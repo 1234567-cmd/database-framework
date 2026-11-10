@@ -1,0 +1,4 @@
+Step M2365: Manual: Keep company_code in costs only, or maintain the copy through one controlled mec
+MANUAL: this step has no generated SQL.
+Keep company_code in costs only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-2036d8f9

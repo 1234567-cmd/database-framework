@@ -1,0 +1,16 @@
+%% Current schema of power-suite-staging (49 of 57: around supplier_amends)
+erDiagram
+    supplier_amends {
+        int id PK
+        varchar_255 credit_term_code
+        int credit_days_amend
+        tinyint_1 credit_days
+        tinyint_1 bsp_payment_terms
+        tinyint_1 bsp_payment_addon
+        tinyint_1 statement_date
+        tinyint_1 last_day_month
+        tinyint_1 other_due_date
+        tinyint_1 weekly
+        datetime created_at
+        datetime updated_at
+    }

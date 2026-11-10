@@ -1,0 +1,667 @@
+[
+  {
+    "item": "quote: Kent: \"from multiplicative to additive\"",
+    "source_url": "https://www.bkent.net/Doc/simple5.htm",
+    "result": "wording differs",
+    "corrected_text": "the size of the normalized files increases in an additive fashion, while the size of the unnormalized file increases in a multiplicative fashion",
+    "action": "Do not use quotation marks around the old wording; use the source text shown."
+  },
+  {
+    "item": "quote: Kent: \"blank fields become ambiguous\"",
+    "source_url": "https://www.bkent.net/Doc/simple5.htm",
+    "result": "wording differs",
+    "corrected_text": "such a format also leads to ambiguities regarding the meanings of blank fields",
+    "action": "Do not use quotation marks around the old wording; use the source text shown."
+  },
+  {
+    "item": "quote: Kent: \"the key, the whole key, and nothing but the key\"",
+    "source_url": "https://www.bkent.net/Doc/simple5.htm",
+    "result": "wording differs",
+    "corrected_text": "a non-key field must provide a fact about the key, us the whole key, and nothing but the key",
+    "action": "The served page literally reads \"us the whole key\". Quote only \"the whole key, and nothing but the key\", or paraphrase."
+  },
+  {
+    "item": "quote: Kimball: \"Keys should not encode meaning\"",
+    "source_url": "https://www.kimballgroup.com/1998/05/surrogate-keys/",
+    "result": "not found",
+    "corrected_text": "Nearest text: \"your smart keys built up out of real data\" (Surrogate Keys); \"Meaningless, sequentially assigned surrogate keys\" (10 Essential Rules, Rule #8)",
+    "action": "Keep as a paraphrase only. Do not attribute the sentence to Kimball."
+  },
+  {
+    "item": "quote: DORA: \"with the same rigor as production application changes\"",
+    "source_url": "https://dora.dev/capabilities/database-change-management/",
+    "result": "not found",
+    "corrected_text": "store their database changes as scripts in version control and manage these changes in the same way they manage production application changes",
+    "action": "Replace the quote with the source text."
+  },
+  {
+    "item": "quote: DORA: \"Test every schema change\"",
+    "source_url": "https://dora.dev/capabilities/database-change-management/",
+    "result": "exact wording confirmed",
+    "corrected_text": "Make sure you test every schema change against a production-like data set",
+    "action": "May be quoted; source has lowercase \"test\" mid-sentence."
+  },
+  {
+    "item": "quote: DORA: \"without consulting DBAs often meet resistance\"",
+    "source_url": "https://dora.dev/capabilities/database-change-management/",
+    "result": "wording differs",
+    "corrected_text": "without consulting the DBA team they are likely to face resistance",
+    "action": "Do not use quotation marks around the old wording; use the source text shown."
+  },
+  {
+    "item": "quote: DORA: \"with the people who run the production database\"",
+    "source_url": "https://dora.dev/capabilities/database-change-management/",
+    "result": "wording differs",
+    "corrected_text": "discuss them with the people responsible for the production database",
+    "action": "Do not use quotation marks around the old wording; use the source text shown."
+  },
+  {
+    "item": "quote: DORA: goal \"100% of database changes\"",
+    "source_url": "https://dora.dev/capabilities/database-change-management/",
+    "result": "exact wording confirmed",
+    "corrected_text": "The goal should be that 100% of database changes are made in this way.",
+    "action": "May be quoted."
+  },
+  {
+    "item": "quote: Braintree 2019: \"about 2 seconds\"",
+    "source_url": "https://gist.github.com/jcoleman/1e6ad1bf8de454c166da94b67537758b",
+    "result": "wording differs",
+    "corrected_text": "Any exclusive locks acquired on tables or indexes be held for at most ~2 seconds.",
+    "action": "Do not use quotation marks around the old wording; use the source text shown."
+  },
+  {
+    "item": "quote: Braintree 2019: \"rollbacks must not revert the database schema\"",
+    "source_url": "https://gist.github.com/jcoleman/1e6ad1bf8de454c166da94b67537758b",
+    "result": "wording differs",
+    "corrected_text": "Rollback strategies do not involve reverting the database schema to its previous version.",
+    "action": "Do not use quotation marks around the old wording; use the source text shown."
+  },
+  {
+    "item": "quote: Braintree 2019: \"We do not combine multiple DDL statements into a single transaction\"",
+    "source_url": "https://gist.github.com/jcoleman/1e6ad1bf8de454c166da94b67537758b",
+    "result": "exact wording confirmed",
+    "corrected_text": "we do not combine multiple DDL statements into a single transaction",
+    "action": "May be quoted; source has lowercase \"we\" mid-sentence."
+  },
+  {
+    "item": "quote: GitLab: \"Migrations must be reversible\"",
+    "source_url": "https://docs.gitlab.com/ee/development/migration_style_guide.html",
+    "result": "wording differs",
+    "corrected_text": "Your migration must be reversible.",
+    "action": "Replace the quote. URL now redirects to https://docs.gitlab.com/development/migration_style_guide/."
+  },
+  {
+    "item": "quote: GitLab: \"Prefer Arel and plain SQL over ActiveRecord syntax\"",
+    "source_url": "https://docs.gitlab.com/ee/development/migration_style_guide.html",
+    "result": "wording differs",
+    "corrected_text": "Prefer Arel and plain SQL over usual ActiveRecord syntax.",
+    "action": "Add the missing word \"usual\"."
+  },
+  {
+    "item": "quote: evodb: \"all database artifacts are version controlled with application code\"",
+    "source_url": "https://martinfowler.com/articles/evodb.html",
+    "result": "exact wording confirmed",
+    "corrected_text": "All database artifacts are version controlled with application code",
+    "action": "May be quoted; it is a section heading with a capital A."
+  },
+  {
+    "item": "quote: evodb: \"every change to the database [is represented] as a database migration script\"",
+    "source_url": "https://martinfowler.com/articles/evodb.html",
+    "result": "wording differs",
+    "corrected_text": "representing every change to the database as a database migration script",
+    "action": "Use the source text and drop the bracketed insertion."
+  },
+  {
+    "item": "quote: strong_migrations: \"blocks writes on both tables\"",
+    "source_url": "https://github.com/ankane/strong_migrations",
+    "result": "exact wording confirmed",
+    "corrected_text": "Adding a foreign key blocks writes on both tables.",
+    "action": "May be quoted."
+  },
+  {
+    "item": "quote: Jepsen MySQL: \"permits G2-item, G-single, and lost update, even on a healthy single node\"",
+    "source_url": "https://jepsen.io/analyses/mysql-8.0.34",
+    "result": "wording differs",
+    "corrected_text": "MySQL's Repeatable Read still allows G2-item, G-single, and lost update; separately: MySQL's Repeatable Read routinely allows G2-item, even on a single healthy node.",
+    "action": "The note merged two sentences. Quote them separately."
+  },
+  {
+    "item": "quote: Jepsen MySQL: Hermitage classification \"cannot be correct\"",
+    "source_url": "https://jepsen.io/analyses/mysql-8.0.34",
+    "result": "wording differs",
+    "corrected_text": "Kleppmann's 2014 Hermitage suggested MySQL Repeatable Read might be Monotonic Atomic View, but this cannot be true: we found monotonicity violations.",
+    "action": "Do not use quotation marks around the old wording; use the source text shown."
+  },
+  {
+    "item": "quote: Jepsen MongoDB: \"snapshot read concern does not guarantee a majority-committed snapshot unless the write concern is also majority\"",
+    "source_url": "https://jepsen.io/analyses/mongodb-4.2.6",
+    "result": "wording differs",
+    "corrected_text": "The snapshot read concern does not actually guarantee snapshot isolation, and must always be used in conjunction with write concern majority .",
+    "action": "Do not use quotation marks around the old wording; use the source text shown."
+  },
+  {
+    "item": "quote: Jepsen MongoDB: \"acknowledges writes from a single node, so committed writes can be rolled back\"",
+    "source_url": "https://jepsen.io/analyses/mongodb-4.2.6",
+    "result": "not found",
+    "corrected_text": "Nearest text: MongoDB's default level of write concern was (and remains) acknowledgement by a single node, which means MongoDB may lose data by default.",
+    "action": "Replace the quote with the source text."
+  },
+  {
+    "item": "quote: Jepsen MongoDB: \"By default, client-level write concern is w: 1\"",
+    "source_url": "https://jepsen.io/analyses/mongodb-4.2.6",
+    "result": "exact wording confirmed",
+    "corrected_text": "By default, client-level write concern is w: 1.",
+    "action": "May be quoted."
+  },
+  {
+    "item": "quote: MongoDB write-conflict sentence (note 12)",
+    "source_url": "https://www.mongodb.com/docs/manual/core/transactions-production-consideration/",
+    "result": "exact wording confirmed",
+    "corrected_text": "If a transaction is in progress and a write outside the transaction modifies a document that an operation in the transaction later tries to modify, the transaction aborts because of a write conflict.",
+    "action": "May be quoted, attributed to MongoDB docs rather than Jepsen."
+  },
+  {
+    "item": "quote: PACELC definition",
+    "source_url": "https://www.cs.umd.edu/~abadi/papers/abadi-pacelc.pdf",
+    "result": "exact wording confirmed",
+    "corrected_text": "if there is a partition (P), how does the system trade off availability and consistency (A and C); else (E), when the system is running normally in the absence of partitions, how does the system trade off latency (L) and consistency (C)?",
+    "action": "May be quoted. Verified with pdftotext on the PDF retrieved by WebFetch; curl failed locally (see links table)."
+  },
+  {
+    "item": "quote: PACELC: consistency/latency more influential than CAP",
+    "source_url": "https://www.cs.umd.edu/~abadi/papers/abadi-pacelc.pdf",
+    "result": "exact wording confirmed",
+    "corrected_text": "one particular tradeoff--between consistency and latency--arguably has been more influential on DDBS design than the CAP tradeoffs",
+    "action": "May be quoted."
+  },
+  {
+    "item": "quote: Testcontainers definition ending",
+    "source_url": "https://testcontainers.com/",
+    "result": "exact wording confirmed",
+    "corrected_text": "Testcontainers is an open source library for providing throwaway, lightweight instances of databases, message brokers, web browsers, or just about anything that can run in a Docker container.",
+    "action": "Note 13 wording matches. The CORRECTIONS.md restriction can be lifted."
+  },
+  {
+    "item": "quote: PostgreSQL wiki: count of anti-patterns",
+    "source_url": "https://wiki.postgresql.org/wiki/Don%27t_Do_This",
+    "result": "exact wording confirmed",
+    "corrected_text": "19 (38 third-level headings, one \"Why not?\" and one \"When should you?\" per item)",
+    "action": "Count is 19, as CORRECTIONS.md states."
+  },
+  {
+    "item": "quote: Codd primary key passage, opening words",
+    "source_url": "https://www.engineering.upenn.edu/~zives/03f/cis550/codd.pdf",
+    "result": "exact wording confirmed",
+    "corrected_text": "Normally, one domain (or combination of domains) of a given relation has values which uniquely identify each element (n-tuple) of that relation. Such a domain (or combination) is called a primary key.",
+    "action": "Opening words confirmed. Verified with pdftotext on the PDF retrieved by WebFetch; curl failed locally."
+  },
+  {
+    "item": "quote: PostgreSQL section number 8.3",
+    "source_url": "https://www.postgresql.org/docs/current/datatype-character.html",
+    "result": "exact wording confirmed",
+    "corrected_text": "8.3. Character Types (Documentation: 18)",
+    "action": "May be cited with the version."
+  },
+  {
+    "item": "quote: PostgreSQL section number 8.14",
+    "source_url": "https://www.postgresql.org/docs/current/datatype-json.html",
+    "result": "exact wording confirmed",
+    "corrected_text": "8.14. JSON Types (Documentation: 18)",
+    "action": "May be cited with the version."
+  },
+  {
+    "item": "quote: PostgreSQL section number 8.18",
+    "source_url": "https://www.postgresql.org/docs/current/domains.html",
+    "result": "exact wording confirmed",
+    "corrected_text": "8.18. Domain Types (Documentation: 18)",
+    "action": "May be cited with the version."
+  },
+  {
+    "item": "quote: PostgreSQL section number 9.14",
+    "source_url": "https://www.postgresql.org/docs/current/functions-uuid.html",
+    "result": "exact wording confirmed",
+    "corrected_text": "9.14. UUID Functions (Documentation: 18)",
+    "action": "May be cited with the version."
+  },
+  {
+    "item": "quote: Karwin: 31 Flavors remedy",
+    "source_url": "https://pragprog.com/titles/bksap1/sql-antipatterns-volume-1/",
+    "result": "wording differs",
+    "corrected_text": "Table of contents only: 31 Flavors, Antipattern: Specify Values in the Column Definition; Solution: Specify Values in Data",
+    "action": "Heading level only. The remedy detail remains unverified against the book."
+  },
+  {
+    "item": "quote: Karwin: closure table and nested set alternatives",
+    "source_url": "https://pragprog.com/titles/bksap1/sql-antipatterns-volume-1/",
+    "result": "not found",
+    "corrected_text": "Table of contents says only: Naive Trees, Solution: Use Alternative Tree Models",
+    "action": "Do not name closure table or nested set as Karwin's content until the book is read."
+  },
+  {
+    "item": "quote: RFC 9562 publication month",
+    "source_url": "https://www.rfc-editor.org/rfc/rfc9562",
+    "result": "exact wording confirmed",
+    "corrected_text": "citation_publication_date 2024/05/07 (page metadata)",
+    "action": "May 2024 confirmed by metadata. URL redirects to https://www.rfc-editor.org/info/rfc9562/."
+  },
+  {
+    "item": "quote: dbt example casting money to float",
+    "source_url": "https://docs.getdbt.com/best-practices/how-we-style/1-how-we-style-our-dbt-models",
+    "result": "exact wording confirmed",
+    "corrected_text": "( order_total / 100.0 ) :: float as order_total",
+    "action": "Keep as a recorded conflict with the exact-decimal rule."
+  },
+  {
+    "item": "quote: MongoDB TransientTransactionError and UnknownTransactionCommitResult labels",
+    "source_url": "https://www.mongodb.com/docs/manual/core/transactions-in-applications/",
+    "result": "exact wording confirmed",
+    "corrected_text": "error handling logic for TransientTransactionError and UnknownTransactionCommitResult",
+    "action": "Sourced. Cite this page."
+  },
+  {
+    "item": "quote: Oracle ORA-01555",
+    "source_url": "https://docs.oracle.com/en/error-help/db/ora-01555/",
+    "result": "exact wording confirmed",
+    "corrected_text": "ORA-01555 - snapshot too old: rollback segment number string with name \"string\" too small",
+    "action": "Sourced. Cite this page."
+  },
+  {
+    "item": "quote: MySQL section 17.7.2.1",
+    "source_url": "https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html",
+    "result": "exact wording confirmed",
+    "corrected_text": "MySQL 8.4 Reference Manual :: 17.7.2.1 Transaction Isolation Levels",
+    "action": "Sourced for MySQL 8.4."
+  },
+  {
+    "item": "quote: Gilbert and Lynch 2002: formal content",
+    "source_url": "https://www.comp.nus.edu.sg/~gilbert/pubs/BrewersConjecture-SigAct.pdf",
+    "result": "exact wording confirmed",
+    "corrected_text": "Theorem 1 It is impossible in the asynchronous network model to implement a read/write data object that guarantees the following properties:",
+    "action": "This PDF has an extractable text layer, so \"unreadable scan\" no longer holds. Notes may now be sourced from it."
+  },
+  {
+    "item": "quote: Gilbert and Lynch 2012 Perspectives paper",
+    "source_url": "https://groups.csail.mit.edu/tds/papers/Gilbert/Brewer2.pdf",
+    "result": "exact wording confirmed",
+    "corrected_text": "Perspectives on the CAP Theorem; Seth Gilbert, Nancy A. Lynch",
+    "action": "Title and authors confirmed and text extractable. Specific claims still need individual checks."
+  },
+  {
+    "item": "quote: \"One Size Fits All\": ICDE 2005 venue",
+    "source_url": "https://cs.brown.edu/~ugur/fits_all.pdf",
+    "result": "not found",
+    "corrected_text": "",
+    "action": "PDF text does not state ICDE 2005. Source the venue elsewhere or drop it."
+  },
+  {
+    "item": "quote: A9: gc_grace_seconds",
+    "source_url": "https://discord.com/blog/how-discord-stores-billions-of-messages",
+    "result": "wording differs",
+    "corrected_text": "We lowered the lifespan of tombstones from 10 days down to 2 days",
+    "action": "The parameter name is not on the page. Use the source wording."
+  },
+  {
+    "item": "quote: B6: \"pre-PG 11 behavior\"",
+    "source_url": "https://gist.github.com/jcoleman/1e6ad1bf8de454c166da94b67537758b",
+    "result": "wording differs",
+    "corrected_text": "Note : In the recently release PostgreSQL 11, this is no longer the case for non-volatile default values.",
+    "action": "Supported by Braintree 2019. Attribute to that page. [sic] \"recently release\"."
+  },
+  {
+    "item": "quote: C5: Brandur as former Stripe engineer",
+    "source_url": "https://brandur.org/about",
+    "result": "wording differs",
+    "corrected_text": "I recently spent five and a half years at Stripe",
+    "action": "Supported in substance. Use the source wording."
+  },
+  {
+    "item": "quote: Summary lesson 6: NOT VALID",
+    "source_url": "https://gist.github.com/jcoleman/1e6ad1bf8de454c166da94b67537758b",
+    "result": "exact wording confirmed",
+    "corrected_text": "ALTER TABLE ... ADD FOREIGN KEY ... NOT VALID",
+    "action": "CORRECTIONS.md says no fetched page supports this; Braintree 2019 does."
+  },
+  {
+    "item": "quote: A12 Instagram: late-2011 date",
+    "source_url": "https://www.rfc-editor.org/rfc/rfc9562",
+    "result": "not found",
+    "corrected_text": "RFC 9562 reference [ShardingID]: \"Sharding & IDs at Instagram\", December 2012",
+    "action": "No support for late 2011. RFC 9562 gives December 2012; the post itself could not be read."
+  },
+  {
+    "item": "quote: A13 TAO: over sharded MySQL or a relational store",
+    "source_url": "https://www.usenix.org/conference/atc13/technical-sessions/presentation/bronson",
+    "result": "not found",
+    "corrected_text": "",
+    "action": "Neither MySQL nor relational appears on the page read. The paper PDF was not read."
+  },
+  {
+    "item": "quote: CLOUD-04: AWS whitepapers",
+    "source_url": "https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/saas-tenant-isolation-strategies.html",
+    "result": "not found",
+    "corrected_text": "URL redirects to https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html; no silo, pool or bridge text on that landing page",
+    "action": "Stop citing CLOUD-04. Read the specific SaaS Lens subpage before citing silo, pool or bridge."
+  },
+  {
+    "item": "quote: Theme F, Frappe: standard columns",
+    "source_url": "https://docs.frappe.io/framework/user/en/basics/doctypes",
+    "result": "not found",
+    "corrected_text": "No owner, modified or creation text on this page; docstatus confirmed at https://docs.frappe.io/framework/doctypes/docstatus",
+    "action": "Keep the restriction."
+  },
+  {
+    "item": "quote: Theme F, iDempiere: AD_Org columns",
+    "source_url": "https://jenkins-artifacts.idempiere.org/javadoc12/org/compiere/model/I_AD_Org.html",
+    "result": "exact wording confirmed",
+    "corrected_text": "Created, CreatedBy, Updated, UpdatedBy, IsActive, AD_Client_ID, AD_Org_ID present on I_AD_Org",
+    "action": "Interface only; keep the restriction for other tables."
+  },
+  {
+    "item": "quote: DDIA: C does not belong in ACID; chapter-level claims",
+    "source_url": "https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not requested in this run: CORRECTIONS.md records O'Reilly returning 403. Needs the book."
+  },
+  {
+    "item": "quote: Gartner definitions",
+    "source_url": "",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not requested in this run: CORRECTIONS.md records 403."
+  },
+  {
+    "item": "quote: Pinterest, Instagram and 4 Airbnb posts; Airbnb Wall and Midas",
+    "source_url": "https://medium.com/airbnb-engineering/",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not requested in this run: catalog records 403 on medium.com. Instagram: see links table."
+  },
+  {
+    "item": "quote: ISO 22301 details",
+    "source_url": "https://www.iso.org/",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not requested in this run: CORRECTIONS.md records 403. Keep citing the EVS record as such."
+  },
+  {
+    "item": "quote: Karwin anti-pattern names, Hay and Silverston contents, PACELC classifications, page numbers (note 16)",
+    "source_url": "",
+    "result": "not checked",
+    "corrected_text": "",
+    "action": "Book content or per-item checks out of reach here. Keep the restriction."
+  },
+  {
+    "item": "quote: LIT-02, LIT-03, LIT-13, LIT-21, LIT-22 details",
+    "source_url": "",
+    "result": "not checked",
+    "corrected_text": "",
+    "action": "Keep the restriction."
+  },
+  {
+    "item": "quote: A11: Snowflake IDs as template",
+    "source_url": "",
+    "result": "not checked",
+    "corrected_text": "",
+    "action": "No source to test; unsourced inference. Remove or source."
+  },
+  {
+    "item": "quote: Theme F: record-level versioning for optimistic locking",
+    "source_url": "",
+    "result": "not checked",
+    "corrected_text": "",
+    "action": "No source to test. Remove or source."
+  },
+  {
+    "item": "quote: Sanderson manifesto; Data Fabric primary support",
+    "source_url": "",
+    "result": "not checked",
+    "corrected_text": "",
+    "action": "No openly served primary source identified. Keep the restriction."
+  },
+  {
+    "item": "quote: Note 11 and note 17 counts; Date 8th ed.",
+    "source_url": "",
+    "result": "not checked",
+    "corrected_text": "",
+    "action": "Internal counts and an omitted citation; no web check applies."
+  },
+  {
+    "item": "quote: Summary lessons 2 and 4: Instagram as evidence",
+    "source_url": "https://instagram-engineering.com/1cf5a71e5a5c",
+    "result": "not checked",
+    "corrected_text": "",
+    "action": "Post could not be read (connection failure). Keep the restriction."
+  },
+  {
+    "item": "link: GOV-20",
+    "source_url": "https://www.six-group.com/en/products-services/financial-information/data-standards.html",
+    "result": "reachable (200)",
+    "corrected_text": "Final URL: https://www.six-group.com/en/products-services/financial-information/market-reference-data/data-standards.html",
+    "action": "Update the catalog URL to the final URL."
+  },
+  {
+    "item": "link: DES-11",
+    "source_url": "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "result": "reachable (200)",
+    "corrected_text": "",
+    "action": "Mark reachable."
+  },
+  {
+    "item": "link: DES-01",
+    "source_url": "https://www.engineering.upenn.edu/~zives/03f/cis550/codd.pdf",
+    "result": "curl retest failed locally: schannel CRYPT_E_REVOCATION_OFFLINE (revocation server unreachable); no HTTP exchange",
+    "corrected_text": "",
+    "action": "Needs a manual check or a working revocation path. WebFetch retrieved the PDF, so the page exists."
+  },
+  {
+    "item": "link: TXN-02",
+    "source_url": "https://www.cs.utexas.edu/~dsb/cs386d/Readings/Recovery/Principles-of-Recovery.pdf",
+    "result": "curl retest failed locally: schannel CRYPT_E_REVOCATION_OFFLINE (revocation server unreachable); no HTTP exchange",
+    "corrected_text": "",
+    "action": "Needs a manual check."
+  },
+  {
+    "item": "link: TXN-14",
+    "source_url": "https://www.cs.umd.edu/~abadi/papers/abadi-pacelc.pdf",
+    "result": "curl retest failed locally: schannel CRYPT_E_REVOCATION_OFFLINE (revocation server unreachable); no HTTP exchange",
+    "corrected_text": "",
+    "action": "Needs a manual check or a working revocation path. WebFetch retrieved the PDF, so the page exists."
+  },
+  {
+    "item": "link: TXN-17",
+    "source_url": "https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf",
+    "result": "curl retest failed locally: schannel CRYPT_E_REVOCATION_OFFLINE (revocation server unreachable); no HTTP exchange",
+    "corrected_text": "",
+    "action": "Needs a manual check."
+  },
+  {
+    "item": "link: CASE-20",
+    "source_url": "https://instagram-engineering.com/1cf5a71e5a5c",
+    "result": "connection failed (curl 28, port 443, about 21 s); no HTTP exchange",
+    "corrected_text": "",
+    "action": "Needs a manual check."
+  },
+  {
+    "item": "link: GOV-09",
+    "source_url": "https://www.iso.org/standard/78915.html",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: GOV-13",
+    "source_url": "https://www.iso.org/standard/78501.html",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: GOV-19",
+    "source_url": "https://www.iso.org/iso-3166-country-codes.html",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: GOV-22",
+    "source_url": "https://www.iso.org/iso-639-language-code",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: OPS-14",
+    "source_url": "https://www.red-gate.com/simple-talk/devops/database-devops/introduction-to-devops-database-delivery/",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: OPS-22",
+    "source_url": "https://www.cisa.gov/stopransomware/ransomware-guide",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: LIT-15",
+    "source_url": "https://doi.org/10.1145/289.291",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: LIT-17",
+    "source_url": "https://doi.org/10.1145/38713.38742",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: LIT-30",
+    "source_url": "https://www.emerald.com/ftdbs/article/1/2/141/1331441/Architecture-of-a-Database-System",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: LIT-38",
+    "source_url": "https://doi.org/10.1145/1559845.1559942",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-06",
+    "source_url": "https://medium.com/pinterest-engineering/sharding-pinterest-how-we-scaled-our-mysql-fleet-3f341e96ca6f",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-09",
+    "source_url": "https://www.uber.com/blog/postgres-to-mysql-migration/",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-10",
+    "source_url": "https://www.uber.com/blog/schemaless-part-one-mysql-datastore/",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-30",
+    "source_url": "https://www.uber.com/blog/how-ledgerstore-supports-trillions-of-indexes/",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-35",
+    "source_url": "https://medium.com/airbnb-engineering/6d742b80f040",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-36",
+    "source_url": "https://medium.com/airbnb-engineering/scaling-airbnbs-payment-platform-43ebfc99b324",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-38",
+    "source_url": "https://www.uber.com/blog/databook/",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-39",
+    "source_url": "https://medium.com/airbnb-engineering/data-quality-at-airbnb-870d03080469",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "link: CASE-40",
+    "source_url": "https://medium.com/airbnb-engineering/how-airbnb-achieved-metric-consistency-at-scale-f23cc53dea70",
+    "result": "refused automated access; needs manual check by the owner",
+    "corrected_text": "",
+    "action": "Not retested, as instructed (catalog status bot_blocked_or_refused)."
+  },
+  {
+    "item": "gov24: GOV-24 replacement",
+    "source_url": "https://www.gleif.org/en/about-lei/iso-17442-the-lei-code-structure",
+    "result": "replacement found (official GLEIF, 200)",
+    "corrected_text": "The LEI is \"a unique 20-character alphanumeric code\" and \"is based on the global ISO 17442 standard\". Replacement URL: https://www.gleif.org/en/organizational-identity/lei-vlei/the-legal-entity-identifier-lei",
+    "action": "Replace the GOV-24 URL with the replacement. Requesting https://gleif.org/en/about-lei/iso-17442-the-lei-code-structure ended on this page after redirects. Do not cite character-position structure from it: the page does not give it, and positions seen in search snippets were not confirmed on a retrieved page."
+  },
+  {
+    "item": "oracle: MSOM-08",
+    "source_url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/data-integrity.html",
+    "result": "reports Release 26 (dcterms.release); served from /26/ after redirect",
+    "corrected_text": "Final URL: https://docs.oracle.com/en/database/oracle/oracle-database/26/cncpt/data-integrity.html",
+    "action": "Do not claim 23ai provenance. Cite as Release 26 or use the final URL."
+  },
+  {
+    "item": "oracle: MSOM-10",
+    "source_url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/sqlrf/Data-Types.html",
+    "result": "reports Release 26 (dcterms.release); served from /26/ after redirect",
+    "corrected_text": "Final URL: https://docs.oracle.com/en/database/oracle/oracle-database/26/sqlrf/Data-Types.html",
+    "action": "Do not claim 23ai provenance. Cite as Release 26 or use the final URL."
+  },
+  {
+    "item": "oracle: MSOM-11",
+    "source_url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/vldbg/partition-concepts.html",
+    "result": "reports Release 26 (dcterms.release); served from /26/ after redirect",
+    "corrected_text": "Final URL: https://docs.oracle.com/en/database/oracle/oracle-database/26/vldbg/partition-concepts.html. Body text: as of Oracle AI Database 26ai",
+    "action": "Do not claim 23ai provenance. Cite as Release 26 or use the final URL."
+  },
+  {
+    "item": "oracle: PERF-24",
+    "source_url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/indexes-and-index-organized-tables.html",
+    "result": "reports Release 26 (dcterms.release); served from /26/ after redirect",
+    "corrected_text": "Final URL: https://docs.oracle.com/en/database/oracle/oracle-database/26/cncpt/indexes-and-index-organized-tables.html",
+    "action": "Do not claim 23ai provenance. Cite as Release 26 or use the final URL."
+  },
+  {
+    "item": "oracle: PERF-26",
+    "source_url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/dwhsg/basic-query-rewrite-materialized-views.html",
+    "result": "reports Release 26 (dcterms.release); served from /26/ after redirect",
+    "corrected_text": "Final URL: https://docs.oracle.com/en/database/oracle/oracle-database/26/dwhsg/basic-query-rewrite-materialized-views.html. Body gives no version; metadata does",
+    "action": "Do not claim 23ai provenance. Cite as Release 26 or use the final URL."
+  },
+  {
+    "item": "oracle: TXN-08",
+    "source_url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/data-concurrency-and-consistency.html",
+    "result": "reports Release 26 (dcterms.release); served from /26/ after redirect",
+    "corrected_text": "Final URL: https://docs.oracle.com/en/database/oracle/oracle-database/26/cncpt/data-concurrency-and-consistency.html",
+    "action": "Do not claim 23ai provenance. Cite as Release 26 or use the final URL."
+  }
+]

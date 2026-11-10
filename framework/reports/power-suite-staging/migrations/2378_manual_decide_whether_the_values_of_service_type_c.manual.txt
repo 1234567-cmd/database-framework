@@ -1,0 +1,4 @@
+Step M2378: Manual: Decide whether the values of service_type can change; if so, use a reference tab
+MANUAL: this step has no generated SQL.
+Decide whether the values of service_type can change; if so, use a reference table.
+Findings: SCH-034-5d7a77da

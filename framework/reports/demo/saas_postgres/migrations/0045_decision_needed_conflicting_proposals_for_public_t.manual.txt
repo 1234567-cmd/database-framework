@@ -1,0 +1,4 @@
+Step M045: Decision needed: conflicting proposals for public.tasks.updated_at
+MANUAL: this step has no generated SQL.
+Two proposals add public.tasks.updated_at with different types.
+Findings: DE-005-69aab2fa, SCH-044-89d095d3

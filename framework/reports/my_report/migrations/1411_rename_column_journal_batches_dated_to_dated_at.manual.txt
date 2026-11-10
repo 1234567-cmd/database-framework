@@ -1,0 +1,4 @@
+Step M1411: Rename column journal_batches.dated to dated_at
+MANUAL: this step has no generated SQL.
+Table journal_batches matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column journal_batches.dated to dated_at.
+Findings: SCH-061-1b306a59

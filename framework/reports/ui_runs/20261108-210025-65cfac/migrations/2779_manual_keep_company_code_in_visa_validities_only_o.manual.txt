@@ -1,0 +1,4 @@
+Step M2779: Manual: Keep company_code in visa_validities only, or maintain the copy through one cont
+MANUAL: this step has no generated SQL.
+Keep company_code in visa_validities only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-997f9321

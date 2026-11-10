@@ -1,0 +1,4 @@
+Step M1426: Manual: Record an accountable owner per table or dataset.
+MANUAL: this step has no generated SQL.
+Record an accountable owner per table or dataset.
+Findings: GVN-003-1aaed6ab

@@ -1,0 +1,1091 @@
+# Schema rules. Python checks in analyzers/schema.py find facts; all text, thresholds and name lists live here.
+# MANDATORY standards are reported as high or critical.
+
+- id: SCH-001
+  check: schema.missing_primary_key
+  title: "Table {table} has no primary key"
+  category: data_integrity
+  severity: critical
+  kind: confirmed_defect
+  requires: [declared_schema]
+  standards: [INT-001, TST-013]
+  workloads: [OLTP]
+  root_cause: "The table was created without a declared primary key."
+  business_impact: "Duplicate rows can enter silently and individual records cannot be reliably corrected or referenced."
+  technical_impact: "Replication, updates by key, foreign keys from other tables and ORM mapping all lack a stable row identity."
+  solution: "Declare a primary key on the natural unique key if one exists, otherwise add a surrogate key."
+  complexity: medium
+  migration: "Check for duplicates and NULLs first. Adding a key builds an index and can lock the table."
+  risks: "Fails if duplicates exist. Plan an online method for large tables."
+  validation: "Confirm the constraint exists and that row counts are unchanged."
+  confidence: 0.98
+  params:
+    exempt_tables: &infra_tables [schema_migrations, flyway_schema_history, alembic_version, django_migrations, databasechangelog, databasechangeloglock, ar_internal_metadata]
+
+- id: SCH-002
+  check: schema.missing_foreign_key
+  title: "Column {table}.{column} looks like an undeclared reference to {ref_table}"
+  category: data_integrity
+  severity: high
+  kind: context_dependent
+  requires: [declared_schema]
+  standards: [INT-002]
+  workloads: [OLTP]
+  root_cause: "A column named like a reference to {ref_table}.{ref_column} has no foreign key. This is inferred from names and types."
+  business_impact: "If it is a real reference, orphaned records can accumulate and reports can silently lose or misstate rows."
+  technical_impact: "The database cannot enforce the relationship, and the optimizer and diagramming tools cannot rely on it."
+  solution: "Confirm the relationship, clean any orphan rows, and add a foreign key to {ref_table}.{ref_column}."
+  complexity: medium
+  migration: "Find and resolve orphan rows, add the constraint as NOT VALID or equivalent where supported, then validate it."
+  risks: "Fails on existing orphans. May be intentional across sharded or separated domains; INT-003 and ERD-007 cover those."
+  validation: "Orphan query returns zero and the constraint is validated."
+  confidence: 0.55
+  params:
+    exempt_tables: *infra_tables
+    reference_suffixes: [id]
+    exclude_column_patterns: ["(^|_)xid$", "^external_", "^ext_", "_external_id$", "^(stripe|paypal|google|facebook|apple|provider|vendor_ref|source|remote|legacy|old|session|request|trace|correlation|transaction_ref)_id$"]
+    irregular_plurals: &irregular {people: person, children: child, men: man, women: woman, addresses: address, statuses: status, categories: category, companies: company, countries: country, currencies: currency}
+    base_confidence: 0.55
+    role_confidence: 0.4
+    verified_confidence: 0.85
+    min_verify_rows: 20
+    min_match_ratio: 0.5
+    strong_match_ratio: 0.98
+    sample_limit: 20000
+
+- id: SCH-003
+  check: schema.fk_type_mismatch
+  title: "Foreign key {table}.{column} does not match the {problem} of {ref_table}.{ref_column}"
+  category: data_integrity
+  severity: medium
+  kind: confirmed_defect
+  requires: [declared_schema]
+  standards: [INT-004, TYP-020]
+  workloads: [OLTP]
+  root_cause: "The reference column and the key it references were declared with different types, widths or character settings."
+  business_impact: "Values can be truncated or fail to match, which appears as missing or wrong related records."
+  technical_impact: "Joins can need implicit conversion and lose index use. Some engines reject or degrade such keys."
+  solution: "Change {table}.{column} to the type of {ref_table}.{ref_column}."
+  complexity: medium
+  migration: "Change the type in a maintenance window or with online schema change. Widening is usually a rewrite on large tables."
+  risks: "Narrowing can truncate. Confirm every value fits before converting."
+  validation: "Compare catalog types for both columns and run the join with EXPLAIN."
+  params:
+    exempt_tables: *infra_tables
+    serial_types: &serial_types {serial: integer, bigserial: bigint, smallserial: smallint}
+
+- id: SCH-004
+  check: schema.nullable_primary_key
+  title: "Primary key column {table}.{column} is nullable"
+  category: data_integrity
+  severity: high
+  kind: confirmed_defect
+  requires: [declared_schema]
+  standards: [TYP-032]
+  root_cause: "The schema source declared a primary key column without NOT NULL."
+  business_impact: "Records without identity break downstream references and reconciliations."
+  technical_impact: "A NULL key cannot identify a row, and most engines reject it outright."
+  solution: "Set the column NOT NULL."
+  complexity: low
+  migration: "Confirm no NULLs exist, then add NOT NULL."
+  risks: "Fails if NULLs exist."
+  validation: "Catalog shows NOT NULL for the column."
+  confidence: 0.98
+
+- id: SCH-005
+  check: schema.composite_fk_partially_nullable
+  title: "Composite foreign key on {table} has nullable column {column}"
+  category: data_integrity
+  severity: medium
+  kind: context_dependent
+  requires: [declared_schema]
+  standards: [INT-008]
+  root_cause: "Some columns of a composite foreign key allow NULL while others do not."
+  business_impact: "Rows can claim a partial reference that is never checked, so related data can be wrong."
+  technical_impact: "Under MATCH SIMPLE a NULL in any key column disables the check for that row."
+  solution: "Make all columns of the composite key NOT NULL, or use MATCH FULL semantics if partial references are meaningful."
+  complexity: low
+  migration: "Backfill any NULLs, then add NOT NULL."
+  risks: "Application inserts that omit the value will start to fail."
+  validation: "Query for partial references returns zero."
+  confidence: 0.8
+  params:
+    exempt_tables: *infra_tables
+
+- id: SCH-006
+  check: schema.nullable_fk_without_nulls
+  title: "Foreign key {table}.{column} allows NULL but never has one"
+  category: data_integrity
+  severity: low
+  kind: context_dependent
+  standards: [INT-008]
+  requires: [data]
+  root_cause: "The column was left nullable although all current rows have a value."
+  business_impact: "A missing parent could be introduced later without any error."
+  technical_impact: "The optionality of the relationship is unclear to readers and tools."
+  solution: "If the relationship is mandatory, set the column NOT NULL."
+  complexity: low
+  migration: "Re-check NULLs at deployment, then add NOT NULL."
+  risks: "The relationship may be intentionally optional and just not yet used."
+  validation: "Catalog shows NOT NULL."
+  confidence: 0.7
+  params:
+    exempt_tables: *infra_tables
+    min_rows: 100
+
+- id: SCH-007
+  check: schema.fk_no_explicit_actions
+  title: "Foreign key on {table} does not declare its actions"
+  category: data_integrity
+  severity: low
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [INT-005]
+  workloads: [OLTP]
+  root_cause: "The foreign key relies on the engine's default delete and update actions."
+  business_impact: "The behaviour when a parent changes is left to chance, not recorded as a design decision."
+  technical_impact: "Actions cannot be confirmed by reading the schema, and defaults differ by engine and version."
+  solution: "State ON DELETE and ON UPDATE explicitly according to the relationship type."
+  complexity: low
+  migration: "Drop and re-create the constraint with explicit actions."
+  risks: "Re-creating a constraint can revalidate and lock the table."
+  validation: "Catalog lists the intended actions."
+  confidence: 0.85
+  params:
+    exempt_tables: *infra_tables
+
+- id: SCH-010
+  check: schema.repeating_columns
+  title: "Repeating column group in {table}: {group}"
+  category: schema_quality
+  severity: high
+  kind: confirmed_defect
+  standards: [NRM-001]
+  workloads: [OLTP]
+  root_cause: "Several values of one attribute are stored in numbered columns."
+  business_impact: "The number of values is capped, and reports must inspect every column."
+  technical_impact: "Queries need OR across columns, indexing is awkward, and adding a value needs a schema change."
+  solution: "Move the values to a child table with one row per value."
+  complexity: high
+  migration: "Create the child table, backfill from the numbered columns, switch readers and writers, then drop the columns."
+  risks: "All application code using these columns must change."
+  validation: "Reconcile row counts between old columns and the new table."
+  confidence: 0.8
+  params:
+    exempt_tables: *infra_tables
+    min_group: 3
+    min_base_length: 2
+    exempt_bases: [address, address_line, addr, line, street]
+
+- id: SCH-011
+  check: schema.delimited_list
+  title: "Delimited list stored in {table}.{column}"
+  category: schema_quality
+  severity: high
+  kind: confirmed_defect
+  standards: [NRM-001]
+  workloads: [OLTP]
+  root_cause: "Several values are stored in one text column separated by a delimiter."
+  business_impact: "Items cannot be reliably searched, counted or validated, so reports can be wrong."
+  technical_impact: "No index or foreign key can apply to individual items."
+  solution: "Move the items to a child or association table."
+  complexity: high
+  migration: "Create the child table, split existing values into rows, switch code, then drop the column."
+  risks: "Bad delimiters in existing data need cleaning first."
+  validation: "Reconcile item counts before and after."
+  confidence: 0.85
+  params:
+    exempt_tables: *infra_tables
+    min_length: 10
+    exclude_tokens: [name, names, address, description, note, notes, comment, comments, title, subject, url, uri, path, query, message, text, body, content, sql, html, json, xml, hash, token, key, password, label, summary, reason]
+    name_patterns: ["_ids$", "_list$", "_csv$", "^tags$", "_tags$", "^emails$", "_emails$", "^phones$", "_phones$", "^roles$", "_roles$", "_codes$"]
+    atomic_list_pattern: '^[\w@.+-]+(\s*[,;|]\s*[\w@.+-]+)+$'
+    thousands_pattern: '^\d{1,3}(,\d{3})+(\.\d+)?$'
+    min_samples: 20
+    min_ratio: 0.6
+    name_only_confidence: 0.5
+    verified_confidence: 0.9
+    sample_limit: 20000
+
+- id: SCH-012
+  check: schema.redundant_attribute
+  title: "Attribute {table}.{column} repeats a column of {parent}"
+  category: schema_quality
+  severity: medium
+  kind: context_dependent
+  standards: [NRM-010]
+  root_cause: "A non-key attribute is stored in both a child table and its parent."
+  business_impact: "The copies can disagree, and different reports can then show different answers."
+  technical_impact: "Each update must touch several tables, or the data drifts."
+  solution: "Keep the attribute on the parent only, or maintain the copy through one controlled mechanism and record why."
+  complexity: medium
+  migration: "Reconcile differences, switch readers to a join, then drop the copy."
+  risks: "Historical snapshot columns are often intentional. Confirm before removing."
+  validation: "Reports match before and after the change."
+  confidence: 0.4
+  params:
+    exempt_tables: *infra_tables
+    generic_columns: &generic_columns [id, name, title, description, status, type, code, value, key, label, notes, note, comment, comments, active, enabled, deleted, version, position, sort_order, tenant_id, company_id]
+    exclude_tokens: &money_exclude_core [amount, price, cost, total, balance, fee, tax, rate, quantity, qty]
+    base_confidence: 0.4
+    verified_confidence: 0.85
+    min_rows: 20
+    min_equal_ratio: 0.95
+    sample_limit: 20000
+
+- id: SCH-013
+  check: schema.functional_dependency
+  title: "{table}.{column} depends on {determinant}, not on the key"
+  category: schema_quality
+  severity: medium
+  kind: context_dependent
+  standards: [NRM-002]
+  workloads: [OLTP]
+  requires: [data]
+  root_cause: "A non-key attribute appears to be determined by another non-key column, a transitive dependency."
+  business_impact: "The same fact is repeated in many rows, so a correction can reach only some of them."
+  technical_impact: "Update anomalies and larger tables."
+  solution: "Move the attribute to the table identified by {determinant}."
+  complexity: medium
+  migration: "Create or extend the parent table, backfill, switch code, then drop the column."
+  risks: "A dependency seen in a sample may not hold for all data, and the copy may be an intended snapshot."
+  validation: "Confirm the dependency on the full table before moving the data."
+  confidence: 0.8
+  params:
+    exempt_tables: *infra_tables
+    determinant_suffixes: [id, code]
+    exclude_tokens: [note, notes, comment, comments, description, reference, ref]
+    min_determinants: 20
+    min_repeat: 1.2
+    max_violation_ratio: 0.01
+    verified_confidence: 0.8
+    sample_limit: 20000
+
+- id: SCH-020
+  check: schema.money_float
+  title: "Monetary column {table}.{column} uses binary floating point"
+  category: data_integrity
+  severity: critical
+  kind: confirmed_defect
+  requires: [declared_schema]
+  standards: [TYP-001]
+  root_cause: "A money column was declared as float, real or double."
+  business_impact: "Totals can be off by small amounts and fail reconciliation or audit."
+  technical_impact: "Binary floating point cannot hold most decimal fractions exactly, and errors accumulate in aggregates."
+  solution: "Change the column to an exact decimal type."
+  complexity: medium
+  migration: "Convert with explicit rounding reviewed by the data owner. Large tables need an online method."
+  risks: "Rounding during conversion can change stored values."
+  validation: "Reconcile sums before and after, and confirm the catalog type."
+  confidence: 0.85
+  params:
+    exempt_tables: *infra_tables
+    exclude_tokens: &money_exclude [id, code, type, status, method, count, number, "no", num, name, date, at, "on", rate, percent, percentage, pct, ratio, center, centre, flag, is, has, key, ref, reference, qty, quantity, items, rows, weight, hours, mode, category, description, desc, note, notes, uuid, url, term, terms, currency, unit, units, card, score, points]
+    target_type: decimal(19,4)
+
+- id: SCH-021
+  check: schema.money_proprietary
+  title: "Column {table}.{column} uses a proprietary money type"
+  category: schema_quality
+  severity: medium
+  kind: confirmed_defect
+  requires: [declared_schema]
+  standards: [TYP-002]
+  root_cause: "The column uses an engine-specific money type."
+  business_impact: "Precision and behaviour depend on engine and locale, which complicates migration and reporting."
+  technical_impact: "Fixed scale and locale-dependent formatting differ between engines."
+  solution: "Use an exact decimal type."
+  complexity: medium
+  migration: "Convert with an explicit cast."
+  risks: "Client code that parses formatted output must change."
+  validation: "Reconcile sums before and after."
+  confidence: 0.98
+  params:
+    exempt_tables: *infra_tables
+    target_type: decimal(19,4)
+
+- id: SCH-022
+  check: schema.money_low_scale
+  title: "Monetary column {table}.{column} has too few decimal places"
+  category: data_integrity
+  severity: medium
+  kind: context_dependent
+  requires: [declared_schema]
+  standards: [TYP-003]
+  root_cause: "The declared scale is below the minor unit needed for common currencies."
+  business_impact: "Amounts can be rounded on entry, causing financial differences."
+  technical_impact: "Scale limits stored precision at the column level."
+  solution: "Increase the scale to cover every currency the column may hold."
+  complexity: medium
+  migration: "Widen the type; existing values are preserved."
+  risks: "Rewrites large tables on some engines."
+  validation: "Catalog shows the new scale, and sums are unchanged."
+  confidence: 0.75
+  params:
+    exempt_tables: *infra_tables
+    exclude_tokens: *money_exclude
+    min_scale: 2
+
+- id: SCH-023
+  check: schema.money_multicurrency_scale
+  title: "Multi-currency amount {table}.{column} has a scale below four"
+  category: data_integrity
+  severity: medium
+  kind: context_dependent
+  requires: [declared_schema]
+  standards: [TYP-004]
+  root_cause: "The amount column has fewer than four decimal places in a multi-currency database."
+  business_impact: "Three-decimal currencies and conversions can lose value."
+  technical_impact: "Scale below the required minor unit truncates stored amounts."
+  solution: "Increase the scale to at least four."
+  complexity: medium
+  migration: "Widen the type; existing values are preserved."
+  risks: "Rewrites large tables on some engines."
+  validation: "Catalog shows the new scale, and sums are unchanged."
+  confidence: 0.65
+  params:
+    exempt_tables: *infra_tables
+    exclude_tokens: [id, code, type, status, method, count, number, "no", num, name, date, at, "on", rate, percent, percentage, pct, ratio, center, centre, flag, is, has, key, ref, reference, qty, quantity, items, rows, weight, hours, mode, category, description, desc, note, notes, uuid, url, term, terms, currency, unit, units, card, score, points, price]
+    multi_currency: null
+    currency_tables: &currency_tables [currencies, currency, exchange_rates, fx_rates]
+    currency_column_patterns: &currency_cols ["(^|_)currency($|_)", "(^|_)ccy($|_)", "(^|_)iso_4217($|_)"]
+    min_scale: 4
+
+- id: SCH-024
+  check: schema.amount_without_currency
+  title: "Amounts in {table} have no currency"
+  category: data_integrity
+  severity: medium
+  kind: context_dependent
+  standards: [TYP-005]
+  workloads: [OLTP, data_warehouse]
+  root_cause: "The table holds monetary amounts with no currency column, in a database that uses several currencies."
+  business_impact: "An amount cannot be interpreted correctly, so totals may mix currencies."
+  technical_impact: "Aggregates across currencies are not detectable in SQL."
+  solution: "Add an ISO 4217 currency code column, or confirm the table is single-currency by design."
+  complexity: medium
+  migration: "Add the column, backfill from business rules, then set NOT NULL."
+  risks: "Backfill needs a reliable source for the historical currency."
+  validation: "No amount row lacks a currency."
+  confidence: 0.6
+  params:
+    exempt_tables: *infra_tables
+    exclude_tokens: *money_exclude
+    multi_currency: null
+    currency_tables: *currency_tables
+    currency_column_patterns: *currency_cols
+    currency_column: currency_code
+    currency_type: char(3)
+
+- id: SCH-030
+  check: schema.timestamp_without_zone
+  title: "Instant column {table}.{column} stores no time zone"
+  category: data_integrity
+  severity: medium
+  kind: context_dependent
+  requires: [declared_schema]
+  standards: [TYP-012]
+  root_cause: "A column recording a point in time uses a type without time zone handling."
+  business_impact: "Times can shift between sessions or be misread across regions."
+  technical_impact: "Comparison and arithmetic depend on undocumented conventions."
+  solution: "Use a UTC-normalizing type, or document the UTC convention."
+  complexity: medium
+  migration: "Convert using the zone the existing values were written in; confirm it first."
+  risks: "A wrong assumed source zone shifts all stored times."
+  validation: "Sample rows show correct instants before and after."
+  confidence: 0.75
+  params:
+    exempt_tables: *infra_tables
+    exempt_dialects: [sqlite]
+    instant_patterns: ["_at$", "^created$", "^updated$", "^deleted$", "(^|_)timestamp$", "_ts$"]
+    utc_normalizing: {mysql: [timestamp]}
+    target_types: {postgres: timestamptz, generic: timestamptz}
+
+- id: SCH-031
+  check: schema.date_as_text
+  title: "Date stored as text in {table}.{column}"
+  category: schema_quality
+  severity: medium
+  kind: confirmed_defect
+  standards: [TYP-013, TYP-016]
+  root_cause: "A date or date-time value is stored in a text column."
+  business_impact: "Invalid or inconsistent dates can enter and make date reports wrong."
+  technical_impact: "Text cannot be range-filtered or validated reliably, and it sorts incorrectly in many formats."
+  solution: "Change the column to a date or date-time type."
+  complexity: medium
+  migration: "Clean values that do not parse, then convert with an explicit format."
+  risks: "Fails on unparseable values; ambiguous formats need a decision."
+  validation: "Count of unparseable values is zero before conversion."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    exempt_dialects: [sqlite]
+    name_patterns: ["_date$", "^date$", "_at$", "_datetime$", "_timestamp$"]
+    exclude_tokens: [format, type, text, note, notes, range, string, label, source]
+    instant_patterns: ["_at$", "_datetime$", "_timestamp$"]
+    instant_types: {postgres: timestamptz, mysql: datetime, default: timestamp}
+    date_types: {default: date}
+    value_pattern: '^(\d{4}-\d{1,2}-\d{1,2}|\d{1,2}/\d{1,2}/\d{2,4}|\d{8}$)'
+    min_samples: 20
+    min_ratio: 0.95
+    name_only_confidence: 0.5
+    verified_confidence: 0.9
+    sample_limit: 20000
+
+- id: SCH-032
+  check: schema.number_as_text
+  title: "Numbers stored as text in {table}.{column}"
+  category: schema_quality
+  severity: medium
+  kind: confirmed_defect
+  standards: [TYP-008]
+  requires: [data]
+  root_cause: "A quantity or amount is stored in a text column."
+  business_impact: "Totals need conversion, and invalid values can enter unnoticed."
+  technical_impact: "Sorting and comparison are lexical, and arithmetic needs casts that block index use."
+  solution: "Change the column to an exact numeric type."
+  complexity: medium
+  migration: "Remove non-numeric values, then convert."
+  risks: "Formatted values such as thousands separators need cleaning first."
+  validation: "Reconcile sums and row counts."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    quantity_tokens: [amount, qty, quantity, count, price, total, score, weight, volume]
+    exclude_tokens: [id, code, phone, zip, postal, postcode, ssn, sku, iban, account, number, "no", num, ref, reference, key, version, status, type, name, description, currency, unit, card]
+    number_pattern: '^-?\d+(\.\d+)?$'
+    leading_zero_pattern: '^-?0\d'
+    integer_pattern: '^-?\d+$'
+    min_samples: 20
+    min_ratio: 0.98
+    max_leading_zero_ratio: 0.01
+    integer_type: bigint
+    decimal_type: decimal(18,4)
+    sample_limit: 20000
+
+- id: SCH-033
+  check: schema.boolean_as_int_or_char
+  title: "Yes-or-no column {table}.{column} does not use a boolean type"
+  category: schema_quality
+  severity: low
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [TYP-021]
+  workloads: [OLTP]
+  root_cause: "A yes-or-no attribute is stored in an integer or a single-character column."
+  business_impact: "Values outside yes or no can appear and be treated inconsistently."
+  technical_impact: "Each reader must know the encoding, and nothing restricts the values."
+  solution: "Use the engine's native boolean type."
+  complexity: low
+  migration: "Map stored codes to true and false, then change the type."
+  risks: "Application code comparing to 0, 1, Y or N must be reviewed."
+  validation: "No values fall outside the mapped set."
+  confidence: 0.8
+  params:
+    exempt_tables: *infra_tables
+    exempt_dialects: [sqlite]
+    name_patterns: ["^is_", "^has_", "_flag$", "^flag_"]
+    tinyint_accepted_dialects: [mysql]
+    target_types: {postgres: boolean, mysql: tinyint(1), default: boolean}
+    max_char_length: 1
+    sample_limit: 20000
+
+- id: SCH-034
+  check: schema.enum_prefer_lookup
+  title: "Enumeration {table}.{column} may need a reference table"
+  category: maintainability
+  severity: low
+  kind: context_dependent
+  standards: [TYP-022, TYP-023]
+  workloads: [OLTP]
+  root_cause: "A native enumeration holds a value set large enough that it is likely to change."
+  business_impact: "Adding or retiring values needs a schema change and deployment."
+  technical_impact: "Enum changes are costly on some engines, and values cannot carry attributes."
+  solution: "If the set can change or needs attributes, use a reference table with a foreign key."
+  complexity: medium
+  migration: "Create the reference table, load values, add a key column, backfill, then drop the enum."
+  risks: "Application code that uses the literal values must be reviewed."
+  validation: "Every row references a valid value."
+  confidence: 0.6
+  params:
+    exempt_tables: *infra_tables
+    min_values: 5
+
+- id: SCH-035
+  check: schema.json_in_text
+  title: "JSON stored in text column {table}.{column}"
+  category: schema_quality
+  severity: medium
+  kind: confirmed_defect
+  standards: [TYP-025]
+  workloads: [OLTP, lakehouse]
+  root_cause: "JSON documents are stored in a plain text column."
+  business_impact: "Invalid documents can be stored and later break consumers."
+  technical_impact: "The engine cannot validate, index or query inside the documents efficiently."
+  solution: "Change the column to the engine's native JSON type."
+  complexity: medium
+  migration: "Find invalid documents, fix them, then convert."
+  risks: "Fails on invalid documents. A native type can normalize key order and whitespace."
+  validation: "Count of invalid documents is zero, and the catalog shows the new type."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    exempt_dialects: [sqlite]
+    explicit_patterns: ["_json$", "^json"]
+    likely_patterns: ["payload", "metadata", "meta_data", "attributes$", "settings$", "config$", "properties$", "extra$", "(^|_)data$"]
+    target_types: {postgres: jsonb, default: json}
+    min_samples: 10
+    min_ratio: 0.95
+    name_only_confidence: 0.55
+    verified_confidence: 0.95
+    sample_limit: 20000
+
+- id: SCH-036
+  check: schema.uuid_as_text
+  title: "UUID stored as text in {table}.{column}"
+  category: schema_quality
+  severity: medium
+  kind: confirmed_defect
+  standards: [TYP-030]
+  workloads: [OLTP]
+  root_cause: "UUID values are stored in a text column."
+  business_impact: "Storage and index size grow, which raises cost and slows queries."
+  technical_impact: "Text form uses more than twice the bytes, and comparison depends on case and format."
+  solution: "Use the native UUID type or binary(16)."
+  complexity: medium
+  migration: "Validate values, convert, and update every foreign key column together."
+  risks: "All referencing columns must change at the same time."
+  validation: "Count of invalid values is zero, and joins still work."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    lengths: [32, 36]
+    name_patterns: ["uuid", "guid"]
+    candidate_patterns: ["_id$", "^id$"]
+    target_types: {postgres: uuid, generic: uuid}
+    value_pattern: '^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$'
+    min_samples: 20
+    min_ratio: 0.95
+    name_only_confidence: 0.7
+    verified_confidence: 0.95
+    sample_limit: 20000
+
+- id: SCH-037
+  check: schema.key_32bit
+  title: "Generated key {table}.{column} is narrower than 64-bit"
+  category: scalability
+  severity: medium
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [TYP-029, IDX-023]
+  workloads: [OLTP]
+  root_cause: "A generated primary key uses an integer type narrower than 64 bits."
+  business_impact: "A growing table can run out of key values and stop accepting inserts."
+  technical_impact: "Widening later rewrites the table and every referencing key."
+  solution: "Use a 64-bit integer key, widening referencing columns at the same time."
+  complexity: high
+  migration: "Plan an online change of the key and every foreign key that references it."
+  risks: "Long table rewrites, and application code that stores keys in 32-bit fields."
+  validation: "Catalog shows 64-bit on the key and all references."
+  confidence: 0.85
+  params:
+    exempt_tables: *infra_tables
+    bounded_lookup_rows: 1000
+    lookup_name_patterns: ["(^|_)(types?|status|statuses|category|categories|kinds?|lookups?|codes?)$", "^(countries|currencies|languages)$"]
+
+- id: SCH-038
+  check: schema.nullable_by_default
+  title: "Most columns in {table} are nullable"
+  category: schema_quality
+  severity: low
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [INT-008]
+  root_cause: "Columns were left nullable by default, not by decision."
+  business_impact: "Missing values can appear in any record, which reduces data quality."
+  technical_impact: "NULL handling complicates queries and hides missing data."
+  solution: "Set NOT NULL on each column whose absence has no documented meaning."
+  complexity: medium
+  migration: "Backfill or confirm no NULLs, then add NOT NULL one column at a time."
+  risks: "Inserts that omit a column will start to fail."
+  validation: "Catalog nullability matches the agreed design."
+  confidence: 0.7
+  params:
+    exempt_tables: *infra_tables
+    min_columns: 5
+    min_ratio: 0.8
+
+- id: SCH-039
+  check: schema.same_name_type_mismatch
+  title: "{table}.{column} has a different type from the same column elsewhere"
+  category: maintainability
+  severity: medium
+  kind: context_dependent
+  standards: [TYP-020, NAM-004]
+  workloads: [OLTP, data_warehouse]
+  root_cause: "A column with the same name is declared with different types in different tables."
+  business_impact: "Joins can miss rows or return inconsistent results."
+  technical_impact: "Comparisons need implicit conversion and can lose index use."
+  solution: "Use one type for this column in every table; the most common is {usual_type}."
+  complexity: medium
+  migration: "Change the minority columns to the agreed type."
+  risks: "Conversions may fail or truncate. Same-named columns can occasionally mean different things."
+  validation: "Catalog shows a single type for the name."
+  confidence: 0.7
+  params:
+    exempt_tables: *infra_tables
+    generic_columns: *generic_columns
+    name_patterns: ["_id$", "_code$", "_key$", "^(email|sku|currency|country)"]
+    min_tables: 2
+    compare_text_length: false
+    serial_types: *serial_types
+
+- id: SCH-040
+  check: schema.polymorphic_reference
+  title: "Polymorphic reference in {table}.{column}"
+  category: data_integrity
+  severity: medium
+  kind: context_dependent
+  standards: [ERD-006]
+  workloads: [OLTP]
+  root_cause: "A type column and an id column together point at several possible parent tables."
+  business_impact: "References can point to records that do not exist, and reports must special-case each parent type."
+  technical_impact: "No foreign key can protect the relationship."
+  solution: "Use one nullable foreign key per parent, or a shared supertype."
+  complexity: high
+  migration: "Add the new key columns, backfill by type, switch code, then drop the pair."
+  risks: "All code using the pair must change."
+  validation: "Every row has exactly one valid parent reference."
+  confidence: 0.6
+  params:
+    exempt_tables: *infra_tables
+    id_pattern: '^(.+)_id$'
+    type_suffixes: [type, kind, model, class]
+    irregular_plurals: *irregular
+
+- id: SCH-041
+  check: schema.eav_shape
+  title: "Table {table} has an entity-attribute-value shape"
+  category: schema_quality
+  severity: medium
+  kind: context_dependent
+  standards: [TYP-024]
+  workloads: [OLTP]
+  root_cause: "Attributes are stored as name and value rows rather than as typed columns."
+  business_impact: "Reporting is slow and hard to get right, and values are not validated."
+  technical_impact: "No types or constraints on values, and many self-joins per query."
+  solution: "Keep typed columns for attributes that are keys, money, filtered or aggregated."
+  complexity: high
+  migration: "Promote the important attributes to columns, backfill, then switch queries."
+  risks: "A flexible-attribute feature may depend on this shape."
+  validation: "Reports built on the typed columns reconcile with the old ones."
+  confidence: 0.65
+  params:
+    exempt_tables: *infra_tables
+    attribute_patterns: ["^(attribute|attr|attribute_name|attr_name|attribute_key|meta_key|property|property_name|field_name|param_name)$"]
+    value_patterns: ["^(value|val|attribute_value|attr_value|meta_value|property_value|field_value|param_value)$"]
+    max_columns: 8
+
+- id: SCH-042
+  check: schema.god_table
+  title: "Table {table} has a very large number of columns"
+  category: maintainability
+  severity: medium
+  kind: context_dependent
+  standards: [NRM-002, NRM-003]
+  workloads: [OLTP]
+  root_cause: "The table has accumulated attributes of more than one concept."
+  business_impact: "Every change carries more risk, and ownership is unclear."
+  technical_impact: "Wide rows, more contention and repeated NULLs."
+  solution: "Review the table for groups of attributes that belong in their own tables."
+  complexity: high
+  migration: "Split in stages behind a compatibility view."
+  risks: "A wide table can be a deliberate read model."
+  validation: "Reports match before and after."
+  confidence: 0.6
+  params:
+    exempt_tables: *infra_tables
+    max_columns: 60
+
+- id: SCH-043
+  check: schema.charset_mixture
+  title: "Inconsistent or non-Unicode text encoding in {table} ({problem})"
+  category: schema_quality
+  severity: medium
+  kind: confirmed_defect
+  requires: [declared_schema]
+  standards: [TYP-019]
+  root_cause: "Tables were created with different character sets or collations, or with a non-Unicode encoding."
+  business_impact: "Some characters cannot be stored, and text comparisons can give unexpected results."
+  technical_impact: "Joins between mixed collations can fail or lose index use."
+  solution: "Convert the affected tables to the database's single approved Unicode encoding and collation."
+  complexity: medium
+  migration: "Convert in a maintenance window. Test collation changes against unique indexes first."
+  risks: "Rewrites tables. Collation changes can introduce unique-key duplicates."
+  validation: "Catalog shows one encoding, and unique indexes still hold."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    non_unicode_charsets: [latin1, latin2, ascii, cp1250, cp1251, cp1252, win1252, big5, sjis, euckr, gbk]
+
+- id: SCH-044
+  check: schema.missing_audit_columns
+  title: "Table {table} is missing audit column {column}"
+  category: governance
+  severity: low
+  kind: optional_improvement
+  standards: [TST-017, AUD-001]
+  workloads: [OLTP]
+  root_cause: "The table does not record who changed each row and when."
+  business_impact: "It cannot be shown who created or last changed a record."
+  technical_impact: "Incremental extraction and investigation have no change marker."
+  solution: "Add the audit column and populate it from the application or a trigger."
+  complexity: low
+  migration: "Add the column as nullable, backfill where a source exists."
+  risks: "Historic rows cannot be accurately backfilled."
+  validation: "New and updated rows have the column populated."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    exempt_association_tables: true
+    time_types: {postgres: timestamptz, mysql: timestamp, default: timestamp}
+    time_default: CURRENT_TIMESTAMP
+    actor_type: varchar(255)
+
+- id: SCH-045
+  check: schema.table_no_relationships
+  title: "Table {table} has no relationships"
+  category: maintainability
+  severity: informational
+  kind: context_dependent
+  standards: [ERD-001]
+  root_cause: "No foreign keys connect this table, and no column looks like a reference."
+  business_impact: "It may be unused or disconnected from the data model."
+  technical_impact: "No relationship information is available for this table."
+  solution: "Confirm whether the table is standalone by design, or retire it."
+  complexity: low
+  migration: "None until a decision is made."
+  risks: "Configuration and staging tables are legitimately standalone."
+  validation: "A recorded decision exists for the table."
+  confidence: 0.5
+  params:
+    exempt_tables: *infra_tables
+    min_tables: 2
+    reference_suffixes: [id]
+
+- id: SCH-046
+  check: schema.status_without_check
+  title: "Status column {table}.{column} has no CHECK or reference table"
+  category: data_integrity
+  severity: low
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [TYP-022]
+  workloads: [OLTP]
+  root_cause: "A status column accepts any text."
+  business_impact: "Misspelled or invented statuses can appear and break workflows or reports."
+  technical_impact: "Nothing in the schema restricts the value set."
+  solution: "Add a CHECK for a small stable set, or reference a lookup table if the set changes."
+  complexity: low
+  migration: "Clean existing values, then add the CHECK."
+  risks: "A CHECK blocks statuses the application adds later."
+  validation: "No rows violate the constraint."
+  confidence: 0.75
+  params:
+    exempt_tables: *infra_tables
+    name_patterns: ["^status$", "_status$"]
+    max_distinct: 20
+    value_pattern: '^[A-Za-z0-9_ -]{1,40}$'
+    name_only_confidence: 0.45
+    verified_confidence: 0.8
+    sample_limit: 20000
+
+- id: SCH-047
+  check: schema.unbounded_varchar
+  title: "Unbounded varchar columns in {table}"
+  category: maintainability
+  severity: informational
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [TYP-017]
+  workloads: [OLTP]
+  root_cause: "Variable-length text columns are declared without a length, and no reason is recorded."
+  business_impact: "Very long values can be stored without any business limit being applied."
+  technical_impact: "No width constraint. On PostgreSQL there is no storage penalty, so this is for information only."
+  solution: "Record each length as a business limit or a storage choice."
+  complexity: low
+  migration: "None required unless a limit is decided."
+  risks: "Adding limits can reject existing long values."
+  validation: "A design record exists for each column."
+  confidence: 0.6
+  params:
+    exempt_tables: *infra_tables
+    varchar_types: [varchar, character varying, nvarchar]
+    free_text_tokens: [description, comment, comments, note, notes, body, content, message, text, details, summary, reason]
+
+- id: SCH-050
+  check: schema.reserved_word
+  title: "Identifier {identifier} is a reserved word"
+  category: maintainability
+  severity: high
+  kind: confirmed_defect
+  standards: [NAM-011]
+  root_cause: "The name is a reserved word in one of the target engines ({engines})."
+  business_impact: "Queries and tools fail unless the name is quoted, which slows delivery and risks outages."
+  technical_impact: "Every statement must quote the identifier, and migrating between engines can fail."
+  solution: "Rename the object. The word lists are a curated subset of each engine's published reserved words."
+  complexity: medium
+  migration: "Rename with a compatibility view or a coordinated release."
+  risks: "All queries, reports and application mappings must be updated."
+  validation: "The object can be used unquoted on every target engine."
+  confidence: 0.95
+  params:
+    exempt_tables: *infra_tables
+    column_suffix: _value
+    table_suffix: _records
+    reserved_table_prefixes: {sqlite: [sqlite_]}
+    # A curated subset of each engine's reserved words, not a complete list. Non-reserved keywords are not included.
+    reserved_words:
+      postgres: [all, analyse, analyze, and, any, array, as, asc, asymmetric, authorization, binary, both, case, cast, check, collate, collation, column, concurrently, constraint, create, cross, current_catalog, current_date, current_role, current_schema, current_time, current_timestamp, current_user, default, deferrable, desc, distinct, do, else, end, except, "false", fetch, for, foreign, freeze, from, full, grant, group, having, ilike, in, initially, inner, intersect, into, is, isnull, join, lateral, leading, left, like, limit, localtime, localtimestamp, natural, not, notnull, "null", offset, "on", only, or, order, outer, overlaps, placing, primary, references, returning, right, select, session_user, similar, some, symmetric, system_user, table, tablesample, then, to, trailing, "true", union, unique, user, using, variadic, verbose, when, where, window, with]
+      mysql: [accessible, add, all, alter, analyze, and, as, asc, asensitive, before, between, bigint, binary, blob, both, by, call, cascade, case, change, char, character, check, collate, column, condition, constraint, continue, convert, create, cross, cube, cume_dist, current_date, current_time, current_timestamp, current_user, cursor, database, databases, day_hour, day_microsecond, day_minute, day_second, dec, decimal, declare, default, delayed, delete, dense_rank, desc, describe, deterministic, distinct, distinctrow, div, double, drop, dual, each, else, elseif, empty, enclosed, escaped, except, exists, exit, explain, "false", fetch, first_value, float, float4, float8, for, force, foreign, from, fulltext, function, generated, get, grant, group, grouping, groups, having, high_priority, hour_microsecond, hour_minute, hour_second, if, ignore, in, index, infile, inner, inout, insensitive, insert, int, int1, int2, int3, int4, int8, integer, intersect, interval, into, io_after_gtids, io_before_gtids, is, iterate, join, json_table, key, keys, kill, lag, last_value, lateral, lead, leading, leave, left, like, limit, linear, lines, load, localtime, localtimestamp, lock, long, longblob, longtext, loop, low_priority, master_bind, match, maxvalue, mediumblob, mediumint, mediumtext, middleint, minute_microsecond, minute_second, mod, modifies, natural, not, no_write_to_binlog, nth_value, ntile, "null", numeric, of, "on", optimize, optimizer_costs, option, optionally, or, order, out, outer, outfile, over, partition, percent_rank, precision, primary, procedure, purge, range, rank, read, reads, read_write, real, recursive, references, regexp, release, rename, repeat, replace, require, resignal, restrict, return, revoke, right, rlike, row, rows, row_number, schema, schemas, second_microsecond, select, sensitive, separator, set, show, signal, smallint, spatial, specific, sql, sqlexception, sqlstate, sqlwarning, sql_big_result, sql_calc_found_rows, sql_small_result, ssl, starting, stored, straight_join, system, table, terminated, then, tinyblob, tinyint, tinytext, to, trailing, trigger, "true", undo, union, unique, unlock, unsigned, update, usage, use, using, utc_date, utc_time, utc_timestamp, values, varbinary, varchar, varcharacter, varying, virtual, when, where, while, window, with, write, xor, year_month, zerofill]
+      sqlite: [abort, action, add, after, all, alter, always, analyze, and, as, asc, attach, autoincrement, before, begin, between, by, cascade, case, cast, check, collate, column, commit, conflict, constraint, create, cross, current, current_date, current_time, current_timestamp, database, default, deferrable, deferred, delete, desc, detach, distinct, do, drop, each, else, end, escape, except, exclude, exclusive, exists, explain, fail, filter, first, following, for, foreign, from, full, generated, glob, group, groups, having, if, ignore, immediate, in, index, indexed, initially, inner, insert, instead, intersect, into, is, isnull, join, key, last, left, like, limit, match, materialized, natural, "no", not, nothing, notnull, "null", nulls, of, offset, "on", or, order, others, outer, over, partition, plan, pragma, preceding, primary, query, raise, range, recursive, references, regexp, reindex, release, rename, replace, restrict, returning, right, rollback, row, rows, savepoint, select, set, table, temp, temporary, then, ties, to, transaction, trigger, unbounded, union, unique, update, using, vacuum, values, view, virtual, when, where, window, with, without]
+
+- id: SCH-051
+  check: schema.identifier_characters
+  title: "Identifier {identifier} contains disallowed characters"
+  category: maintainability
+  severity: high
+  kind: confirmed_defect
+  standards: [NAM-006]
+  root_cause: "The name uses characters other than ASCII letters, digits and underscores, or does not start with a letter."
+  business_impact: "Tools and exports can fail or mishandle the object."
+  technical_impact: "The name always requires quoting and is not portable."
+  solution: "Rename the object using only ASCII letters, digits and underscores."
+  complexity: medium
+  migration: "Rename with a coordinated release."
+  risks: "All consumers must be updated."
+  validation: "The name matches the allowed pattern."
+  confidence: 0.98
+  params:
+    exempt_tables: *infra_tables
+    allowed_pattern: '^[A-Za-z][A-Za-z0-9_]*$'
+    fallback_prefix: x_
+
+- id: SCH-052
+  check: schema.identifier_case
+  title: "Identifier {identifier} is not lowercase snake case"
+  category: maintainability
+  severity: low
+  kind: optional_improvement
+  standards: [NAM-012, NAM-008]
+  root_cause: "The name uses mixed case or irregular underscores."
+  business_impact: "Inconsistent names slow development and cause mistakes."
+  technical_impact: "Mixed-case names need quoting on some engines and fold differently on others."
+  solution: "Rename to lowercase words separated by single underscores."
+  complexity: medium
+  migration: "Rename with a compatibility layer or a coordinated release."
+  risks: "All queries must change."
+  validation: "Names match the style pattern."
+  confidence: 0.95
+  params:
+    exempt_tables: *infra_tables
+    allowed_pattern: '^[A-Za-z][A-Za-z0-9_]*$'
+    style_pattern: '^[a-z][a-z0-9]*(_[a-z0-9]+)*$'
+
+- id: SCH-053
+  check: schema.identifier_length
+  title: "Identifier {identifier} is too long"
+  category: maintainability
+  severity: high
+  kind: confirmed_defect
+  standards: [NAM-009, NAM-010]
+  root_cause: "The name exceeds the identifier limit for the target engines."
+  business_impact: "Deployment to a target engine can fail."
+  technical_impact: "Engines reject or silently truncate names over their limit, and truncation can create collisions."
+  solution: "Shorten the identifier."
+  complexity: medium
+  migration: "Rename with a coordinated release."
+  risks: "Consumers must be updated."
+  validation: "The length is within the limit."
+  confidence: 0.98
+  params:
+    exempt_tables: *infra_tables
+    limit: null
+
+- id: SCH-054
+  check: schema.identifier_quoting_collision
+  title: "Identifiers in {table} differ only by letter case"
+  category: maintainability
+  severity: medium
+  kind: confirmed_defect
+  standards: [NAM-008]
+  root_cause: "Objects depend on quoting or letter case to be distinct."
+  business_impact: "Exports and integrations can overwrite or confuse one object with the other."
+  technical_impact: "Engines and tools fold case differently, so the objects can collide."
+  solution: "Rename so identifiers are distinct without quoting."
+  complexity: medium
+  migration: "Rename with a coordinated release."
+  risks: "Consumers must be updated."
+  validation: "No lower-cased name is repeated."
+  confidence: 0.98
+  params:
+    exempt_tables: *infra_tables
+
+- id: SCH-055
+  check: schema.table_plural_naming
+  title: "Table naming differs from the plural convention"
+  category: maintainability
+  severity: low
+  kind: optional_improvement
+  standards: [NAM-013]
+  root_cause: "The table name does not follow the configured singular or plural convention."
+  business_impact: "Inconsistent names make the schema harder to learn and use."
+  technical_impact: "Generated code and joins follow different patterns across tables."
+  solution: "Rename to the convention, or record the existing style as an approved exception if the whole schema is uniform."
+  complexity: medium
+  migration: "Rename with a compatibility view."
+  risks: "All queries must change; low value for a schema that is already uniform."
+  validation: "Table names follow one convention."
+  confidence: 0.7
+  params:
+    exempt_tables: *infra_tables
+    plural: null
+    uniform_ratio: 0.8
+    uniform_min_count: 5
+    plural_words: [people, children, men, women, data, media, criteria]
+    singular_endings: [ss, us, is]
+    uncountable_words: [data, information, info, staff, equipment, news, series, media, metadata, history, audit, log, status, config, configuration, inventory, stock, mail, software, hardware, feedback, personnel, analytics, statistics]
+    irregular_plurals: *irregular
+
+- id: SCH-056
+  check: schema.type_prefix
+  title: "Identifier {identifier} carries a type prefix"
+  category: maintainability
+  severity: low
+  kind: optional_improvement
+  standards: [NAM-015]
+  root_cause: "The name repeats the object or data type as a prefix."
+  business_impact: "Names are longer and harder to read, with no added meaning."
+  technical_impact: "The prefix can become wrong if the type changes."
+  solution: "Remove the prefix."
+  complexity: low
+  migration: "Rename with a coordinated release."
+  risks: "All queries must change."
+  validation: "No names carry the prefix."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    table_prefixes: [tbl_, tb_, table_]
+    column_prefixes: [col_, fld_, str_, int_, bool_]
+
+- id: SCH-057
+  check: schema.pk_naming
+  title: "Primary key naming differs from the <entity_singular>_id form"
+  category: maintainability
+  severity: low
+  kind: optional_improvement
+  standards: [NAM-017]
+  root_cause: "The surrogate primary key is not named after its entity."
+  business_impact: "Joins are less self-explanatory."
+  technical_impact: "Many tables share one column name, so unqualified references are ambiguous."
+  solution: "Rename to the standard form, or record the existing uniform convention as an approved exception."
+  complexity: medium
+  migration: "Rename with a coordinated release, or record the exception."
+  risks: "ORM mappings and all references must change."
+  validation: "Key names follow one convention."
+  confidence: 0.85
+  params:
+    exempt_tables: *infra_tables
+    uniform_ratio: 0.8
+    uniform_min_count: 3
+    irregular_plurals: *irregular
+
+- id: SCH-058
+  check: schema.fk_naming
+  title: "Foreign key column {table}.{column} is not named for its parent"
+  category: maintainability
+  severity: low
+  kind: optional_improvement
+  standards: [NAM-018]
+  root_cause: "The reference column does not use the parent's singular name with _id, or a role-qualified form."
+  business_impact: "Relationships are harder to recognize."
+  technical_impact: "Tools that infer relationships from names miss this one."
+  solution: "Rename to {expected} or <role>_{expected}."
+  complexity: medium
+  migration: "Rename with a coordinated release."
+  risks: "All queries must change."
+  validation: "Column follows the pattern."
+  confidence: 0.85
+  params:
+    exempt_tables: *infra_tables
+    irregular_plurals: *irregular
+
+- id: SCH-059
+  check: schema.constraint_naming
+  title: "Constraints or indexes in {table} use non-standard names"
+  category: maintainability
+  severity: low
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [NAM-023]
+  root_cause: "Names were generated by the engine or do not follow the pk_, fk_, unique_, check_ and index_ forms."
+  business_impact: "Names differ between environments, which complicates support and releases."
+  technical_impact: "Migrations that refer to engine-generated names break across environments."
+  solution: "Rename to the standard forms in a planned change."
+  complexity: low
+  migration: "Rename constraints and indexes; on engines without rename, drop and re-create."
+  risks: "Monitoring or scripts that use the old names must be updated."
+  validation: "Names match the standard forms."
+  confidence: 0.85
+  params:
+    exempt_tables: *infra_tables
+    exempt_names: [PRIMARY]
+    pk_pattern: '^pk_'
+    fk_pattern: '^fk_'
+    unique_pattern: '^(unique_|index_)'
+    index_pattern: '^index_'
+    check_pattern: '^check_'
+    max_listed: 10
+
+- id: SCH-060
+  check: schema.boolean_naming
+  title: "Boolean column {table}.{column} is not named is_ or has_"
+  category: maintainability
+  severity: low
+  kind: optional_improvement
+  standards: [NAM-020]
+  root_cause: "The boolean column does not use the is_ or has_ form."
+  business_impact: "Its meaning is less clear to report authors."
+  technical_impact: "Readers cannot tell the column's type from its name."
+  solution: "Rename the column."
+  complexity: low
+  migration: "Rename with a coordinated release."
+  risks: "All queries must change."
+  validation: "Name follows the pattern."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    allowed_pattern: '^(is|has)_'
+
+- id: SCH-061
+  check: schema.temporal_naming
+  title: "{label} column {table}.{column} does not follow the naming form"
+  category: maintainability
+  severity: low
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [NAM-021]
+  root_cause: "The column does not use the <event>_at form for instants, or <event>_date for calendar dates."
+  business_impact: "Readers can confuse instants with calendar dates, leading to reporting errors."
+  technical_impact: "The temporal meaning cannot be inferred from the name."
+  solution: "Rename to {expected}."
+  complexity: low
+  migration: "Rename with a coordinated release."
+  risks: "All queries must change."
+  validation: "Name follows the pattern."
+  confidence: 0.85
+  params:
+    exempt_tables: *infra_tables
+    strip_suffix_pattern: '_(at|on|date|time|datetime|timestamp|ts|dt)$'
+    instant_pattern: '_at$'
+    date_pattern: '(_date|date|_day)$'

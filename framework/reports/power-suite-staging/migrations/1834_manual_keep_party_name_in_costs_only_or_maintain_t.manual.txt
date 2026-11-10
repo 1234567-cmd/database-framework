@@ -1,0 +1,4 @@
+Step M1834: Manual: Keep party_name in costs only, or maintain the copy through one controlled mecha
+MANUAL: this step has no generated SQL.
+Keep party_name in costs only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-10069caf

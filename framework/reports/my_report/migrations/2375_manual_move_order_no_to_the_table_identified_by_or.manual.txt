@@ -1,0 +1,4 @@
+Step M2375: Manual: Move order_no to the table identified by orderId and join to it.
+MANUAL: this step has no generated SQL.
+Move order_no to the table identified by orderId and join to it.
+Findings: SCH-013-2ed57d92

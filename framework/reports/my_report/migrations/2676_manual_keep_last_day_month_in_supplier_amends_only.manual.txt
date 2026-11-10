@@ -1,0 +1,4 @@
+Step M2676: Manual: Keep last_day_month in supplier_amends only, or maintain the copy through one co
+MANUAL: this step has no generated SQL.
+Keep last_day_month in supplier_amends only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-efce0ef4

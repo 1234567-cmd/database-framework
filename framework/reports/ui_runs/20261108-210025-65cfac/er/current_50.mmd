@@ -1,0 +1,17 @@
+%% Current schema of power-suite-staging (50 of 57: around supplier_contacts)
+erDiagram
+    supplier_contacts {
+        int id PK
+        int supplier_id FK
+        varchar_255 sup_sur_name
+        varchar_255 sup_given_name
+        varchar_255 title
+        varchar_255 tel
+        varchar_255 email
+        datetime created_at
+        datetime updated_at
+    }
+    suppliers {
+        external stub "see the diagram that holds this table"
+    }
+    suppliers ||--o{ supplier_contacts : "supplier_id"

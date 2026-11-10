@@ -1,0 +1,4 @@
+Step M1516: Manual: Keep header_name in branch_document_template only, or maintain the copy through 
+MANUAL: this step has no generated SQL.
+Keep header_name in branch_document_template only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-2eb715b7

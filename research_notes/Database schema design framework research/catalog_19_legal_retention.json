@@ -1,0 +1,953 @@
+[
+ {
+  "id": "LEG-01",
+  "title": "VAT Directive 2006/112/EC (consolidated 14 April 2025), Arts 226, 233, 244, 247",
+  "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02006L0112-20250414",
+  "organization_author": "Council of the European Union / EUR-Lex",
+  "category": "Invoicing law",
+  "subcategory": "EU VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "Consolidated version 2025-04-14",
+  "core_concepts": [
+   "sequential invoice number",
+   "series",
+   "invoice integrity",
+   "storage period set nationally"
+  ],
+  "engineering_principles": "Invoice numbers are sequential per series and unique; integrity holds for the whole storage period.",
+  "practical_examples": "Art. 226(2) wording; Art. 233 audit trail between invoice and supply.",
+  "why_it_matters": "Baseline rule for any EU invoicing schema.",
+  "authority_level": 5,
+  "authority_rationale": "Primary EU legislation, EUR-Lex consolidated text.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. Silent on gaps."
+ },
+ {
+  "id": "LEG-02",
+  "title": "Council Directive (EU) 2025/516 (ViDA)",
+  "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202500516",
+  "organization_author": "Council of the European Union / EUR-Lex",
+  "category": "Invoicing law",
+  "subcategory": "EU VAT reform",
+  "resource_type": "official_documentation",
+  "publication_date": "2025-03-25",
+  "core_concepts": [
+   "e-invoicing",
+   "digital reporting",
+   "corrective invoice reference",
+   "phased application"
+  ],
+  "engineering_principles": "Plan for structured e-invoices and a corrective invoice link to the original number.",
+  "practical_examples": "Art. 226(16) from 1 July 2030; Art. 6 transposition dates.",
+  "why_it_matters": "Sets future schema fields for EU invoicing.",
+  "authority_level": 5,
+  "authority_rationale": "Primary EU legislation in the Official Journal.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. National transposition status not researched."
+ },
+ {
+  "id": "LEG-03",
+  "title": "Regulation (EU) 2016/679 (GDPR), Arts 9, 17, 30(5)",
+  "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679",
+  "organization_author": "European Parliament and Council / EUR-Lex",
+  "category": "Privacy law",
+  "subcategory": "EU data protection",
+  "resource_type": "official_documentation",
+  "publication_date": "2016-04-27",
+  "core_concepts": [
+   "special categories",
+   "right to erasure",
+   "legal obligation exception",
+   "records of processing exemption"
+  ],
+  "engineering_principles": "Erasure is a duty with exceptions applied to the extent necessary.",
+  "practical_examples": "Art. 17(3)(b) permits retention needed for a Union or Member State legal obligation.",
+  "why_it_matters": "Governs conflict between deletion and statutory retention.",
+  "authority_level": 5,
+  "authority_rationale": "Primary EU legislation.",
+  "applies_to": [
+   "OLTP",
+   "OLAP",
+   "data_warehouse",
+   "data_lake",
+   "streaming",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-04",
+  "title": "Umsatzsteuergesetz section 14 (invoice content)",
+  "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+  "organization_author": "German Federal Ministry of Justice (gesetze-im-internet)",
+  "category": "Invoicing law",
+  "subcategory": "Germany VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "Current text at access",
+  "core_concepts": [
+   "fortlaufende Nummer",
+   "one or more number series",
+   "issued once"
+  ],
+  "engineering_principles": "Invoice number must be issued once only.",
+  "practical_examples": "Section 14(4) point 4.",
+  "why_it_matters": "German invoice number rule.",
+  "authority_level": 5,
+  "authority_rationale": "Official German federal law portal.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Also read section 14b (https://www.gesetze-im-internet.de/ustg_1980/__14b.html): invoices retained 8 years."
+ },
+ {
+  "id": "LEG-05",
+  "title": "Abgabenordnung section 147 (retention of records)",
+  "url": "https://www.gesetze-im-internet.de/ao_1977/__147.html",
+  "organization_author": "German Federal Ministry of Justice (gesetze-im-internet)",
+  "category": "Retention law",
+  "subcategory": "Germany tax",
+  "resource_type": "official_documentation",
+  "publication_date": "Current text at access",
+  "core_concepts": [
+   "10/8/6 year classes",
+   "period suspended while tax open",
+   "system migration rule"
+  ],
+  "engineering_principles": "Retention depends on record class and open tax assessment periods.",
+  "practical_examples": "Section 147(3),(4); read with HGB 257 (https://www.gesetze-im-internet.de/hgb/__257.html).",
+  "why_it_matters": "Shows retention needs class, start event and hold override.",
+  "authority_level": 5,
+  "authority_rationale": "Official German federal law portal.",
+  "applies_to": [
+   "OLTP",
+   "data_warehouse",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly, HGB 257 read too. Transitional provision for 8 years not read."
+ },
+ {
+  "id": "LEG-06",
+  "title": "UStAE section 14.5 Pflichtangaben in der Rechnung (BMF Umsatzsteuer-Handausgabe)",
+  "url": "https://usth.bundesfinanzministerium.de/usth/2022/A-Umsatzsteuergesetz/IV-Steuer-und-Vorsteuer/Paragraf-14/ae-14-5.html",
+  "organization_author": "German Federal Ministry of Finance",
+  "category": "Invoicing guidance",
+  "subcategory": "Germany VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "2022 handbook edition",
+  "core_concepts": [
+   "gap tolerance",
+   "number ranges"
+  ],
+  "engineering_principles": "Reported: a gap-free sequence is not mandatory but uniqueness is.",
+  "practical_examples": "Paragraph 10.",
+  "why_it_matters": "Germany gap question.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority guidance; reading not confirmed directly.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": false,
+  "verified_on": null,
+  "notes": "HTTP 503 at research time; content known only from search-engine snippets. Not opened."
+ },
+ {
+  "id": "LEG-07",
+  "title": "BOFiP BOI-TVA-DECLA-30-20-20-10 Mentions obligatoires generales",
+  "url": "https://bofip.impots.gouv.fr/bofip/140-PGP.html/identifiant=BOI-TVA-DECLA-30-20-20-10-20121231",
+  "organization_author": "Direction generale des Finances publiques (France)",
+  "category": "Invoicing guidance",
+  "subcategory": "France VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "Identifier dated 2012-12-31",
+  "core_concepts": [
+   "sequence chronologique et continue",
+   "series",
+   "prefix per series"
+  ],
+  "engineering_principles": "Chronological, continuous numbering in each justified series.",
+  "practical_examples": "Paragraphs 70 to 110, examples of justified series.",
+  "why_it_matters": "Strictest EU wording found on continuity.",
+  "authority_level": 5,
+  "authority_rationale": "Official French tax doctrine.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. No passage on gaps or spoiled numbers."
+ },
+ {
+  "id": "LEG-08",
+  "title": "All about billing (service-public)",
+  "url": "https://entreprendre.service-public.gouv.fr/vosdroits/F23208?lang=en",
+  "organization_author": "French government (service-public)",
+  "category": "Invoicing guidance",
+  "subcategory": "France business",
+  "resource_type": "official_documentation",
+  "publication_date": "Not captured",
+  "core_concepts": [
+   "continuous sequence without rupture"
+  ],
+  "engineering_principles": "Official summary says the sequence is without rupture.",
+  "practical_examples": "Unique number line.",
+  "why_it_matters": "Corroborates French continuity.",
+  "authority_level": 4,
+  "authority_rationale": "Official information site, not doctrine.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-09",
+  "title": "BOFiP BOI-CF-COM-10-10-30-10 Delai et mode de conservation des documents",
+  "url": "https://bofip.impots.gouv.fr/bofip/8877-PGP.html/identifiant=BOI-CF-COM-10-10-30-10-20140528",
+  "organization_author": "Direction generale des Finances publiques (France)",
+  "category": "Retention guidance",
+  "subcategory": "France tax",
+  "resource_type": "official_documentation",
+  "publication_date": "Page displayed version in force 2013-10-18 to 2014-05-28",
+  "core_concepts": [
+   "six year rule",
+   "LPF L102 B"
+  ],
+  "engineering_principles": "Six years from last transaction or document date.",
+  "practical_examples": "Paragraph 1.",
+  "why_it_matters": "French tax retention.",
+  "authority_level": 4,
+  "authority_rationale": "Official doctrine but older version displayed.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly; check for a later version. L123-22 Code de commerce (10 years) known from search snippet only."
+ },
+ {
+  "id": "LEG-10",
+  "title": "Risoluzione n. 1/E del 10 gennaio 2013",
+  "url": "https://www.agenziaentrate.gov.it/portale/documents/20143/304338/Risoluzione+1++10012013a_risoluzione+1e.pdf/71b92d56-5b2e-6e70-a1c1-47cf4d365a29",
+  "organization_author": "Agenzia delle Entrate (Italy)",
+  "category": "Invoicing guidance",
+  "subcategory": "Italy VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "2013-01-10",
+  "core_concepts": [
+   "numero progressivo",
+   "identification with date"
+  ],
+  "engineering_principles": "Any progressive numbering that gives unique identification.",
+  "practical_examples": "Multi-year running sequence allowed.",
+  "why_it_matters": "Italy numbering rule.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority resolution.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. Does not address gaps."
+ },
+ {
+  "id": "LEG-11",
+  "title": "Real Decreto 1619/2012 Reglamento de facturacion (consolidated)",
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2012-14696",
+  "organization_author": "Boletin Oficial del Estado (Spain)",
+  "category": "Invoicing law",
+  "subcategory": "Spain VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "Consolidated update 2026-03-31",
+  "core_concepts": [
+   "correlative numbering",
+   "mandatory separate series",
+   "conservation"
+  ],
+  "engineering_principles": "Sequential within series, separate series for corrective invoices.",
+  "practical_examples": "Arts 6.1.a and 19.",
+  "why_it_matters": "Spain numbering rule.",
+  "authority_level": 5,
+  "authority_rationale": "Official legal gazette consolidation.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Read via WebFetch summary only."
+ },
+ {
+  "id": "LEG-12",
+  "title": "Preguntas frecuentes: Caracteristicas y requisitos de los SIF: trazabilidad",
+  "url": "https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu/preguntas-frecuentes/caracteristicas-requisitos-sif-trazabilidad.html",
+  "organization_author": "Agencia Tributaria (Spain)",
+  "category": "Invoicing guidance",
+  "subcategory": "Spain billing software",
+  "resource_type": "official_documentation",
+  "publication_date": "2026-10-21",
+  "core_concepts": [
+   "billing record chain",
+   "no gaps in chain"
+  ],
+  "engineering_principles": "Billing records chain; invoice number changes do not break it.",
+  "practical_examples": "Year-end renumbering does not affect traceability.",
+  "why_it_matters": "Distinguishes record chains from invoice numbers.",
+  "authority_level": 4,
+  "authority_rationale": "Tax authority FAQ.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Read via WebFetch summary only."
+ },
+ {
+  "id": "LEG-13",
+  "title": "Record keeping (VAT Notice 700/21)",
+  "url": "https://www.gov.uk/guidance/record-keeping-for-vat-notice-70021",
+  "organization_author": "HM Revenue and Customs (UK)",
+  "category": "Invoicing and retention guidance",
+  "subcategory": "UK VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "Not captured",
+  "core_concepts": [
+   "six years",
+   "sequential number"
+  ],
+  "engineering_principles": "Keep VAT records at least 6 years.",
+  "practical_examples": "Sections 2.4 and 4.1.",
+  "why_it_matters": "UK VAT retention.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority published notice.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-14",
+  "title": "VATREC5010 VAT invoice: details on a full VAT invoice",
+  "url": "https://www.gov.uk/hmrc-internal-manuals/vat-trader-records/vatrec5010",
+  "organization_author": "HM Revenue and Customs (UK)",
+  "category": "Invoicing guidance",
+  "subcategory": "UK VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "Not captured",
+  "core_concepts": [
+   "gaps with explanation",
+   "multiple sequences",
+   "higher start number"
+  ],
+  "engineering_principles": "Breaks are acceptable if the spoiled invoice is retained or explained.",
+  "practical_examples": "Q and A on cancelled invoices.",
+  "why_it_matters": "Clearest statement on gaps.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority internal manual.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-15",
+  "title": "Companies Act 2006 section 388",
+  "url": "https://www.legislation.gov.uk/ukpga/2006/46/section/388",
+  "organization_author": "UK Parliament / legislation.gov.uk",
+  "category": "Retention law",
+  "subcategory": "UK company records",
+  "resource_type": "official_documentation",
+  "publication_date": "Current text at access",
+  "core_concepts": [
+   "three years private",
+   "six years public"
+  ],
+  "engineering_principles": "Period depends on company type.",
+  "practical_examples": "Section 388(4).",
+  "why_it_matters": "UK company accounting records.",
+  "authority_level": 5,
+  "authority_rationale": "Primary UK legislation.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-16",
+  "title": "How long should I keep records",
+  "url": "https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records",
+  "organization_author": "Internal Revenue Service (US)",
+  "category": "Retention guidance",
+  "subcategory": "US tax",
+  "resource_type": "official_documentation",
+  "publication_date": "Not captured",
+  "core_concepts": [
+   "periods of limitations",
+   "employment tax four years"
+  ],
+  "engineering_principles": "Periods follow the limitation period.",
+  "practical_examples": "3, 6, 7 years and indefinite cases.",
+  "why_it_matters": "US tax retention.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority guidance.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-17",
+  "title": "17 CFR 240.17a-4 Records to be preserved by certain exchange members, brokers and dealers",
+  "url": "https://www.law.cornell.edu/cfr/text/17/240.17a-4",
+  "organization_author": "Legal Information Institute, reproducing the CFR",
+  "category": "Retention law",
+  "subcategory": "US broker-dealers",
+  "resource_type": "official_documentation",
+  "publication_date": "Current at access",
+  "core_concepts": [
+   "six and three year classes",
+   "audit trail or WORM"
+  ],
+  "engineering_principles": "Electronic recordkeeping needs an audit trail or non-rewriteable format.",
+  "practical_examples": "Paragraphs (a) to (c), (f).",
+  "why_it_matters": "Only for broker-dealers; often misapplied.",
+  "authority_level": 4,
+  "authority_rationale": "Reproduction of federal regulation; eCFR blocked automated page access.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly from Cornell LII."
+ },
+ {
+  "id": "LEG-18",
+  "title": "Sales Tax Act 1990 (updated to 2025-26)",
+  "url": "https://download1.fbr.gov.pk/Docs/202586148252375SalesTaxActupdatedupto2025-26.pdf",
+  "organization_author": "Federal Board of Revenue (Pakistan)",
+  "category": "Invoicing and retention law",
+  "subcategory": "Pakistan sales tax",
+  "resource_type": "official_documentation",
+  "publication_date": "Updated to 2025-26",
+  "core_concepts": [
+   "serially numbered tax invoice",
+   "six year retention"
+  ],
+  "engineering_principles": "Serial invoices and six years or until proceedings end.",
+  "practical_examples": "Sections 23 and 24.",
+  "why_it_matters": "Pakistan core rule.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority consolidation of statute.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. Consolidation, check gazette for legal citation."
+ },
+ {
+  "id": "LEG-19",
+  "title": "Sales Tax Rules 2006 (updated to 2025-08-06), Chapter XIV",
+  "url": "https://download1.fbr.gov.pk/Docs/2025881385446623STR-2006-UpdatedUpto06-08-2025(ver-iv).pdf",
+  "organization_author": "Federal Board of Revenue (Pakistan)",
+  "category": "E-invoicing rules",
+  "subcategory": "Pakistan sales tax",
+  "resource_type": "official_documentation",
+  "publication_date": "Updated to 2025-08-06",
+  "core_concepts": [
+   "FBR invoice number",
+   "QR code",
+   "activity logs",
+   "rule 150S retention"
+  ],
+  "engineering_principles": "Store FBR-assigned number and retain 6 years electronically.",
+  "practical_examples": "Rule 150S(1).",
+  "why_it_matters": "Pakistan e-invoicing data.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority rules.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly, plus Chapter XIV PDF. FBR FAQ (https://fbr.gov.pk/faqs/173967/173969) opened; integration dates conflict with reported SRO table."
+ },
+ {
+  "id": "LEG-20",
+  "title": "Income Tax Ordinance 2001 (amended to 31.07.2025), section 174",
+  "url": "https://download1.fbr.gov.pk/Docs/2025881983148210Income-Tax-Ordinance,-2001-Amended-upto-31.07.2025.pdf",
+  "organization_author": "Federal Board of Revenue (Pakistan)",
+  "category": "Retention law",
+  "subcategory": "Pakistan income tax",
+  "resource_type": "official_documentation",
+  "publication_date": "Amended to 2025-07-31",
+  "core_concepts": [
+   "six years",
+   "pending proceedings"
+  ],
+  "engineering_principles": "Six years after tax year, extended by proceedings.",
+  "practical_examples": "Section 174(3).",
+  "why_it_matters": "Pakistan tax retention.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority consolidation.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-21",
+  "title": "Companies Act 2017, section 220",
+  "url": "https://pakistancode.gov.pk/pdffiles/administrator89de324eeaa53c96ff701820d2e007e4.pdf",
+  "organization_author": "Government of Pakistan (Pakistan Code)",
+  "category": "Retention law",
+  "subcategory": "Pakistan companies",
+  "resource_type": "official_documentation",
+  "publication_date": "As hosted at access",
+  "core_concepts": [
+   "ten financial years",
+   "vouchers"
+  ],
+  "engineering_principles": "Books and vouchers for ten financial years.",
+  "practical_examples": "Section 220(5).",
+  "why_it_matters": "Pakistan company records.",
+  "authority_level": 5,
+  "authority_rationale": "Official legal code portal.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-22",
+  "title": "Cabinet Decision 52 of 2017 VAT Executive Regulation (MoF compilation)",
+  "url": "https://mof.gov.ae/wp-content/uploads/2024/10/Executive-Regulation-of-Federal-Decree-Law-No-8-of-2017.pdf",
+  "organization_author": "Ministry of Finance (UAE)",
+  "category": "Invoicing law",
+  "subcategory": "UAE VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "Uploaded 2024-10",
+  "core_concepts": [
+   "sequential or unique number showing order"
+  ],
+  "engineering_principles": "The invoice number must show order within a sequence.",
+  "practical_examples": "Article 59(1)(d).",
+  "why_it_matters": "UAE number rule.",
+  "authority_level": 5,
+  "authority_rationale": "Ministry compilation of regulation.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. Amendment citation conflict noted."
+ },
+ {
+  "id": "LEG-23",
+  "title": "Cabinet Decision 74 of 2023 Executive Regulation of the Tax Procedures Law",
+  "url": "https://tax.gov.ae/Datafolder/Files/Legislation/Cabinet%20Decision%20No.%2074%20of%202023%20on%20Executive%20Regulation%20of%20Federal%20Decree-Law%20No.%2028%20of%202022%20on%20Tax%20Procedures%20-%20For%20Publishing.pdf",
+  "organization_author": "Federal Tax Authority (UAE)",
+  "category": "Retention law",
+  "subcategory": "UAE tax",
+  "resource_type": "official_documentation",
+  "publication_date": "2023",
+  "core_concepts": [
+   "five years",
+   "seven years real estate",
+   "extensions"
+  ],
+  "engineering_principles": "Five years, with four year extensions.",
+  "practical_examples": "Article 3.",
+  "why_it_matters": "UAE retention.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority publication of regulation.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. Federal Decree-Law 28/2022 Art 4 also read."
+ },
+ {
+  "id": "LEG-24",
+  "title": "UAE Electronic Invoicing Guidelines V2.0",
+  "url": "https://mof.gov.ae/wp-content/uploads/2026/10/UAE-Electronic-Invoicing-Guidelines_En.pdf",
+  "organization_author": "Ministry of Finance (UAE)",
+  "category": "E-invoicing guidance",
+  "subcategory": "UAE e-invoicing",
+  "resource_type": "official_documentation",
+  "publication_date": "2026-10-26",
+  "core_concepts": [
+   "UUID plus sequential number",
+   "data retention"
+  ],
+  "engineering_principles": "UUID does not replace the sequential number.",
+  "practical_examples": "Sections 5.4 and glossary.",
+  "why_it_matters": "UAE e-invoice fields.",
+  "authority_level": 5,
+  "authority_rationale": "Ministry guidance.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-25",
+  "title": "Guideline for Tax Invoicing and Records under VAT Provisions",
+  "url": "https://zatca.gov.sa/en/HelpCenter/guidelines/Documents/Guideline-for-Tax-Invoicing-and-Records-under-VAT-Provisions.pdf",
+  "organization_author": "Zakat, Tax and Customs Authority (Saudi Arabia)",
+  "category": "Invoicing and retention guidance",
+  "subcategory": "KSA VAT",
+  "resource_type": "official_documentation",
+  "publication_date": "Not captured",
+  "core_concepts": [
+   "sequential number",
+   "six years",
+   "15 years real estate",
+   "local storage"
+  ],
+  "engineering_principles": "Sequence, retention and location in one guide.",
+  "practical_examples": "Sections 8.3.1 to 8.3.3.",
+  "why_it_matters": "KSA retention and location.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority guideline.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-26",
+  "title": "E-invoicing Detailed Technical Guidelines v2",
+  "url": "https://zatca.gov.sa/en/E-Invoicing/Introduction/Guidelines/Documents/E-invoicing-Detailed-Technical-Guideline.pdf",
+  "organization_author": "Zakat, Tax and Customs Authority (Saudi Arabia)",
+  "category": "E-invoicing guidance",
+  "subcategory": "KSA e-invoicing",
+  "resource_type": "official_documentation",
+  "publication_date": "2022-11",
+  "core_concepts": [
+   "ICV not reused",
+   "rejected hash in chain"
+  ],
+  "engineering_principles": "A counter is never reused, and rejected documents stay in the chain.",
+  "practical_examples": "FAQ on rejected invoices.",
+  "why_it_matters": "Append-only counter model.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority technical guidance.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. Later versions may exist."
+ },
+ {
+  "id": "LEG-27",
+  "title": "Electronic Invoice XML Implementation Standard v1.2",
+  "url": "https://zatca.gov.sa/ar/E-Invoicing/SystemsDevelopers/Documents/20230519_ZATCA_Electronic_Invoice_XML_Implementation_Standard_%20vF.pdf",
+  "organization_author": "Zakat, Tax and Customs Authority (Saudi Arabia)",
+  "category": "E-invoicing standard",
+  "subcategory": "KSA e-invoicing",
+  "resource_type": "official_documentation",
+  "publication_date": "2023-05-19 per file name",
+  "core_concepts": [
+   "KSA-16 counter",
+   "KSA-13 previous hash"
+  ],
+  "engineering_principles": "Counter and base64 SHA-256 previous hash are required fields.",
+  "practical_examples": "Business rules BR-KSA series.",
+  "why_it_matters": "Exact field definitions.",
+  "authority_level": 5,
+  "authority_rationale": "Tax authority specification.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. Later versions may exist."
+ },
+ {
+  "id": "LEG-28",
+  "title": "California Consumer Privacy Act statute (CPPA copy, effective 01/01/2025), Civil Code 1798.105",
+  "url": "https://cppa.ca.gov/regulations/pdf/ccpa_statute.pdf",
+  "organization_author": "California Privacy Protection Agency",
+  "category": "Privacy law",
+  "subcategory": "California",
+  "resource_type": "official_documentation",
+  "publication_date": "Update posted January 2025",
+  "core_concepts": [
+   "deletion",
+   "notify providers",
+   "legal obligation exception"
+  ],
+  "engineering_principles": "Deletion extends to providers and third parties.",
+  "practical_examples": "Section 1798.105(c),(d).",
+  "why_it_matters": "California deletion rule.",
+  "authority_level": 4,
+  "authority_rationale": "Agency copy of statute; leginfo itself not opened.",
+  "applies_to": [
+   "OLTP",
+   "data_warehouse",
+   "data_lake",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Binary saved by WebFetch, text extracted with pdftotext. Statute changes after 2025-01 not checked."
+ },
+ {
+  "id": "LEG-29",
+  "title": "CCPA Regulations (effective 1/1/2026), section 7022",
+  "url": "https://cppa.ca.gov/regulations/pdf/ccpa_statute_eff_20260101.pdf",
+  "organization_author": "California Privacy Protection Agency",
+  "category": "Privacy regulation",
+  "subcategory": "California",
+  "resource_type": "official_documentation",
+  "publication_date": "Effective 2026-01-01",
+  "core_concepts": [
+   "archived or backup systems delay",
+   "restore triggers deletion"
+  ],
+  "engineering_principles": "Backup deletion may wait until restore or next use.",
+  "practical_examples": "Section 7022 (d) in this text.",
+  "why_it_matters": "Clearest statutory backup rule found.",
+  "authority_level": 5,
+  "authority_rationale": "Agency regulation text.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "The PDF at this URL contained the Regulations, despite the file name. Text extracted with pdftotext."
+ },
+ {
+  "id": "LEG-30",
+  "title": "PCI DSS v4.0 SAQ D for Merchants",
+  "url": "https://listings.pcisecuritystandards.org/documents/PCI-DSS-v4-0-SAQ-D-Merchant.pdf",
+  "organization_author": "PCI Security Standards Council",
+  "category": "Card data standard",
+  "subcategory": "PCI DSS",
+  "resource_type": "international_standard",
+  "publication_date": "2022-04",
+  "core_concepts": [
+   "SAD not retained",
+   "minimum storage",
+   "12 month log history"
+  ],
+  "engineering_principles": "No SAD after authorization and defined log retention.",
+  "practical_examples": "Requirements 3.2.1, 3.3.1, 10.5.1.",
+  "why_it_matters": "Public approximation of Requirements 3 and 10.",
+  "authority_level": 3,
+  "authority_rationale": "Council publication but for v4.0, not v4.0.1.",
+  "applies_to": [
+   "OLTP",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. v4.0.1 SAQ returned HTTP 403 and document library HTTP 504."
+ },
+ {
+  "id": "LEG-31",
+  "title": "PCI SSC FAQ 1280 on storing card verification codes",
+  "url": "https://www.pcisecuritystandards.org/faqs/1280/",
+  "organization_author": "PCI Security Standards Council",
+  "category": "Card data guidance",
+  "subcategory": "PCI DSS",
+  "resource_type": "international_standard",
+  "publication_date": "Not captured",
+  "core_concepts": [
+   "no CVV storage",
+   "consent irrelevant"
+  ],
+  "engineering_principles": "Consent does not permit CVV storage.",
+  "practical_examples": "Card on file case.",
+  "why_it_matters": "Blocks a common field design.",
+  "authority_level": 4,
+  "authority_rationale": "Council FAQ.",
+  "applies_to": [
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Read via WebFetch summary only."
+ },
+ {
+  "id": "LEG-32",
+  "title": "Coordinated Enforcement Action: Implementation of the right to erasure (2025 CEF report)",
+  "url": "https://www.edpb.europa.eu/system/files/2026-02/edpb_cef-report_2025_right-to-erasure_en.pdf",
+  "organization_author": "European Data Protection Board",
+  "category": "Regulator guidance",
+  "subcategory": "EU erasure",
+  "resource_type": "official_documentation",
+  "publication_date": "2026-02-10",
+  "core_concepts": [
+   "back-ups",
+   "without undue delay open",
+   "demonstrate erasure"
+  ],
+  "engineering_principles": "Track erasure requests and re-apply on restore.",
+  "practical_examples": "Issue 6 section.",
+  "why_it_matters": "Most current EU view; confirms unsettled state.",
+  "authority_level": 5,
+  "authority_rationale": "EDPB adopted report.",
+  "applies_to": [
+   "general",
+   "OLTP",
+   "data_lake"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly."
+ },
+ {
+  "id": "LEG-33",
+  "title": "Right to erasure guidance (ICO, Wayback capture 2026-10-29)",
+  "url": "https://web.archive.org/web/20261029043746/https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/individual-rights/right-to-erasure/",
+  "organization_author": "Information Commissioner's Office (UK)",
+  "category": "Regulator guidance",
+  "subcategory": "UK erasure",
+  "resource_type": "official_documentation",
+  "publication_date": "Capture 2026-10-29",
+  "core_concepts": [
+   "beyond use",
+   "backup erasure",
+   "transparency"
+  ],
+  "engineering_principles": "Backup data can be put beyond use until overwritten.",
+  "practical_examples": "Backup section.",
+  "why_it_matters": "UK treatment of backups.",
+  "authority_level": 4,
+  "authority_rationale": "Regulator text via archive copy; live site refused access.",
+  "applies_to": [
+   "general",
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Live site returned HTTP 403. Encryption scenarios page also read at https://web.archive.org/web/20260305151002/https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/security/encryption/encryption-scenarios/ ."
+ },
+ {
+  "id": "LEG-34",
+  "title": "Guidelines 02/2025 on processing of personal data through blockchain technologies",
+  "url": "https://www.edpb.europa.eu/system/files/2025-04/edpb_guidelines_202502_blockchain_en.pdf",
+  "organization_author": "European Data Protection Board",
+  "category": "Regulator guidance",
+  "subcategory": "EU encryption and deletion",
+  "resource_type": "official_documentation",
+  "publication_date": "2025-04-08 consultation version",
+  "core_concepts": [
+   "key deletion limits",
+   "encrypted data remains personal data"
+  ],
+  "engineering_principles": "Key deletion makes data unintelligible but with limits.",
+  "practical_examples": "Encryption section.",
+  "why_it_matters": "Closest EU text on key destruction.",
+  "authority_level": 4,
+  "authority_rationale": "EDPB, but public consultation version and blockchain-specific.",
+  "applies_to": [
+   "general",
+   "data_lake",
+   "streaming"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Text extracted directly. Not a ruling that key destruction is erasure."
+ },
+ {
+  "id": "LEG-35",
+  "title": "Right to erasure (Autoriteit Persoonsgegevens, Wayback capture 2026-03-21)",
+  "url": "https://web.archive.org/web/20260321104218/https://autoriteitpersoonsgegevens.nl/en/themes/basic-gdpr/privacy-rights-under-the-gdpr/right-to-erasure",
+  "organization_author": "Autoriteit Persoonsgegevens (Netherlands)",
+  "category": "Regulator guidance",
+  "subcategory": "Netherlands erasure",
+  "resource_type": "official_documentation",
+  "publication_date": "Capture 2026-03-21",
+  "core_concepts": [
+   "backups in scope",
+   "records of what to erase",
+   "erase on restore"
+  ],
+  "engineering_principles": "Keep records of data that should be erased and act on restore.",
+  "practical_examples": "Backup section.",
+  "why_it_matters": "Clear national regulator instruction.",
+  "authority_level": 4,
+  "authority_rationale": "Regulator text via archive copy.",
+  "applies_to": [
+   "general",
+   "OLTP"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Live site returned HTTP 403 to automated access."
+ },
+ {
+  "id": "LEG-36",
+  "title": "Les durees de conservation des donnees",
+  "url": "https://www.cnil.fr/fr/les-durees-de-conservation-des-donnees",
+  "organization_author": "CNIL (France)",
+  "category": "Regulator guidance",
+  "subcategory": "France retention",
+  "resource_type": "official_documentation",
+  "publication_date": "Not captured",
+  "core_concepts": [
+   "active base",
+   "intermediate archive",
+   "physical or logical separation"
+  ],
+  "engineering_principles": "Intermediate archive separated from the active base.",
+  "practical_examples": "Billing data example.",
+  "why_it_matters": "Retention tiering guidance.",
+  "authority_level": 4,
+  "authority_rationale": "Regulator guidance.",
+  "applies_to": [
+   "OLTP",
+   "data_warehouse",
+   "general"
+  ],
+  "url_verified": true,
+  "verified_on": "2026-11-08",
+  "notes": "Read via WebFetch summary only. Does not address backups."
+ }
+]

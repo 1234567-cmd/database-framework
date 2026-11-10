@@ -1,0 +1,50 @@
+%% Proposed schema of power-suite-staging (16 of 80: around visa_import_logs)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    visa_import_logs {
+        bigint id PK "proposed: changed"
+        varchar_255 company_code
+        int user_id FK
+        int branch_id FK
+        int template_id FK
+        text order_ids
+        varchar_255 file_name
+        datetime uploaded_at
+        int total_rows
+        int orders_created
+        int duplicate_count
+        int error_count
+        int success_count
+        enum_success_partial_failed result
+        text message
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    templates {
+        int id PK
+        text service_column
+        text document_column
+        int template_id
+        datetime created_at
+        datetime updated_at
+        enum_mandatory_optional mandatory
+        enum_direct_mapping_extraction handling_method
+        varchar_50 separator_value "proposed: added"
+        int start_position
+        int length
+        text description
+        int row_identitfier
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    branches ||--o{ visa_import_logs : "branch_id (proposed)"
+    templates ||--o{ visa_import_logs : "template_id (proposed)"
+    users ||--o{ visa_import_logs : "user_id (proposed)"

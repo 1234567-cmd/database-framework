@@ -1,0 +1,4 @@
+Step M1496: Manual: Decide whether the values of document_type can change; if so, use a reference ta
+MANUAL: this step has no generated SQL.
+Decide whether the values of document_type can change; if so, use a reference table.
+Findings: SCH-034-39eb2a28

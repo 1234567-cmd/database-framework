@@ -1,0 +1,4 @@
+Step M2783: Manual: Keep company_code in visa_length_stays only, or maintain the copy through one co
+MANUAL: this step has no generated SQL.
+Keep company_code in visa_length_stays only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-f37d61d2

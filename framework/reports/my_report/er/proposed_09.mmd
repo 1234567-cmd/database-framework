@@ -1,0 +1,61 @@
+%% Proposed schema of power-suite-staging (9 of 80: around bank_accounts)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    bank_accounts {
+        int id PK
+        int bank_id "proposed: changed"
+        varchar_255 bank_account_code
+        varchar_255 account_number
+        int chart_of_account_id FK
+        varchar_45 company_code
+        int status
+        tinyint is_manual_bank
+        varchar_45 manual_bank_name
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    payments {
+        bigint id PK "proposed: changed"
+        decimal_12_4 amount "proposed: changed"
+        datetime payment_date
+        varchar_50 payment_method
+        int cost_id FK
+        int bank_account_id FK
+        text report
+        varchar_255 remarks
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    receipts {
+        bigint id PK "proposed: changed"
+        varchar_50 receipt_number
+        datetime receipt_at "proposed: added"
+        decimal_12_4 total_amount "proposed: changed"
+        enum_Paid_Unpaid_Partially_Paid status
+        varchar_160 payment_method
+        int invoice_id FK
+        int bank_account_id FK
+        text report
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    costs {
+        external stub "see the diagram that holds this table"
+    }
+    invoices {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts ||--o{ bank_accounts : "chart_of_account_id (proposed)"
+    bank_accounts ||--o{ payments : "bank_account_id"
+    costs ||--o{ payments : "cost_id"
+    bank_accounts ||--o{ receipts : "bank_account_id"
+    invoices ||--o{ receipts : "invoice_id"

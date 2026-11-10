@@ -1,0 +1,4 @@
+Step M1420: Rename column payment_settlement_payments.card_type_id to pay_card_type_id
+MANUAL: this step has no generated SQL.
+Table payment_settlement_payments matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column payment_settlement_payments.card_type_id to pay_card_type_id.
+Findings: SCH-058-6fbf2e9c

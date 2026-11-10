@@ -1,0 +1,8 @@
+[
+  {"sql": "SELECT * FROM customers WHERE LOWER(email) = 'orders@rhine.example.com'", "calls": 8200, "mean_ms": 74.5},
+  {"sql": "SELECT id, total FROM orders WHERE status = 'open' ORDER BY id LIMIT 50 OFFSET 40000", "calls": 950, "mean_ms": 220.0},
+  {"sql": "SELECT id FROM payments WHERE card_number = '4111111111111111'", "calls": 12, "mean_ms": 41.0},
+  {"sql": "SELECT order_id, SUM(unit_price * quantity) FROM order_items GROUP BY order_id", "calls": 300, "mean_ms": 3500.0, "rows": 9},
+  {"sql": "SELECT * FROM products WHERE company_id = 1", "calls": 15000, "mean_ms": 12.0},
+  {"sql": "SELECT e.id FROM journal_lines l JOIN journal_entries e ON e.id = l.journal_entry_id WHERE l.account_id = 2", "calls": 2400, "mean_ms": 310.0}
+]

@@ -1,0 +1,4 @@
+Step M1823: Manual: Keep company_code in passengers only, or maintain the copy through one controlle
+MANUAL: this step has no generated SQL.
+Keep company_code in passengers only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-b42e5ea9

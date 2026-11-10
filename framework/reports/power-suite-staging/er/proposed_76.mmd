@@ -1,0 +1,15 @@
+%% Proposed schema of power-suite-staging (76 of 80: around visa_ptc_maintenances)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    visa_ptc_maintenances {
+        int id PK
+        varchar_255 code
+        varchar_255 description
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }

@@ -1,0 +1,4 @@
+Step M163: Manual: Pipeline nightly_sales_load, step extract_orders: declare the change column, or 
+MANUAL: this step has no generated SQL.
+Pipeline nightly_sales_load, step extract_orders: declare the change column, or use log-based capture.
+Findings: DE-004-4b9f60a8

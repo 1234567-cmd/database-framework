@@ -1,0 +1,25 @@
+%% Proposed schema of power-suite-staging (35 of 80: around visa_status_history)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    visa_status_history {
+        int id PK
+        int service_visa_id FK "proposed: added"
+        varchar_100 status
+        datetime status_at "proposed: added"
+        text remarks
+        int user_id FK "proposed: added"
+        datetime changed_at
+        varchar_100 previous_status
+        timestamp created_at
+        timestamp updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_visas {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    users ||--o{ visa_status_history : "user_id (proposed)"
+    service_visas ||--o{ visa_status_history : "service_visa_id (proposed)"

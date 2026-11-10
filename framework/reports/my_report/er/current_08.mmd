@@ -1,0 +1,67 @@
+%% Current schema of power-suite-staging (8 of 57: around branch_document_template)
+erDiagram
+    branch_document_template {
+        int id PK
+        int branch_id FK
+        varchar_255 company_code FK
+        enum_invoice_cost_receipt_payment_deposit_credit_note_debit_note_advance_payment document_type
+        mediumtext document_title
+        varchar_255 header_name
+        text header_address
+        varchar_100 header_phone
+        varchar_255 header_email
+        varchar_100 header_licence_no
+        varchar_100 header_ntn
+        text footer_text
+        timestamp created_at
+        timestamp updated_at
+        mediumtext header_content
+        mediumtext footer_content
+        mediumtext stamp_image
+        int stamp_opacity
+        int stamp_width
+        int stamp_height
+    }
+    branch_document_template_pins {
+        int id PK
+        varchar_255 company_code
+        int template_id FK
+        varchar_32 document_kind
+        varchar_64 document_key
+        int version_id FK
+        datetime created_at
+    }
+    branch_document_template_versions {
+        int id PK
+        int template_id FK
+        varchar_255 company_code
+        int branch_id
+        varchar_32 document_type
+        mediumtext document_title
+        mediumtext header_content
+        mediumtext footer_content
+        mediumtext stamp_image
+        int stamp_opacity
+        int stamp_width
+        int stamp_height
+        varchar_255 header_name
+        text header_address
+        varchar_100 header_phone
+        varchar_255 header_email
+        varchar_100 header_licence_no
+        varchar_100 header_ntn
+        text footer_text
+        datetime retired_at
+        int retired_by
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    branches ||--o{ branch_document_template : "branch_id"
+    companies ||--o{ branch_document_template : "company_code"
+    branch_document_template ||--o{ branch_document_template_pins : "template_id"
+    branch_document_template_versions ||--o{ branch_document_template_pins : "version_id"
+    branch_document_template ||--o{ branch_document_template_versions : "template_id"

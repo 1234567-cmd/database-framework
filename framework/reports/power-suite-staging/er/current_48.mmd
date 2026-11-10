@@ -1,0 +1,18 @@
+%% Current schema of power-suite-staging (48 of 57: around smtp_settings)
+erDiagram
+    smtp_settings {
+        int id PK
+        varchar_255 company_code FK
+        varchar_255 smtp_host
+        int smtp_port
+        varchar_255 smtp_user
+        varchar_255 smtp_password
+        enum_none_ssl_tls smtp_encryption
+        varchar_255 from_email
+        varchar_255 from_name
+        tinyint_1 is_active
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ smtp_settings : "company_code"

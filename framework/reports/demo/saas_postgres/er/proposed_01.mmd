@@ -1,0 +1,69 @@
+%% Proposed schema of saas_demo
+%% 49 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    tenants {
+        bigint id PK
+        character_varying_120 name
+        character_varying_20 plan
+        timestamptz created_at "proposed: changed"
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    users {
+        bigint id PK
+        bigint tenant_id FK
+        character_varying_160 email
+        character_varying_120 display_name
+        timestamptz created_at "proposed: changed"
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    projects {
+        bigint id PK
+        bigint tenant_id FK
+        bigint user_id FK "proposed: added"
+        character_varying_160 name
+        real budget
+        timestamptz created_at "proposed: changed"
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    tasks {
+        bigint id PK
+        bigint project_id FK
+        character_varying_200 title
+        bigint user_id FK "proposed: added"
+        character_varying_20 status
+        timestamptz created_at "proposed: changed"
+        varchar_255 created_by "proposed: added"
+        bigint tenant_id "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    comments {
+        bigint id PK
+        bigint task_id FK
+        bigint user_id FK "proposed: added"
+        text body
+        timestamptz created_at "proposed: changed"
+        varchar_255 created_by "proposed: added"
+        bigint tenant_id "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    invoices {
+        bigint id PK
+        bigint tenant_id FK
+        character_varying_30 invoice_number
+        decimal_19_4 total "proposed: changed"
+        timestamptz issued_at "proposed: changed"
+        timestamptz created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    tenants ||--o{ users : "tenant_id"
+    tenants ||--o{ projects : "tenant_id"
+    users ||--o{ projects : "user_id (proposed)"
+    projects ||--o{ tasks : "project_id"
+    users ||--o{ tasks : "user_id (proposed)"
+    tasks ||--o{ comments : "task_id"
+    users ||--o{ comments : "user_id (proposed)"
+    tenants ||--o{ invoices : "tenant_id"

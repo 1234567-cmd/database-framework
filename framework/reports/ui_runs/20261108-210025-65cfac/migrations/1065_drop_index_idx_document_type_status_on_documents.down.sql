@@ -1,0 +1,10 @@
+-- Step M1065: Drop index idx_document_type_status on documents
+-- Direction: down
+-- Findings: PERF-002-64532d62
+-- Destructive: False. Reversible: True. Data loss risk: none. Lock risk: low.
+-- PROPOSAL ONLY. Review before use.
+-- Precheck: Table documents exists. Expect 1: SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'documents' AND table_schema = DATABASE()
+-- Precheck: Index idx_document_type_status exists. Expect 1: SELECT COUNT(DISTINCT index_name) FROM information_schema.statistics WHERE table_name = 'documents' AND table_schema = DATABASE() AND index_name = 'idx_document_type_status'
+-- Note: Queries that use this index will degrade after it is dropped. Confirm with usage statistics first.
+SET SESSION lock_wait_timeout = 5;
+ALTER TABLE `documents` ADD INDEX `idx_document_type_status` (`document_type`), ALGORITHM=INPLACE, LOCK=NONE;

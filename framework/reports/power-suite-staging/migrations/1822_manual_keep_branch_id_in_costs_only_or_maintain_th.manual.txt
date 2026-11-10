@@ -1,0 +1,4 @@
+Step M1822: Manual: Keep branch_id in costs only, or maintain the copy through one controlled mechan
+MANUAL: this step has no generated SQL.
+Keep branch_id in costs only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-893190c7

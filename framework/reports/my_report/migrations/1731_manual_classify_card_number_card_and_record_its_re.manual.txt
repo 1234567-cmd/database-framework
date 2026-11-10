@@ -1,0 +1,4 @@
+Step M1731: Manual: Classify card_number (card) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify card_number (card) and record its required protections.
+Findings: SECA-004-f051033f

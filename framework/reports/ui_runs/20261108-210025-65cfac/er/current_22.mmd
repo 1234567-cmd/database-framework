@@ -1,0 +1,23 @@
+%% Current schema of power-suite-staging (22 of 57: around visa_code_require_codes)
+erDiagram
+    visa_code_require_codes {
+        int id PK
+        int visa_code_id FK
+        int require_code_id FK
+    }
+    visa_require_codes {
+        int id PK
+        varchar_255 description
+        varchar_255 code
+        varchar_255 display_order
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }
+    visa_code_maintenance {
+        external stub "see the diagram that holds this table"
+    }
+    visa_code_maintenance ||--o{ visa_code_require_codes : "visa_code_id"
+    visa_require_codes ||--o{ visa_code_require_codes : "require_code_id"

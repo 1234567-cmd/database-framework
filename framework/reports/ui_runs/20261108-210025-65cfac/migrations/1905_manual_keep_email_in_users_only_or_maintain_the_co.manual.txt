@@ -1,0 +1,4 @@
+Step M1905: Manual: Keep email in users only, or maintain the copy through one controlled mechanism 
+MANUAL: this step has no generated SQL.
+Keep email in users only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-f123f2b5

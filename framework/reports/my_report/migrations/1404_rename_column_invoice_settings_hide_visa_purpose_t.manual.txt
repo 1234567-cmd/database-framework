@@ -1,0 +1,4 @@
+Step M1404: Rename column invoice_settings.hide_visa_purpose to is_hide_visa_purpose
+MANUAL: this step has no generated SQL.
+Table invoice_settings matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoice_settings.hide_visa_purpose to is_hide_visa_purpose.
+Findings: SCH-060-1d0d3838

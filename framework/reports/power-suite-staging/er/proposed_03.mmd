@@ -1,0 +1,543 @@
+%% Proposed schema of power-suite-staging (3 of 80: around credit_notes)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    credit_notes {
+        int_unsigned id PK
+        int supplier_id FK
+        int customer_id FK
+        int doc_no
+        date doc_date
+        int so_no
+        varchar_50 doc_type
+        decimal_17_4 billing_amount "proposed: changed"
+        decimal_17_4 billing_amount_base "proposed: changed"
+        varchar_300 to_value "proposed: added"
+        int currency_code_id FK "proposed: added"
+        int currency_code_id FK "proposed: added"
+        decimal_10_5 exchange_rate
+        date exchange_rate_date
+        decimal_17_4 base_amount "proposed: changed"
+        decimal_17_4 base_amount_base "proposed: changed"
+        varchar_45 sst_code
+        decimal_17_4 sst_amount "proposed: changed"
+        int buy_staff_id
+        enum_Printed_Raised_Partially_Settled_Settled_Paid_Void doc_status
+        int credit_term
+        date due_date
+        varchar_60 reference
+        varchar_45 service_provided
+        text remarks
+        varchar_50 deposit_no
+        date deposit_date
+        decimal_10_0 deposit_balance
+        decimal_17_4 refund_amount "proposed: changed"
+        decimal_17_4 refund_amount_base "proposed: changed"
+        decimal_10_0 handling_fee
+        varchar_45 transfer_to
+        decimal_10_0 sst_handling_fee
+        int account_no
+        enum_Cash_Cheque_Credit_Card_Direct_Deposit_GL_Account type
+        int bank_id FK
+        int pay_type_form_id FK "proposed: added"
+        int sales_id_id FK "proposed: added"
+        decimal_17_4 amount "proposed: changed"
+        decimal_17_4 amount_base "proposed: changed"
+        varchar_45 cash_box
+        int chart_of_account_id FK
+        varchar_45 client_refrence
+        varchar_45 check_number
+        int pay_card_type_id FK "proposed: added"
+        varchar_45 card_number
+        varchar_45 voucher_number
+        varchar_45 gl_account_box
+        varchar_45 account_number
+        int amount_raw
+        varchar_45 request_by
+        varchar_45 approved_by
+        varchar_45 paid_amount
+        varchar_45 internal_remarks
+        enum_Miscellaneous_Payment_XO_Payment pr_type
+        timestamp created_at
+        timestamp updated_at
+        tinyint_1 is_je_generated "proposed: added"
+        decimal_12_4 used_amount "proposed: changed"
+        varchar_50 settled_invoice_number
+        varchar_255 paid_payment_number
+        int branch_id FK
+        varchar_200 company_code
+        int refund_id FK
+        tinyint is_opening
+        int import_batch_id FK
+        varchar_255 pax_name
+        text void_remarks
+        int passenger_id FK
+        int invoice_id FK
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    banks {
+        int id PK
+        varchar_255 name
+        varchar_255 code
+        int status
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    currency_codes {
+        int id PK
+        varchar_10 currency_code
+        text description
+        varchar_10 symbol
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    passengers {
+        bigint id PK "proposed: changed"
+        varchar_300 passenger_name
+        enum_ADT_CHD_INF passenger_type
+        tinyint_1 is_lead_passenger "proposed: added"
+        varchar_45 passport_number
+        varchar_45 ticket_number
+        int order_id FK
+        varchar_200 company_code
+        int branch_id FK
+        timestamp created_at
+        timestamp updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    pay_card_types {
+        int id PK
+        varchar_255 card_type
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    pay_type_forms {
+        int id PK
+        varchar_255 label
+        int chart_of_account_id FK
+        varchar_255 account_key
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    payment_settlement_credit_notes {
+        int id PK
+        int payment_settlement_id FK
+        int_unsigned credit_note_id FK
+        decimal_12_4 amount "proposed: changed"
+        varchar_10 currency_code
+        decimal_10_4 exchange_rate
+        decimal_12_4 base_amount "proposed: changed"
+        text remarks
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    receipt_settlement_credit_notes {
+        int_unsigned id PK
+        int receipt_settlement_id FK
+        int_unsigned credit_note_id FK
+        decimal_12_4 amount "proposed: changed"
+        varchar_10 currency_code
+        decimal_10_4 exchange_rate
+        decimal_12_4 base_amount "proposed: changed"
+        text remarks
+        timestamp created_at
+        timestamp updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    debit_notes {
+        int id PK
+        int doc_no
+        date doc_date
+        varchar_50 doc_type
+        varchar_255 reference
+        varchar_255 client_reference
+        decimal_12_4 amount "proposed: changed"
+        decimal_17_4 amount_base "proposed: changed"
+        decimal_12_4 billing_amount "proposed: changed"
+        decimal_12_4 base_amount "proposed: changed"
+        decimal_12_4 refund_amount "proposed: changed"
+        int currency_id "proposed: changed"
+        int currency_code_id FK "proposed: added"
+        decimal_10_5 exchange_rate
+        date exchange_rate_date
+        enum_Printed_Partially_Paid_Paid_Void doc_status
+        int supplier_id FK
+        varchar_255 supplier_name
+        text supplier_address
+        varchar_255 from_company
+        text remarks
+        varchar_255 request_by
+        varchar_255 approved_by
+        varchar_50 type
+        int bank_id FK
+        text bank_details
+        int created_by
+        int updated_by
+        int branch_id FK
+        varchar_200 company_code
+        timestamp created_at
+        timestamp updated_at
+        tinyint_1 is_je_generated "proposed: added"
+        int refund_id FK
+        decimal_12_4 used_amount "proposed: changed"
+        varchar_45 settled_payment_number
+        tinyint is_opening
+        int import_batch_id FK
+        varchar_255 pax_name
+        text void_remarks
+        int passenger_id FK
+        int cost_id FK
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+    }
+    payment_settlement_payments {
+        int id PK
+        int payment_settlement_id FK
+        int bank_id FK
+        int currency_id
+        varchar_50 check_number
+        int card_type_id FK
+        varchar_50 card_number
+        varchar_50 voucher_number
+        varchar_50 gl_account_box
+        varchar_50 account_number
+        decimal_12_4 amount "proposed: changed"
+        int pay_type_id FK
+        int chart_of_account_id FK
+        int gl_account_id
+        varchar_255 remarks
+        datetime created_at
+        datetime updated_at
+        date adjustment_date
+        decimal_12_4 overpay_amount "proposed: changed"
+        varchar_45 transfer_type
+        varchar_45 reference_number
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    supplier_deposits {
+        int id PK
+        varchar_50 payment_number
+        int user_id FK
+        int supplier_id FK
+        int chart_of_account_id FK
+        int branch_id FK
+        int pay_type_id
+        int currency_id
+        decimal_12_4 amount "proposed: changed"
+        decimal_12_4 current_amount "proposed: changed"
+        decimal_10_4 exchange_rate
+        decimal_12_4 base_amount "proposed: changed"
+        varchar_50 cash_box
+        varchar_50 client_refrence
+        int bank_id FK
+        varchar_255 bank_name
+        varchar_50 check_number
+        int card_type_id
+        varchar_50 card_number
+        varchar_50 voucher_number
+        varchar_50 gl_account_box
+        int gl_account_id
+        varchar_50 account_number
+        varchar_255 remarks
+        text void_remarks
+        enum_Raised_Printed_Void status
+        datetime created_at
+        datetime updated_at
+        tinyint_1 is_je_generated "proposed: added"
+        varchar_50 settled_invoice_number
+        date adjustment_date
+        tinyint is_edited
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    visa_code_maintenances {
+        int id PK "proposed: added"
+        varchar_200 company_code "proposed: added"
+        varchar_255 code "proposed: added"
+        varchar_255 description "proposed: added"
+        int country_code_id FK "proposed: added"
+        int visa_purpose_id FK "proposed: added"
+        enum_Yes_No require_visa "proposed: added"
+        int country_code_id FK "proposed: added"
+        int visa_type_id FK "proposed: added"
+        int visa_length_stay_id FK "proposed: added"
+        int visa_no_entry_id FK "proposed: added"
+        int visa_validity_id FK "proposed: added"
+        int visa_urgency_id FK "proposed: added"
+        varchar_255 photo "proposed: added"
+        enum_Yes_No next_stop "proposed: added"
+        text forms "proposed: added"
+        enum_Yes_No ticket "proposed: added"
+        varchar_255 validity_secondary "proposed: added"
+        varchar_255 working_day "proposed: added"
+        int currency_code_id FK "proposed: added"
+        decimal_15_2 selling_price "proposed: added"
+        int currency_code_id FK "proposed: added"
+        decimal_17_4 cost_amount "proposed: added"
+        tinyint_1 is_approval "proposed: added"
+        int visa_require_code_id FK "proposed: added"
+        text remark "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    visa_documents {
+        int id PK
+        int service_id FK
+        varchar_45 quantity
+        varchar_200 remark
+        varchar_100 document_type
+        date modified_date
+        int passenger_id FK
+        int service_visa_id FK "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    receipt_settlements {
+        int id PK
+        varchar_255 receipt_number
+        int user_id FK
+        varchar_200 company_code
+        int customer_id FK
+        int supplier_id FK
+        decimal_12_4 amount "proposed: changed"
+        varchar_200 remarks
+        varchar_200 internal_remarks
+        varchar_200 receipt_reference
+        varchar_200 billing_address
+        enum_Printed_Raised_Void status
+        varchar_30 settlement_type
+        datetime created_at
+        datetime updated_at
+        tinyint_1 is_je_generated "proposed: added"
+        date adjustment_date
+        text void_remarks
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    payment_settlement_debit_notes {
+        int id PK
+        int payment_settlement_id FK
+        int debit_note_id FK
+        decimal_12_4 amount "proposed: changed"
+        varchar_10 currency_code
+        decimal_10_4 exchange_rate
+        decimal_12_4 base_amount "proposed: changed"
+        text remarks
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    payment_settlement_overpayments {
+        int id PK
+        int payment_settlement_id FK
+        int source_payment_settlement_id FK
+        int source_payment_id FK
+        decimal_12_4 amount "proposed: changed"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    payment_settlement_deposits {
+        int id PK
+        int payment_settlement_id FK
+        int supplier_deposit_id FK
+        decimal_12_4 amount "proposed: changed"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    country_codes {
+        int id PK
+        varchar_45 code
+        varchar_100 name
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    visa_length_stays {
+        int id PK
+        varchar_255 length_of_stay
+        varchar_255 code
+        varchar_255 display_order
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    visa_no_entries {
+        int id PK
+        varchar_255 no_of_entries
+        varchar_255 code
+        varchar_255 display_order
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    costs {
+        external stub "see the diagram that holds this table"
+    }
+    customers {
+        external stub "see the diagram that holds this table"
+    }
+    import_batches {
+        external stub "see the diagram that holds this table"
+    }
+    invoices {
+        external stub "see the diagram that holds this table"
+    }
+    orders {
+        external stub "see the diagram that holds this table"
+    }
+    payment_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    refunds {
+        external stub "see the diagram that holds this table"
+    }
+    sales_id {
+        external stub "see the diagram that holds this table"
+    }
+    service_visas {
+        external stub "see the diagram that holds this table"
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    suppliers {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    visa_purposes {
+        external stub "see the diagram that holds this table"
+    }
+    visa_require_codes {
+        external stub "see the diagram that holds this table"
+    }
+    visa_types {
+        external stub "see the diagram that holds this table"
+    }
+    visa_urgencies {
+        external stub "see the diagram that holds this table"
+    }
+    visa_validities {
+        external stub "see the diagram that holds this table"
+    }
+    pay_card_types ||--o{ credit_notes : "pay_card_type_id (proposed)"
+    chart_of_accounts ||--o{ credit_notes : "chart_of_account_id"
+    banks ||--o{ credit_notes : "bank_id"
+    currency_codes ||--o{ credit_notes : "currency_code_id (proposed)"
+    import_batches ||--o{ credit_notes : "import_batch_id"
+    invoices ||--o{ credit_notes : "invoice_id"
+    passengers ||--o{ credit_notes : "passenger_id"
+    currency_codes ||--o{ credit_notes : "currency_code_id (proposed)"
+    customers ||--o{ credit_notes : "customer_id"
+    pay_type_forms ||--o{ credit_notes : "pay_type_form_id (proposed)"
+    suppliers ||--o{ credit_notes : "supplier_id"
+    sales_id ||--o{ credit_notes : "sales_id_id (proposed)"
+    branches ||--o{ credit_notes : "branch_id (proposed)"
+    refunds ||--o{ credit_notes : "refund_id (proposed)"
+    orders ||--o{ passengers : "order_id"
+    branches ||--o{ passengers : "branch_id (proposed)"
+    chart_of_accounts ||--o{ pay_type_forms : "chart_of_account_id"
+    payment_settlements ||--o{ payment_settlement_credit_notes : "payment_settlement_id"
+    credit_notes ||--o{ payment_settlement_credit_notes : "credit_note_id"
+    receipt_settlements ||--o{ receipt_settlement_credit_notes : "receipt_settlement_id"
+    credit_notes ||--o{ receipt_settlement_credit_notes : "credit_note_id"
+    currency_codes ||--o{ debit_notes : "currency_code_id (proposed)"
+    costs ||--o{ debit_notes : "cost_id"
+    import_batches ||--o{ debit_notes : "import_batch_id"
+    passengers ||--o{ debit_notes : "passenger_id"
+    banks ||--o{ debit_notes : "bank_id (proposed)"
+    branches ||--o{ debit_notes : "branch_id (proposed)"
+    refunds ||--o{ debit_notes : "refund_id (proposed)"
+    suppliers ||--o{ debit_notes : "supplier_id (proposed)"
+    chart_of_accounts ||--o{ payment_settlement_payments : "chart_of_account_id"
+    payment_settlements ||--o{ payment_settlement_payments : "payment_settlement_id"
+    banks ||--o{ payment_settlement_payments : "bank_id"
+    pay_card_types ||--o{ payment_settlement_payments : "card_type_id"
+    pay_type_forms ||--o{ payment_settlement_payments : "pay_type_id"
+    banks ||--o{ supplier_deposits : "bank_id (proposed)"
+    branches ||--o{ supplier_deposits : "branch_id (proposed)"
+    chart_of_accounts ||--o{ supplier_deposits : "chart_of_account_id (proposed)"
+    suppliers ||--o{ supplier_deposits : "supplier_id (proposed)"
+    users ||--o{ supplier_deposits : "user_id (proposed)"
+    country_codes ||--o{ visa_code_maintenances : "country_code_id (proposed)"
+    currency_codes ||--o{ visa_code_maintenances : "currency_code_id (proposed)"
+    visa_require_codes ||--o{ visa_code_maintenances : "visa_require_code_id (proposed)"
+    visa_purposes ||--o{ visa_code_maintenances : "visa_purpose_id (proposed)"
+    country_codes ||--o{ visa_code_maintenances : "country_code_id (proposed)"
+    visa_types ||--o{ visa_code_maintenances : "visa_type_id (proposed)"
+    visa_length_stays ||--o{ visa_code_maintenances : "visa_length_stay_id (proposed)"
+    visa_no_entries ||--o{ visa_code_maintenances : "visa_no_entry_id (proposed)"
+    visa_validities ||--o{ visa_code_maintenances : "visa_validity_id (proposed)"
+    visa_urgencies ||--o{ visa_code_maintenances : "visa_urgency_id (proposed)"
+    currency_codes ||--o{ visa_code_maintenances : "currency_code_id (proposed)"
+    passengers ||--o{ visa_documents : "passenger_id"
+    service_visas ||--o{ visa_documents : "service_visa_id (proposed)"
+    services ||--o{ visa_documents : "service_id (proposed)"
+    customers ||--o{ receipt_settlements : "customer_id"
+    suppliers ||--o{ receipt_settlements : "supplier_id"
+    users ||--o{ receipt_settlements : "user_id (proposed)"
+    payment_settlements ||--o{ payment_settlement_debit_notes : "payment_settlement_id"
+    debit_notes ||--o{ payment_settlement_debit_notes : "debit_note_id"
+    payment_settlements ||--o{ payment_settlement_overpayments : "payment_settlement_id"
+    payment_settlements ||--o{ payment_settlement_overpayments : "source_payment_settlement_id"
+    payment_settlement_payments ||--o{ payment_settlement_overpayments : "source_payment_id"
+    payment_settlements ||--o{ payment_settlement_deposits : "payment_settlement_id (proposed)"
+    supplier_deposits ||--o{ payment_settlement_deposits : "supplier_deposit_id (proposed)"

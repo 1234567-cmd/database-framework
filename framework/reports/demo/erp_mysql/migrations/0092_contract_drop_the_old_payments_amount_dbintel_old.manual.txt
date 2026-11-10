@@ -1,0 +1,4 @@
+Step M092: Contract: drop the old payments.amount__dbintel_old
+MANUAL: this step has no generated SQL.
+Table payments matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change. Intended change: Contract: drop the old payments.amount__dbintel_old.
+Findings: SCH-020-b9ce260d

@@ -1,0 +1,15 @@
+%% Current schema of power-suite-staging (38 of 57: around invoice_taxes)
+erDiagram
+    invoice_taxes {
+        int id PK
+        int invoice_id FK
+        varchar_255 tax_code
+        decimal_10_2 tax_amount
+        text remarks
+        datetime created_at
+        datetime updated_at
+    }
+    invoices {
+        external stub "see the diagram that holds this table"
+    }
+    invoices ||--o{ invoice_taxes : "invoice_id"

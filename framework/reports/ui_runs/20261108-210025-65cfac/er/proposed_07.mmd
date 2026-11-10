@@ -1,0 +1,17 @@
+%% Proposed schema of power-suite-staging (7 of 80: around city_codes)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    city_codes {
+        int id PK
+        varchar_255 code
+        varchar_255 name
+        varchar_45 airport_name
+        varchar_45 country_name
+        varchar_45 country_abbr
+        varchar_45 world_area_code
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }

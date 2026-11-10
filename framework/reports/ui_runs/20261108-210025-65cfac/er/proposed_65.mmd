@@ -1,0 +1,18 @@
+%% Proposed schema of power-suite-staging (65 of 80: around reports)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    reports {
+        bigint id PK "proposed: changed"
+        varchar_255 report_number
+        varchar_60 report_type
+        varchar_5 file_type
+        int user_id FK
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    users ||--o{ reports : "user_id"

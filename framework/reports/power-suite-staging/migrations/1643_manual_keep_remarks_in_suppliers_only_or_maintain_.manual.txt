@@ -1,0 +1,4 @@
+Step M1643: Manual: Keep remarks in suppliers only, or maintain the copy through one controlled mech
+MANUAL: this step has no generated SQL.
+Keep remarks in suppliers only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-1eee437d

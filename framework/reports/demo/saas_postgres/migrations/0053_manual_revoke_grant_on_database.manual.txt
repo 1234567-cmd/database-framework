@@ -1,0 +1,4 @@
+Step M053: Manual: revoke_grant on database
+MANUAL: this step has no generated SQL.
+revoke_grant needs a grantee and a table scope.
+Findings: SECA-002-d0a96b3f

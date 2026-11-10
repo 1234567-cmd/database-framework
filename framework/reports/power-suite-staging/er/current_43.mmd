@@ -1,0 +1,23 @@
+%% Current schema of power-suite-staging (43 of 57: around service_insurances)
+erDiagram
+    service_insurances {
+        int id PK
+        int service_id FK
+        int destination
+        varchar_255 policy_number
+        date purchase_date
+        varchar_255 plan_type
+        date first_coverage_date
+        date last_coverage_date
+        date expiry_date
+        varchar_255 fop
+        varchar_255 cheque_number
+        int status
+        varchar_255 itin_remarks
+        varchar_255 optional_benefit
+        varchar_255 special_instruction
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    services ||--o{ service_insurances : "service_id"

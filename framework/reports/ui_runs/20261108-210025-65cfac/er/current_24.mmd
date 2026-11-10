@@ -1,0 +1,13 @@
+%% Current schema of power-suite-staging (24 of 57: around visa_no_entries)
+erDiagram
+    visa_no_entries {
+        int id PK
+        varchar_255 no_of_entries
+        varchar_255 code
+        varchar_255 display_order
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }

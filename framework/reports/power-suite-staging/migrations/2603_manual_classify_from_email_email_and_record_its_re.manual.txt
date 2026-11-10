@@ -1,0 +1,4 @@
+Step M2603: Manual: Classify from_email (email) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify from_email (email) and record its required protections.
+Findings: SECA-004-fc130149

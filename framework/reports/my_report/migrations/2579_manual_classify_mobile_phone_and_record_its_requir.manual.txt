@@ -1,0 +1,4 @@
+Step M2579: Manual: Classify mobile (phone) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify mobile (phone) and record its required protections.
+Findings: SECA-004-18ab74c3

@@ -1,0 +1,7 @@
+# sales_book.xlsx comes from make_excel_sample.py. An inferred schema must not produce schema defects.
+source: excel/sales_book.xlsx
+expected:
+  - {rule: DQ-002, table: customers, severity: medium, kind: confirmed_defect}
+absent:
+  - {rule: SCH-001}
+  - {rule: SCH-020}

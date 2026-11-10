@@ -1,0 +1,4 @@
+Step M1412: Rename column journal_batches.updated_by to user_id
+MANUAL: this step has no generated SQL.
+Table journal_batches matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column journal_batches.updated_by to user_id.
+Findings: SCH-058-cc04d97a

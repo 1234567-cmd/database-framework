@@ -1,0 +1,4 @@
+Step M2780: Manual: Keep company_code in visa_require_codes only, or maintain the copy through one c
+MANUAL: this step has no generated SQL.
+Keep company_code in visa_require_codes only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-9af4a3cc

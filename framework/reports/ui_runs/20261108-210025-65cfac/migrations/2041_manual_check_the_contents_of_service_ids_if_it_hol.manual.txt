@@ -1,0 +1,4 @@
+Step M2041: Manual: Check the contents of service_ids; if it holds lists, move them to a child table
+MANUAL: this step has no generated SQL.
+Check the contents of service_ids; if it holds lists, move them to a child table.
+Findings: SCH-011-f8a7f599

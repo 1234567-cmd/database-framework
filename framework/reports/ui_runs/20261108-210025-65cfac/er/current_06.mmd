@@ -1,0 +1,79 @@
+%% Current schema of power-suite-staging (6 of 57: around user_groups)
+erDiagram
+    user_groups {
+        int id PK
+        varchar_255 name
+        varchar_255 company_code
+        datetime created_at
+        datetime updated_at
+    }
+    branch_permissions {
+        int id PK
+        int branch_id FK
+        int user_group_id FK
+        tinyint_1 active
+    }
+    doc_issue_permissions {
+        int id PK
+        int doc_issue_id FK
+        int user_group_id FK
+        tinyint_1 active
+    }
+    permission_groups {
+        int id PK
+        int permission_id FK
+        int user_group_id FK
+    }
+    product_code_permissions {
+        int id PK
+        int product_code_id FK
+        int user_group_id FK
+        tinyint_1 active
+    }
+    supplier_permissions {
+        int id PK
+        int supplier_id FK
+        int user_group_id FK
+        tinyint_1 active
+    }
+    user_permissions {
+        int id PK
+        int user_id FK
+        int user_group_id FK
+        tinyint_1 active
+    }
+    doc_issues {
+        int id PK
+        varchar_255 type
+        varchar_255 description
+        varchar_45 company_code
+    }
+    permissions {
+        int id PK
+        varchar_255 permission_name
+        varchar_255 model_name
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    suppliers {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    branches ||--o{ branch_permissions : "branch_id"
+    user_groups ||--o{ branch_permissions : "user_group_id"
+    doc_issues ||--o{ doc_issue_permissions : "doc_issue_id"
+    user_groups ||--o{ doc_issue_permissions : "user_group_id"
+    permissions ||--o{ permission_groups : "permission_id"
+    user_groups ||--o{ permission_groups : "user_group_id"
+    service_types ||--o{ product_code_permissions : "product_code_id"
+    user_groups ||--o{ product_code_permissions : "user_group_id"
+    suppliers ||--o{ supplier_permissions : "supplier_id"
+    user_groups ||--o{ supplier_permissions : "user_group_id"
+    users ||--o{ user_permissions : "user_id"
+    user_groups ||--o{ user_permissions : "user_group_id"

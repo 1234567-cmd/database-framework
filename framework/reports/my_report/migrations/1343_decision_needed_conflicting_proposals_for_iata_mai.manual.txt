@@ -1,0 +1,4 @@
+Step M1343: Decision needed: conflicting proposals for iata_maintenances.updatedAt
+MANUAL: this step has no generated SQL.
+Cannot rename iata_maintenances.updatedAt to an existing column 'updated_at'.
+Findings: SCH-052-834c8be3

@@ -1,0 +1,12 @@
+%% Current schema of power-suite-staging (52 of 57: around visa_ptc_maintenances)
+erDiagram
+    visa_ptc_maintenances {
+        int id PK
+        varchar_255 code
+        varchar_255 description
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }

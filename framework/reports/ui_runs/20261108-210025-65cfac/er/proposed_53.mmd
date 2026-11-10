@@ -1,0 +1,22 @@
+%% Proposed schema of power-suite-staging (53 of 80: around email_templates)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    email_templates {
+        int id PK
+        varchar_255 company_code FK
+        varchar_255 name
+        varchar_255 slug
+        varchar_255 subject
+        longtext body
+        text variables
+        varchar_255 description
+        tinyint_1 is_active
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ email_templates : "company_code"

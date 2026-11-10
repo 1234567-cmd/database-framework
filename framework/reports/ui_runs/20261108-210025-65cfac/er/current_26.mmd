@@ -1,0 +1,22 @@
+%% Current schema of power-suite-staging (26 of 57: around visa_status_history)
+erDiagram
+    visa_status_history {
+        int id PK
+        int visa_id FK
+        varchar_100 status
+        datetime status_date
+        text remarks
+        int changed_by FK
+        datetime changed_at
+        varchar_100 previous_status
+        timestamp created_at
+        timestamp updated_at
+    }
+    service_visas {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    users ||--o{ visa_status_history : "changed_by"
+    service_visas ||--o{ visa_status_history : "visa_id"

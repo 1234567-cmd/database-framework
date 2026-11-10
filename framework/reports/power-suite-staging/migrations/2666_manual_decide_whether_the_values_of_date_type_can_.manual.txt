@@ -1,0 +1,4 @@
+Step M2666: Manual: Decide whether the values of date_type can change; if so, use a reference table.
+MANUAL: this step has no generated SQL.
+Decide whether the values of date_type can change; if so, use a reference table.
+Findings: SCH-034-9ef57726

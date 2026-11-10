@@ -1,0 +1,4 @@
+Step M2758: Manual: Classify email_options (email) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify email_options (email) and record its required protections.
+Findings: SECA-004-e08b7983

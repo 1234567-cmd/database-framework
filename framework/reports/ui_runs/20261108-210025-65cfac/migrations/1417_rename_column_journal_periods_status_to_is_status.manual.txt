@@ -1,0 +1,4 @@
+Step M1417: Rename column journal_periods.status to is_status
+MANUAL: this step has no generated SQL.
+Table journal_periods matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column journal_periods.status to is_status.
+Findings: SCH-060-9b4877ef

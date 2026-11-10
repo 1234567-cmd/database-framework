@@ -1,0 +1,4 @@
+Step M1340: Decision needed: conflicting proposals for suppliers.e_Nett
+MANUAL: this step has no generated SQL.
+Cannot rename suppliers.e_Nett to an existing column 'e_nett'.
+Findings: SCH-052-99297215

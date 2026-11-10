@@ -1,0 +1,4 @@
+Step M1801: Manual: Classify date_of_birth (date_of_birth) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify date_of_birth (date_of_birth) and record its required protections.
+Findings: SECA-004-435e156a

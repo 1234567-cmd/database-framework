@@ -1,0 +1,4 @@
+Step M1613: Manual: Review the table for independent groups of attributes that belong in other table
+MANUAL: this step has no generated SQL.
+Review the table for independent groups of attributes that belong in other tables.
+Findings: SCH-042-8b473d3f

@@ -1,0 +1,4 @@
+Step M056: Manual: Decide which record classes need audit history and how long it is retained.
+MANUAL: this step has no generated SQL.
+Decide which record classes need audit history and how long it is retained.
+Findings: GVN-005-f4a9337b

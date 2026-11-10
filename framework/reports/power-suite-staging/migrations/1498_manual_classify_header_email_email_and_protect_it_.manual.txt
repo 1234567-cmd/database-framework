@@ -1,0 +1,4 @@
+Step M1498: Manual: Classify header_email (email) and protect it accordingly.
+MANUAL: this step has no generated SQL.
+Classify header_email (email) and protect it accordingly.
+Findings: SECA-005-eaf6b43d

@@ -1,0 +1,4 @@
+Step M1873: Manual: Review the duplicates with the data owner, choose the surviving record, and repo
+MANUAL: this step has no generated SQL.
+Review the duplicates with the data owner, choose the surviving record, and repoint references. Do not delete financial or business records without an approved repair plan.
+Findings: DQ-002-36ed9b30

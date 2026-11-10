@@ -1,0 +1,53 @@
+%% Current schema of saas_demo
+erDiagram
+    tenants {
+        bigint id PK
+        character_varying_120 name
+        character_varying_20 plan
+        timestamp_without_time_zone created_at
+    }
+    users {
+        bigint id PK
+        bigint tenant_id FK
+        character_varying_160 email
+        character_varying_120 display_name
+        timestamp_without_time_zone created_at
+    }
+    projects {
+        bigint id PK
+        bigint tenant_id FK
+        bigint owner_id FK
+        character_varying_160 name
+        real budget
+        timestamp_without_time_zone created_at
+    }
+    tasks {
+        bigint id PK
+        bigint project_id FK
+        character_varying_200 title
+        bigint assignee_id FK
+        character_varying_20 status
+        timestamp_without_time_zone created_at
+    }
+    comments {
+        bigint id PK
+        bigint task_id FK
+        bigint author_id FK
+        text body
+        timestamp_without_time_zone created_at
+    }
+    invoices {
+        bigint id PK
+        bigint tenant_id FK
+        character_varying_30 invoice_number
+        double_precision total
+        timestamp_without_time_zone issued_at
+    }
+    tenants ||--o{ users : "tenant_id"
+    tenants ||--o{ projects : "tenant_id"
+    users ||--o{ projects : "owner_id"
+    projects ||--o{ tasks : "project_id"
+    users ||--o{ tasks : "assignee_id"
+    tasks ||--o{ comments : "task_id"
+    users ||--o{ comments : "author_id"
+    tenants ||--o{ invoices : "tenant_id"

@@ -1,0 +1,4 @@
+Step M2251: Manual: Decide on column or application encryption from the threat model.
+MANUAL: this step has no generated SQL.
+Decide on column or application encryption from the threat model.
+Findings: SECA-009-ef13fe2d

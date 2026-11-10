@@ -1,0 +1,4 @@
+Step M2280: Manual: Keep branch_id in posting_number_prefixes only, or maintain the copy through one
+MANUAL: this step has no generated SQL.
+Keep branch_id in posting_number_prefixes only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-d42ef334

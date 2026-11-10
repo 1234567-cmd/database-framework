@@ -1,0 +1,17 @@
+%% Proposed schema of power-suite-staging (63 of 80: around lcc_profile_templates)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    lcc_profile_templates {
+        int id PK
+        text label
+        varchar_10 type
+        int company_id FK
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ lcc_profile_templates : "company_id (proposed)"

@@ -1,0 +1,710 @@
+%% Proposed schema of power-suite-staging (2 of 80: around services)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    services {
+        bigint id PK "proposed: changed"
+        int service_type_id FK
+        int user_id FK
+        text description
+        varchar_8 pnr
+        varchar_100 supplier_reference
+        int quantity
+        enum_Booked_Confirmed_Cancelled status
+        int order_id FK
+        varchar_200 company_code
+        int supplier_id FK
+        datetime created_at
+        datetime updated_at
+        tinyint processed_iur
+        int airline_form
+        datetime ticket_issue_at "proposed: added"
+        datetime iur_processed_at "proposed: added"
+        varchar_50 service_group_id
+        enum_ADT_CHD_INF_ALL passenger_type_filter
+        varchar_20 iata
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    costs {
+        bigint id PK "proposed: changed"
+        varchar_255 supplier_reference
+        date supplier_due_date
+        varchar_255 charge_type
+        decimal_12_4 amount "proposed: changed"
+        decimal_10_2 published_rate
+        varchar_160 spl_fare_code
+        decimal_10_5 commission
+        decimal_12_2 commission_value
+        decimal_10_2 net_rate
+        varchar_3 currency
+        decimal_10_2 exchange_rate
+        int quantity
+        decimal_12_4 free_of_cost "proposed: changed"
+        int service_id FK
+        varchar_200 company_code
+        int branch_id FK
+        enum_Paid_Partially_Paid_Raised_Void_Printed status
+        datetime created_at
+        datetime updated_at
+        decimal_10_2 staff_comission
+        decimal_10_2 sst
+        tinyint gst_inclusive
+        decimal_17_4 total_costing "proposed: changed"
+        tinyint_1 is_je_generated "proposed: added"
+        text remarks
+        int credit_days
+        tinyint is_opening
+        int import_batch_id FK
+        varchar_50 xo_number
+        decimal_10_2 extra_charges_percent
+        text void_remarks
+        int passenger_id FK
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    cruise_services {
+        int id PK
+        int service_id FK
+        varchar_255 voyage_name
+        varchar_255 voyage_no
+        int cruise_company_maintenance_id FK "proposed: added"
+        int ship_name_maintenance_id FK "proposed: added"
+        datetime embark_at "proposed: added"
+        int seaport_code_maintenance_id FK "proposed: added"
+        datetime disembark_at "proposed: added"
+        int seaport_code_maintenance_id FK "proposed: added"
+        varchar_255 duration
+        int cabin_type_maintenance_id FK "proposed: added"
+        varchar_255 cabin_no
+        varchar_255 grade_no
+        varchar_255 grade_type
+        varchar_255 booking_ref
+        varchar_255 deck_no
+        varchar_255 deck_name
+        varchar_255 dining
+        varchar_255 on_board_credit
+        int group_id "proposed: changed"
+        varchar_255 status
+        varchar_255 itin_remarks
+        varchar_255 remarks
+        varchar_255 cancellation_policy
+        varchar_255 region
+        varchar_255 cruise_offer
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    hotel_rate_breakdowns {
+        int_unsigned id PK
+        decimal_12_4 cost "proposed: changed"
+        decimal_10_2 price
+        date date
+        int service_id FK
+        datetime created_at
+        datetime updated_at
+        tinyint_1 is_lumpsum "proposed: added"
+        double markup
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    invoices {
+        bigint id PK "proposed: changed"
+        varchar_50 invoice_number
+        datetime invoice_date
+        decimal_12_4 total_amount "proposed: changed"
+        varchar_20 currency
+        decimal_10_2 markup
+        decimal_10_2 price
+        decimal_10_6 discount
+        decimal_10_6 rebate
+        varchar_45 sst
+        tinyint_1 manual_sst_override
+        int quantity
+        varchar_255 free_of_cost
+        enum_Raised_Partially_Settled_Printed_Settled_Void status
+        int service_id FK
+        varchar_200 company_code
+        int branch_id FK
+        datetime created_at
+        datetime updated_at
+        varchar_200 customer_no
+        decimal_19_4 transaction_fee "proposed: changed"
+        tinyint manual_transaction_fee
+        decimal_10_2 total_price
+        tinyint_1 je_generated
+        text remarks
+        decimal_10_2 exchange_rate
+        decimal_12_4 customer_supplementary_fee "proposed: changed"
+        json supplementary_fee_ids
+        tinyint is_supplementary_checked
+        tinyint is_supplementary_manual
+        date due_date
+        tinyint_1 is_opening
+        int import_batch_id FK
+        tinyint manual_markup
+        decimal_10_2 transaction_fee_percent
+        text void_remarks
+        int passenger_id FK
+        varchar_10 manual_sst
+        decimal_10_2 sst_value
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    refunds {
+        int id PK
+        varchar_50 order_no
+        varchar_50 invoice_no
+        varchar_255 cost_document_number
+        varchar_500 refund
+        varchar_100 form_of_payment
+        varchar_45 currency_code
+        int currency_code_id FK "proposed: added"
+        decimal_10_5 exchange_rate
+        date exchange_rate_date
+        decimal_17_4 customer_refund_amount "proposed: changed"
+        decimal_17_4 customer_refund_amount_base "proposed: changed"
+        decimal_15_2 customer_airline_charges
+        decimal_15_2 customer_refund_charges
+        decimal_17_4 supplier_refund_amount "proposed: changed"
+        decimal_17_4 supplier_refund_amount_base "proposed: changed"
+        decimal_15_2 supplier_airline_charges
+        decimal_15_2 supplier_refund_charges
+        text refund_remarks
+        json voucher_no
+        varchar_100 bank_in_to
+        tinyint customer_refund_complete
+        tinyint supplier_refund_complete
+        int sales
+        varchar_255 supp_name
+        longtext passenger_name
+        varchar_255 customer_name
+        varchar_255 refund_notice
+        int branch_id FK
+        varchar_200 company_code
+        enum_Void_Printed_Raised status
+        datetime created_at
+        datetime updated_at
+        int service_id FK
+        enum_Flight_Hotel_Insurance_Tour_CarRental_CarTransfer_VISA_Train_Cruise_Miscellaneous_Hajj_Umrah service_type
+        json service_details
+        varchar_50 refund_no
+        int order_id FK "proposed: added"
+        int invoice_id FK
+        int cost_id FK
+        json selected_tickets
+        json selected_segments
+        json selected_passengers
+        tinyint_1 is_je_generated "proposed: added"
+        tinyint_1 is_debit_note_generated "proposed: added"
+        json calculator_overrides
+        int debit_note_id FK
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_car_transfers {
+        int id PK
+        int service_id FK
+        enum_departure_arrival transfer_type
+        varchar_255 flight
+        varchar_255 location
+        datetime estimated_time_departure_at "proposed: added"
+        tinyint_1 is_vip_meet_asset "proposed: added"
+        int car_type_id FK
+        varchar_255 provided_by
+        varchar_255 itin_remarks
+        datetime pick_up_at "proposed: added"
+        varchar_255 pick_up_location
+        datetime drop_off_at "proposed: added"
+        varchar_255 drop_off_location
+        varchar_255 stop_over_one
+        varchar_255 stop_over_two
+        varchar_255 stop_over_three
+        varchar_255 phone_one
+        varchar_255 phone_two
+        varchar_255 status
+        varchar_255 special_request
+        varchar_255 conf_code
+        datetime created_at
+        datetime updated_at
+        int departure_to
+        int arrival_from
+        datetime estimated_time_arrival_at "proposed: added"
+        int no_of_cars
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_flights {
+        bigint id PK "proposed: changed"
+        int service_id FK
+        int city_code_id FK "proposed: added"
+        int city_code_id FK "proposed: added"
+        int airline_id
+        datetime departure_at "proposed: added"
+        datetime arrival_at "proposed: added"
+        varchar_100 flight_number
+        int flight_class
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_hajjs {
+        int id PK
+        int service_id FK
+        varchar_255 package_name
+        int car_rental_status_id FK "proposed: added"
+        datetime departure_at "proposed: added"
+        datetime arrival_at "proposed: added"
+        varchar_255 airline
+        text emergency_notes
+        text other_services_notes
+        text disclaimer
+        text terms_and_conditions
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_hotels {
+        int id PK
+        int service_id FK
+        varchar_255 city
+        varchar_255 hotel_name
+        varchar_255 hotel_chain
+        date check_in_date "proposed: added"
+        date check_out_date "proposed: added"
+        tinyint_1 is_same_day_check_out "proposed: added"
+        int no_of_nights
+        int no_of_rooms
+        int room_id
+        int room_category_id FK
+        int guest_per_room
+        varchar_255 meals
+        varchar_255 other_services
+        varchar_255 remarks
+        varchar_255 address
+        varchar_255 rate_description
+        varchar_255 tel
+        varchar_255 fax
+        int status
+        varchar_255 itin_remarks
+        varchar_255 refrence_code
+        varchar_255 confirmation_no
+        varchar_255 hotel_code
+        datetime confirmation_at "proposed: added"
+        varchar_255 confirmation_by
+        varchar_255 cancellation_policy
+        datetime created_at
+        datetime updated_at
+        int allotment_room_id
+        tinyint rooms_released
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_insurances {
+        int id PK
+        int service_id FK
+        int destination
+        varchar_255 policy_number
+        date purchase_date
+        varchar_255 plan_type
+        date first_coverage_date
+        date last_coverage_date
+        date expiry_date
+        varchar_255 fop
+        varchar_255 cheque_number
+        int status
+        varchar_255 itin_remarks
+        varchar_255 optional_benefit
+        varchar_255 special_instruction
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_miscellaneouss {
+        int id PK "proposed: added"
+        int service_id FK "proposed: added"
+        varchar_255 description "proposed: added"
+        int city "proposed: added"
+        datetime start_date_at "proposed: added"
+        varchar_255 start_date_description "proposed: added"
+        varchar_255 end_date_description "proposed: added"
+        datetime end_date_at "proposed: added"
+        int status "proposed: added"
+        varchar_255 itin_remarks "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_passengers {
+        bigint id PK "proposed: changed"
+        int service_id FK
+        int passenger_id FK
+        datetime created_at
+        datetime updated_at
+        enum_BSP_Temporary stock_type
+        varchar_45 ticket_number
+        varchar_45 conjection_ticket_number
+        tinyint is_processed
+        tinyint_1 is_voided
+        datetime voided_at
+        int voided_by
+        enum_IUR_Manual void_source
+        varchar_500 void_remarks
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_rental_cars {
+        int id PK
+        int service_id FK
+        int city
+        int company_id FK
+        int vehicle_id
+        int rate_type_id
+        datetime pick_up_date_at "proposed: added"
+        varchar_255 pick_up_location
+        datetime drop_off_date_at "proposed: added"
+        varchar_255 drop_off_location
+        int status
+        int no_of_days_hired
+        varchar_255 conf_code
+        varchar_255 itin_remarks
+        datetime created_at
+        datetime updated_at
+        int no_of_cars
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_tours {
+        int id PK
+        int service_id FK
+        varchar_255 package_name
+        varchar_255 package_code
+        int status
+        int destination
+        datetime start_date_at "proposed: added"
+        datetime end_date_at "proposed: added"
+        text itin_remarks
+        datetime created_at
+        datetime updated_at
+        text insurance_options
+        text hotel_bookings
+        text air_travel
+        text visa_service
+        text other_services
+        decimal_17_4 air_travel_cost "proposed: changed"
+        decimal_15_2 air_travel_price
+        decimal_17_4 hotel_bookings_cost "proposed: changed"
+        decimal_15_2 hotel_bookings_price
+        decimal_17_4 insurance_options_cost "proposed: changed"
+        decimal_15_2 insurance_options_price
+        decimal_17_4 visa_service_cost "proposed: changed"
+        decimal_15_2 visa_service_price
+        decimal_17_4 itin_remarks_cost "proposed: changed"
+        decimal_15_2 itin_remarks_price
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_trains {
+        int id PK
+        int service_id FK
+        int from_city
+        int to_city
+        varchar_255 train_class
+        varchar_255 company
+        datetime departure_at "proposed: added"
+        datetime arrival_at "proposed: added"
+        int status
+        varchar_255 itin_remarks
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_types {
+        int id PK
+        varchar_255 type
+        varchar_255 product_description
+        varchar_255 product_code
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_umrahs {
+        int id PK
+        int service_id FK
+        varchar_255 package_name
+        varchar_255 status
+        date departure_date
+        date arrival_date
+        varchar_255 guest_name
+        varchar_255 airline
+        text emergency_notes
+        text other_services_notes
+        text disclaimer
+        text terms_and_conditions
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_visas {
+        bigint id PK "proposed: changed"
+        int service_id FK
+        varchar_255 title
+        varchar_255 surname
+        int visa_ptc_maintenance_id FK "proposed: added"
+        enum_male_female gender
+        int country_code_id FK "proposed: added"
+        int country_code_id FK "proposed: added"
+        int visa_code_maintenance_id FK "proposed: added"
+        decimal_10_2 price
+        decimal_12_4 cost "proposed: changed"
+        varchar_255 passport_type
+        varchar_255 passport_number
+        varchar_255 mobile
+        varchar_255 email
+        varchar_45 address
+        int visa_no_entry_id FK "proposed: added"
+        int visa_purpose_id FK "proposed: added"
+        int visa_urgency_id FK "proposed: added"
+        int visa_validity_id FK "proposed: added"
+        int visa_length_stay_id FK "proposed: added"
+        int process_days
+        varchar_45 remarks
+        varchar_45 given_name
+        varchar_200 status
+        datetime status_at "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    suppliers {
+        int id PK
+        int user_id FK
+        varchar_200 company_code
+        varchar_255 supp_name
+        varchar_255 supp_no
+        int supplier_type_id FK
+        tinyint_1 is_hotel_vendor "proposed: added"
+        tinyint_1 is_sundry_profile "proposed: added"
+        tinyint_1 BSP
+        varchar_255 sabre_code
+        varchar_255 default_payee
+        varchar_255 interface_account_no
+        varchar_255 gst_reg_no
+        varchar_255 service_provided
+        varchar_255 internet_address
+        tinyint_1 is_active "proposed: added"
+        varchar_255 remarks
+        varchar_255 address
+        varchar_255 post_code
+        varchar_255 country_code
+        decimal_12_4 credit_limit "proposed: changed"
+        int currency_code_id FK "proposed: added"
+        decimal_10_2 comission
+        int credit_days_1
+        varchar_255 credit_term_type
+        enum_credit_days_BSP_Payment_Term_BSP_PAYMENT_15_days_Statement_Date_Weekly_COA date_type
+        enum_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday_Sunday weekly
+        tinyint_1 is_last_day_month "proposed: added"
+        datetime other_due_at "proposed: added"
+        varchar_255 e_Nett
+        varchar_255 mint_EFT
+        varchar_255 travel_pay_b2b
+        varchar_255 beneficiary_bk_name
+        varchar_255 bank_code
+        varchar_255 bank_address
+        varchar_255 remarks_bank
+        varchar_255 city_bank
+        varchar_255 country_bank
+        varchar_255 beneficiary_name
+        varchar_255 account_one
+        varchar_255 iban_one
+        varchar_255 account_two
+        varchar_255 iban_two
+        varchar_255 account_three
+        varchar_255 iban_three
+        varchar_255 account_four
+        varchar_255 iban_four
+        varchar_255 swift_code
+        varchar_255 bic
+        varchar_255 benef_reamrks
+        varchar_255 beneficiary_name_two
+        varchar_255 beneficiary_address_two
+        varchar_255 beneficiary_account_two
+        varchar_255 beneficiary_swiftcode_two
+        varchar_255 beneficiary_remarks_two
+        varchar_255 beneficiary_name_three
+        varchar_255 beneficiary_address_three
+        varchar_255 beneficiary_account_three
+        varchar_255 beneficiary_swiftcode_three
+        varchar_255 beneficiary_remarks_three
+        timestamp created_at
+        datetime updated_at
+        int supplier_amend_id FK "proposed: added"
+        decimal_10_2 commission_percentage
+        decimal_12_4 commission_amount "proposed: changed"
+        enum_active_inactive_blacklist_suspend status
+        tinyint_1 is_use_percent_commission "proposed: added"
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    cabin_type_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    car_rental_statuses {
+        external stub "see the diagram that holds this table"
+    }
+    car_types {
+        external stub "see the diagram that holds this table"
+    }
+    city_codes {
+        external stub "see the diagram that holds this table"
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    country_codes {
+        external stub "see the diagram that holds this table"
+    }
+    cruise_company_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    currency_codes {
+        external stub "see the diagram that holds this table"
+    }
+    debit_notes {
+        external stub "see the diagram that holds this table"
+    }
+    import_batches {
+        external stub "see the diagram that holds this table"
+    }
+    orders {
+        external stub "see the diagram that holds this table"
+    }
+    passengers {
+        external stub "see the diagram that holds this table"
+    }
+    room_categories {
+        external stub "see the diagram that holds this table"
+    }
+    seaport_code_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    ship_name_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    supplier_amends {
+        external stub "see the diagram that holds this table"
+    }
+    supplier_types {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    visa_code_maintenance {
+        external stub "see the diagram that holds this table"
+    }
+    visa_length_stays {
+        external stub "see the diagram that holds this table"
+    }
+    visa_no_entries {
+        external stub "see the diagram that holds this table"
+    }
+    visa_ptc_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    visa_purposes {
+        external stub "see the diagram that holds this table"
+    }
+    visa_urgencies {
+        external stub "see the diagram that holds this table"
+    }
+    visa_validities {
+        external stub "see the diagram that holds this table"
+    }
+    users ||--o{ services : "user_id"
+    service_types ||--o{ services : "service_type_id"
+    orders ||--o{ services : "order_id"
+    suppliers ||--o{ services : "supplier_id"
+    services ||--o{ costs : "service_id"
+    import_batches ||--o{ costs : "import_batch_id"
+    passengers ||--o{ costs : "passenger_id"
+    branches ||--o{ costs : "branch_id (proposed)"
+    services ||--o{ cruise_services : "service_id"
+    cruise_company_maintenances ||--o{ cruise_services : "cruise_company_maintenance_id (proposed)"
+    ship_name_maintenances ||--o{ cruise_services : "ship_name_maintenance_id (proposed)"
+    seaport_code_maintenances ||--o{ cruise_services : "seaport_code_maintenance_id (proposed)"
+    seaport_code_maintenances ||--o{ cruise_services : "seaport_code_maintenance_id (proposed)"
+    cabin_type_maintenances ||--o{ cruise_services : "cabin_type_maintenance_id (proposed)"
+    services ||--o{ hotel_rate_breakdowns : "service_id"
+    import_batches ||--o{ invoices : "import_batch_id"
+    passengers ||--o{ invoices : "passenger_id"
+    services ||--o{ invoices : "service_id"
+    branches ||--o{ invoices : "branch_id (proposed)"
+    costs ||--o{ refunds : "cost_id"
+    invoices ||--o{ refunds : "invoice_id"
+    currency_codes ||--o{ refunds : "currency_code_id (proposed)"
+    branches ||--o{ refunds : "branch_id"
+    services ||--o{ refunds : "service_id"
+    debit_notes ||--o{ refunds : "debit_note_id (proposed)"
+    orders ||--o{ refunds : "order_id (proposed)"
+    services ||--o{ service_car_transfers : "service_id"
+    car_types ||--o{ service_car_transfers : "car_type_id"
+    city_codes ||--o{ service_flights : "city_code_id (proposed)"
+    city_codes ||--o{ service_flights : "city_code_id (proposed)"
+    services ||--o{ service_flights : "service_id"
+    car_rental_statuses ||--o{ service_hajjs : "car_rental_status_id (proposed)"
+    services ||--o{ service_hajjs : "service_id"
+    services ||--o{ service_hotels : "service_id"
+    room_categories ||--o{ service_hotels : "room_category_id (proposed)"
+    services ||--o{ service_insurances : "service_id"
+    services ||--o{ service_miscellaneouss : "service_id (proposed)"
+    services ||--o{ service_passengers : "service_id"
+    passengers ||--o{ service_passengers : "passenger_id"
+    services ||--o{ service_rental_cars : "service_id"
+    companies ||--o{ service_rental_cars : "company_id (proposed)"
+    services ||--o{ service_tours : "service_id"
+    services ||--o{ service_trains : "service_id"
+    services ||--o{ service_umrahs : "service_id"
+    services ||--o{ service_umrahs : "service_id"
+    country_codes ||--o{ service_visas : "country_code_id (proposed)"
+    visa_no_entries ||--o{ service_visas : "visa_no_entry_id (proposed)"
+    visa_length_stays ||--o{ service_visas : "visa_length_stay_id (proposed)"
+    country_codes ||--o{ service_visas : "country_code_id (proposed)"
+    visa_ptc_maintenances ||--o{ service_visas : "visa_ptc_maintenance_id (proposed)"
+    visa_purposes ||--o{ service_visas : "visa_purpose_id (proposed)"
+    services ||--o{ service_visas : "service_id"
+    visa_urgencies ||--o{ service_visas : "visa_urgency_id (proposed)"
+    visa_validities ||--o{ service_visas : "visa_validity_id (proposed)"
+    visa_code_maintenance ||--o{ service_visas : "visa_code_maintenance_id (proposed)"
+    users ||--o{ suppliers : "user_id"
+    currency_codes ||--o{ suppliers : "currency_code_id (proposed)"
+    supplier_amends ||--o{ suppliers : "supplier_amend_id (proposed)"
+    supplier_types ||--o{ suppliers : "supplier_type_id"

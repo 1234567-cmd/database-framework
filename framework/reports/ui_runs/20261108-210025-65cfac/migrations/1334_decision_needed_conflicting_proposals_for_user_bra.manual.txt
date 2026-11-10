@@ -1,0 +1,4 @@
+Step M1334: Decision needed: conflicting proposals for user_branches.branch_City_Codes
+MANUAL: this step has no generated SQL.
+Cannot rename user_branches.branch_City_Codes to an existing column 'branch_city_codes'.
+Findings: SCH-052-05d88a23

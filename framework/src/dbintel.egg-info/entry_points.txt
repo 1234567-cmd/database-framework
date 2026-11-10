@@ -1,0 +1,2 @@
+[console_scripts]
+dbintel = dbintel.cli:main

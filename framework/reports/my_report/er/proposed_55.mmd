@@ -1,0 +1,13 @@
+%% Proposed schema of power-suite-staging (55 of 80: around hotel_chain_maintenances)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    hotel_chain_maintenances {
+        int id PK
+        varchar_10 hotel_chain_code
+        varchar_160 hotel_chain_name
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }

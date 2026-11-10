@@ -1,0 +1,8 @@
+# Single-tenant OLTP shop. Convention rules can be tuned with rule overrides.
+workload: OLTP
+tenancy: none
+target_engines: [postgres]
+rules:
+  SCH-047:
+    enabled: false
+audit_exempt_tables: [schema_migrations, currencies, audit_log]

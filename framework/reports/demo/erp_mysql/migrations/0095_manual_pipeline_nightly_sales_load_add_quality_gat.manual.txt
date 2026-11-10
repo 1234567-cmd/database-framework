@@ -1,0 +1,4 @@
+Step M095: Manual: Pipeline nightly_sales_load: add quality gates that run before the output is pub
+MANUAL: this step has no generated SQL.
+Pipeline nightly_sales_load: add quality gates that run before the output is published.
+Findings: DE-009-33c086ba

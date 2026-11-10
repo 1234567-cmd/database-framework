@@ -1,0 +1,17 @@
+%% Current schema of power-suite-staging (35 of 57: around hotel_rate_breakdowns)
+erDiagram
+    hotel_rate_breakdowns {
+        int_unsigned id PK
+        decimal_10_2 cost
+        decimal_10_2 price
+        date date
+        int service_id FK
+        datetime created_at
+        datetime updated_at
+        tinyint_1 lumpsum
+        double markup
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    services ||--o{ hotel_rate_breakdowns : "service_id"

@@ -1,0 +1,4 @@
+Step M1337: Decision needed: conflicting proposals for users.first_name_OTH
+MANUAL: this step has no generated SQL.
+Cannot rename users.first_name_OTH to an existing column 'first_name_oth'.
+Findings: SCH-052-9f74b509

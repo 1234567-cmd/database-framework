@@ -1,0 +1,23 @@
+%% Current schema of power-suite-staging (29 of 57: around webdav_credentials)
+erDiagram
+    webdav_credentials {
+        int id PK
+        varchar_255 company_code FK
+        int user_id FK
+        varchar_160 webdav_username
+        varchar_200 password_hash
+        varchar_200 label
+        tinyint_1 inactive
+        datetime last_used_at
+        varchar_64 last_used_ip
+        datetime created_at
+        datetime updated_at
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ webdav_credentials : "company_code"
+    users ||--o{ webdav_credentials : "user_id"

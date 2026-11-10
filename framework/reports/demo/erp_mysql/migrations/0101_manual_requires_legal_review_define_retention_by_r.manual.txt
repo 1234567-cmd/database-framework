@@ -1,0 +1,4 @@
+Step M101: Manual: Requires legal review: define retention by record class, jurisdiction, start eve
+MANUAL: this step has no generated SQL.
+Requires legal review: define retention by record class, jurisdiction, start event and hold.
+Findings: GVN-006-57fc2b5d

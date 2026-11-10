@@ -1,0 +1,4 @@
+Step M1828: Manual: Keep is_opening in costs only, or maintain the copy through one controlled mecha
+MANUAL: this step has no generated SQL.
+Keep is_opening in costs only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-4f48e74c

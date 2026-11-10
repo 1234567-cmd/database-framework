@@ -1,0 +1,19 @@
+%% Current schema of power-suite-staging (40 of 57: around journal_periods)
+erDiagram
+    journal_periods {
+        int id PK
+        varchar_200 company_code FK
+        varchar_10 fiscal_year
+        int month
+        int year
+        tinyint_1 status
+        datetime start_date
+        datetime end_date
+        datetime report_date
+        datetime created_at
+        datetime updated_at
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ journal_periods : "company_code"

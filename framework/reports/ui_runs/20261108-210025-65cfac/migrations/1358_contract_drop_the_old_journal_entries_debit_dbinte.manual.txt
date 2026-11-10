@@ -1,0 +1,4 @@
+Step M1358: Contract: drop the old journal_entries.debit__dbintel_old
+MANUAL: this step has no generated SQL.
+Table journal_entries matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change. Intended change: Contract: drop the old journal_entries.debit__dbintel_old.
+Findings: SCH-023-ec0cfb6c

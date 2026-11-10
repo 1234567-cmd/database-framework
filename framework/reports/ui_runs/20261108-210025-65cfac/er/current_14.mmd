@@ -1,0 +1,15 @@
+%% Current schema of power-suite-staging (14 of 57: around fee_main_product_codes)
+erDiagram
+    fee_main_product_codes {
+        int id PK
+        int fee_rule_id FK
+        int product_code_id FK
+    }
+    maintenance_fee_groups {
+        external stub "see the diagram that holds this table"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    maintenance_fee_groups ||--o{ fee_main_product_codes : "fee_rule_id"
+    service_types ||--o{ fee_main_product_codes : "product_code_id"

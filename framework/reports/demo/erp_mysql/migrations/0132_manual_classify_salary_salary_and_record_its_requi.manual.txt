@@ -1,0 +1,4 @@
+Step M132: Manual: Classify salary (salary) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify salary (salary) and record its required protections.
+Findings: SECA-004-c6943838

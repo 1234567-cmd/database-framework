@@ -1,0 +1,4 @@
+Step M2611: Manual: Decide whether the values of account_type can change; if so, use a reference tab
+MANUAL: this step has no generated SQL.
+Decide whether the values of account_type can change; if so, use a reference table.
+Findings: SCH-034-550a0184

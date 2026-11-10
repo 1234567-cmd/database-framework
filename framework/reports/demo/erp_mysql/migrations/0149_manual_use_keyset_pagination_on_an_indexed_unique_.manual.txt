@@ -1,0 +1,4 @@
+Step M149: Manual: Use keyset pagination on an indexed, unique ordering.
+MANUAL: this step has no generated SQL.
+Use keyset pagination on an indexed, unique ordering.
+Findings: PERF-012-e6086c56

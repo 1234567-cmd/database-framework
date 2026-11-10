@@ -1,0 +1,4 @@
+Step M044: Decision needed: conflicting proposals for public.comments.updated_at
+MANUAL: this step has no generated SQL.
+Two proposals add public.comments.updated_at with different types.
+Findings: DE-005-e3d826de, SCH-044-1fa0269d

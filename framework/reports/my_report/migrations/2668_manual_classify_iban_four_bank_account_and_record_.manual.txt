@@ -1,0 +1,4 @@
+Step M2668: Manual: Classify iban_four (bank_account) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify iban_four (bank_account) and record its required protections.
+Findings: SECA-004-cb8b75c0

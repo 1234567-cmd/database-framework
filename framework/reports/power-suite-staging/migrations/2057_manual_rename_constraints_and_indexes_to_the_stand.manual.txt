@@ -1,0 +1,4 @@
+Step M2057: Manual: Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and ind
+MANUAL: this step has no generated SQL.
+Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and index_ forms in a planned change.
+Findings: SCH-059-f305c544

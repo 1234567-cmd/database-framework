@@ -1,0 +1,4 @@
+Step M1386: Rename column invoice_settings.hide_ins_cheque_no to is_hide_ins_cheque_no
+MANUAL: this step has no generated SQL.
+Table invoice_settings matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoice_settings.hide_ins_cheque_no to is_hide_ins_cheque_no.
+Findings: SCH-060-e54862b6

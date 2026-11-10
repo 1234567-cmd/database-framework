@@ -1,0 +1,4 @@
+Step M1406: Rename column invoice_settings.ticket_issue_date_in_invoice to is_ticket_issue_date_in_invoice
+MANUAL: this step has no generated SQL.
+Table invoice_settings matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoice_settings.ticket_issue_date_in_invoice to is_ticket_issue_date_in_invoice.
+Findings: SCH-060-c922d059

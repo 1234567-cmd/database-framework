@@ -1,0 +1,4 @@
+Step M2307: Manual: Keep remarks in receipt_settlements only, or maintain the copy through one contr
+MANUAL: this step has no generated SQL.
+Keep remarks in receipt_settlements only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-2ff58cc8

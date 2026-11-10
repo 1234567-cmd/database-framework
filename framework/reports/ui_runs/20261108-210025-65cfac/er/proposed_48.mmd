@@ -1,0 +1,22 @@
+%% Proposed schema of power-suite-staging (48 of 80: around customer_credit_terms)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    customer_credit_terms {
+        bigint id PK "proposed: changed"
+        int customer_id FK
+        int days
+        decimal_10_2 charge_percent
+        tinyint last_day
+        date other_due_date
+        varchar_10 weekly
+        decimal_10_2 ytd_turnover
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customers {
+        external stub "see the diagram that holds this table"
+    }
+    customers ||--o{ customer_credit_terms : "customer_id"

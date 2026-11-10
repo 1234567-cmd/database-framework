@@ -1,0 +1,4 @@
+Step M1898: Manual: Add a description to the table, with no sensitive values.
+MANUAL: this step has no generated SQL.
+Add a description to the table, with no sensitive values.
+Findings: GVN-001-6f9ca4d5

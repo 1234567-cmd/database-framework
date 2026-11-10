@@ -1,0 +1,4 @@
+Step M1904: Manual: Keep email in companies only, or maintain the copy through one controlled mechan
+MANUAL: this step has no generated SQL.
+Keep email in companies only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-7677a7ec

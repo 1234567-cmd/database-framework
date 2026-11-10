@@ -1,0 +1,4 @@
+Step M1767: Manual: Keep company_code in customer_required_data only, or maintain the copy through o
+MANUAL: this step has no generated SQL.
+Keep company_code in customer_required_data only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-ca50d7af

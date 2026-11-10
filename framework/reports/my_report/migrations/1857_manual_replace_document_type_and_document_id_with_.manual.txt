@@ -1,0 +1,4 @@
+Step M1857: Manual: Replace document_type and document_id with one nullable foreign key per parent, 
+MANUAL: this step has no generated SQL.
+Replace document_type and document_id with one nullable foreign key per parent, or an exclusive supertype.
+Findings: SCH-040-8dc54903

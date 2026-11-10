@@ -1,0 +1,4 @@
+Step M1713: Manual: Keep je_generated in customer_deposits only, or maintain the copy through one co
+MANUAL: this step has no generated SQL.
+Keep je_generated in customer_deposits only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-3dbf19aa

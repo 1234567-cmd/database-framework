@@ -1,0 +1,25 @@
+%% Current schema of power-suite-staging (45 of 57: around service_rental_cars)
+erDiagram
+    service_rental_cars {
+        int id PK
+        int service_id FK
+        int city
+        int company_id
+        int vehicle_id
+        int rate_type_id
+        datetime pick_up_date_time
+        varchar_255 pick_up_location
+        datetime drop_off_date_time
+        varchar_255 drop_off_location
+        int status
+        int no_of_days_hired
+        varchar_255 conf_code
+        varchar_255 itin_remarks
+        datetime created_at
+        datetime updated_at
+        int no_of_cars
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    services ||--o{ service_rental_cars : "service_id"

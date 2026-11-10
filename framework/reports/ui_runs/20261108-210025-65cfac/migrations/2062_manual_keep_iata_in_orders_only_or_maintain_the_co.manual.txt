@@ -1,0 +1,4 @@
+Step M2062: Manual: Keep iata in orders only, or maintain the copy through one controlled mechanism 
+MANUAL: this step has no generated SQL.
+Keep iata in orders only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-aae57621

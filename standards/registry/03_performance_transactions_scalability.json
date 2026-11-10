@@ -1,0 +1,1772 @@
+[
+  {
+    "id": "IDX-001",
+    "title": "Index from named query patterns",
+    "statement": "Each secondary index on an OLTP table SHOULD be justified by a named query, join or constraint it serves.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "always",
+    "rationale": "Every index adds write and storage cost, so speculative indexes slow writes without helping any known read.",
+    "exceptions": "An index added ahead of a planned query, recorded with that query and approved by the framework exception approver.",
+    "engine_notes": "No vendor or source gives a maximum index count, so no number is set. SQL Server names speculative indexing as a common mistake and advises extending existing indexes over near-duplicates.",
+    "evidence": [
+      "MSOM-01",
+      "MSOM-09",
+      "MSOM-15",
+      "PERF-09",
+      "PERF-17",
+      "PERF-27",
+      "PGMY-05",
+      "research/design_decision_matrix.md §8, IX-1",
+      "research/architecture_comparison.md §A1, U22"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Each secondary index is traceable to a recorded query, join or constraint.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-002",
+    "title": "Remove unused indexes",
+    "statement": "Indexes that usage statistics show serve no query or constraint SHOULD be removed from OLTP tables.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The engine exposes index usage data over a period long enough to include periodic workloads.",
+    "rationale": "Unused indexes keep charging write, storage and maintenance cost for no read benefit.",
+    "exceptions": "Indexes kept for infrequent but critical runs such as period close, recorded and approved by the framework exception approver.",
+    "engine_notes": "none",
+    "evidence": [
+      "MSOM-01",
+      "MSOM-15",
+      "PERF-17",
+      "research/design_decision_matrix.md §8, IX-1",
+      "research/official_documentation.md §15"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "runtime_monitor",
+    "check_description": "Index usage counters are reviewed and indexes with no recorded use are removed or justified.",
+    "lifecycle_stage": "Monitoring"
+  },
+  {
+    "id": "IDX-003",
+    "title": "Trial index removal before dropping",
+    "statement": "An index MAY be made invisible or modelled hypothetically to test the effect of removing it before it is dropped.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The engine or an extension offers invisible or hypothetical indexes.",
+    "rationale": "Dropping an index that a query still needs causes a plan regression that takes a rebuild to reverse.",
+    "exceptions": "none",
+    "engine_notes": "Invisible indexes exist in Oracle and MySQL. PostgreSQL has none natively; HypoPG provides hypothetical indexes.",
+    "evidence": [
+      "PERF-20",
+      "PERF-53",
+      "research/database_design_standards.md §8.3"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Where a trial was used, its result is recorded with the removal.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-004",
+    "title": "Enforce known uniqueness with a unique constraint or index",
+    "statement": "Columns whose values are unique by business rule SHOULD carry a unique constraint or unique index.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The engine enforces uniqueness.",
+    "rationale": "Without it duplicates can enter and the optimizer loses information about row counts.",
+    "exceptions": "Distributed tables where the engine cannot enforce global uniqueness, with a compensating check approved by the framework exception approver.",
+    "engine_notes": "NULL treatment in UNIQUE differs by engine and is not portable (C-83). [WF] SQL Server, MySQL and Oracle NULL behaviour needs a re-check against the vendor pages.",
+    "evidence": [
+      "MSOM-01",
+      "PGMY-01",
+      "ENG-05",
+      "ENG-10",
+      "ENG-15",
+      "research/database_design_standards.md §8.4",
+      "research/architecture_comparison.md §Part C, C-83"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Attributes documented as unique have a matching unique constraint or index.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-005",
+    "title": "Composite B-tree key order",
+    "statement": "Composite B-tree indexes SHOULD lead with equality columns and then order sort and range columns by query use, and SHOULD NOT be ordered by selectivity alone.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The index is a B-tree or equivalent ordered structure.",
+    "rationale": "A poor leading column stops the index serving its queries, and the most-selective-first folk rule produces that result.",
+    "exceptions": "none",
+    "engine_notes": "Selectivity matters only among independent range columns. MongoDB uses Equality, Sort, Range, with a very selective range before sort. PostgreSQL says multicolumn indexes should be used sparingly and more than three columns is rarely helpful; PostgreSQL 18 skip scan relaxes the leading-column requirement in some cases. Snowflake clustering keys order low to high cardinality, a different mechanism that must not be transferred (C-29).",
+    "evidence": [
+      "PERF-06",
+      "PERF-16",
+      "PERF-18",
+      "PERF-34",
+      "MSOM-17",
+      "LAKE-10",
+      "research/design_decision_matrix.md §8, IX-2",
+      "research/architecture_comparison.md §Part C, C-28, C-29"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Composite index column order is compared with the predicates of the queries it serves.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-006",
+    "title": "Index foreign keys by engine need",
+    "statement": "Foreign key columns SHOULD be indexed where the child is joined on them or the parent rows can be updated or deleted.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A foreign key exists and the engine does not create the index automatically.",
+    "rationale": "Without the index, parent changes scan the child table and on some engines take a broad lock on it.",
+    "exceptions": "Rarely joined append-only children, or parents never updated or deleted, recorded and approved by the framework exception approver.",
+    "engine_notes": "InnoDB creates the index automatically. PostgreSQL does not, and says it is often a good idea. Oracle says index as a rule, to avoid child table locks and full scans, except where the parent key is never updated or deleted. SQL Server says useful but not required. Note 10 and GitLab treat this as mandatory on PostgreSQL; the matrix classification is followed.",
+    "evidence": [
+      "PGMY-01",
+      "PGMY-14",
+      "PERF-24",
+      "MSOM-02",
+      "MSOM-08",
+      "research/design_decision_matrix.md §8, IX-3",
+      "research/architecture_comparison.md §Part C, C-10",
+      "research/official_documentation.md §13, C4"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Foreign keys without a leading-column index are listed and each is indexed or has a recorded exemption.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-007",
+    "title": "Covering indexes for named queries",
+    "statement": "A covering index MAY be used when a named query needs it and the table's write rate has been considered.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A named query would otherwise need repeated row lookups.",
+    "rationale": "Payload columns widen the index and raise write cost, and they can give no benefit on frequently updated tables.",
+    "exceptions": "none",
+    "engine_notes": "SQL Server encourages included columns and warns against too-wide indexes. PostgreSQL payload columns help only when the table changes slowly enough for index-only scans to skip the heap, so its documentation is cautious.",
+    "evidence": [
+      "MSOM-01",
+      "PGMY-12",
+      "PERF-07",
+      "research/design_decision_matrix.md §8, IX-4"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Each covering index names its query and notes the table's update profile.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-008",
+    "title": "Partial and expression indexes for named queries",
+    "statement": "A partial or expression index MAY be used for a named query or subset uniqueness, but not as a replacement for partitioning.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The query predicate matches the index condition or expression.",
+    "rationale": "An index the query does not exactly match is never used, and sets of non-overlapping partial indexes are a poor substitute for partitioning.",
+    "exceptions": "none",
+    "engine_notes": "PostgreSQL and SQL Server support partial or filtered indexes. MySQL and SQL Server index expressions through generated or computed columns.",
+    "evidence": [
+      "PERF-08",
+      "PERF-36",
+      "PGMY-05",
+      "research/design_decision_matrix.md §8, IX-5",
+      "research/official_documentation.md §2"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Each partial or expression index names its query, and no group of them stands in for partitioning.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-009",
+    "title": "Specialized index types by operator need",
+    "statement": "A specialized index type MAY be chosen when the data shape or operator needs it and the B-tree default cannot serve the query.",
+    "level": "OPTIONAL",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "The engine provides the index type and the operator is in use.",
+    "rationale": "Choosing a specialized type without the matching operator adds maintenance cost and gives no read benefit.",
+    "exceptions": "none",
+    "engine_notes": "PostgreSQL offers GIN, GiST, SP-GiST, BRIN and hash; BRIN depends on correlation with physical row order. Hash indexes are equality-only on PostgreSQL and MySQL, and on SQL Server are for memory-optimized tables. Availability elsewhere is engine-specific.",
+    "evidence": [
+      "PGMY-04",
+      "PGMY-05",
+      "PERF-19",
+      "MSOM-01",
+      "research/design_decision_matrix.md §8, IX-6"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "A specialized index records the operator or query that requires it.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-010",
+    "title": "Analytical access paths by platform",
+    "statement": "Large analytical tables SHOULD use the access path native to the platform, such as columnar storage, bitmap indexes, or partitioning and clustering, rather than OLTP index design.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLAP",
+      "data_warehouse"
+    ],
+    "applies_when": "The table is a large fact or analytical table on a platform offering the access path.",
+    "rationale": "OLTP B-tree design does not suit scan-heavy analytical queries, and each platform's own path carries its own DML cost.",
+    "exceptions": "none",
+    "engine_notes": "SQL Server uses clustered columnstore, with vendor-stated gains up to tenfold. Oracle bitmap indexes suit low-cardinality, rarely modified columns and are inappropriate for many OLTP applications. BigQuery uses partitioning and clustering. Snowflake micro-partitions are automatic and clustering keys are for large, typically multi-terabyte tables, with credit cost. Oracle star transformation requires bitmap indexes on fact foreign keys.",
+    "evidence": [
+      "PERF-02",
+      "PERF-24",
+      "PERF-38",
+      "MSOM-12",
+      "CLOUD-13",
+      "LAKE-10",
+      "research/design_decision_matrix.md §8, IX-7",
+      "research/architecture_comparison.md §A2, E17"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Each large analytical table records the platform access path chosen and why.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-011",
+    "title": "Clustering and partitioning on lakehouse tables",
+    "statement": "Lakehouse tables MAY be clustered or partitioned on frequent filter columns, using the mechanism current for the table format, treated as a changeable physical choice.",
+    "level": "OPTIONAL",
+    "scope": [
+      "lakehouse"
+    ],
+    "applies_when": "Queries filter repeatedly on the columns and the table format supports the mechanism.",
+    "rationale": "Treating a physical layout as part of the model makes it costly to change, and legacy advice can conflict with current engine behaviour.",
+    "exceptions": "none",
+    "engine_notes": "Databricks recommends liquid clustering for new tables; it replaces partitioning and ZORDER and is incompatible with both, so 2022 Z-order advice is legacy. Fabric prefers liquid clustering for silver and gold. Iceberg offers hidden partitioning. Delta and Hudi expose partition columns.",
+    "evidence": [
+      "LAKE-03",
+      "CLOUD-21",
+      "PIPE-10",
+      "PIPE-11",
+      "PIPE-12",
+      "research/architecture_comparison.md §A2, E19",
+      "research/official_documentation.md §13, C17"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "The clustering or partitioning choice is recorded and matches the current guidance for the table format.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-012",
+    "title": "Materialized views in OLTP need a cost check",
+    "statement": "A materialized or indexed view MAY be used on an OLTP system only after its DML cost has been assessed against the write rate.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A materialized or indexed view is proposed on a transactional store.",
+    "rationale": "View maintenance adds cost to every write on the base tables.",
+    "exceptions": "none",
+    "engine_notes": "SQL Server offers indexed views with a stated DML cost. Stonebraker argues against them in OLTP. Oracle query rewrite has a stale-tolerant mode with a risk of inaccurate results. In OLAP and warehouse systems, materialized views are a normal tool (see IDX-010).",
+    "evidence": [
+      "PERF-04",
+      "PERF-26",
+      "PERF-38",
+      "research/architecture_comparison.md §Part C, C-19",
+      "research/database_design_standards.md §8.4"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "A proposed OLTP materialized view has a recorded write-cost assessment.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-013",
+    "title": "Partition for manageability, not point lookups",
+    "statement": "A table SHOULD be partitioned only when retention, maintenance or pruning on a dominant filter justifies it, and point lookup speed alone SHOULD NOT be the justification.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "data_warehouse"
+    ],
+    "applies_when": "A table is very large or has data that is removed together.",
+    "rationale": "Partitioning adds planning cost and can slow queries that span many partitions, while the manageability benefits are what the sources agree on.",
+    "exceptions": "A measured case showing a pruning benefit, approved by the framework exception approver.",
+    "engine_notes": "Thresholds are engine-specific and must not be merged: PostgreSQL suggests table size above server memory, Oracle cites 2 GB candidates (dated), SQL Server says partitioning rarely improves OLTP performance. Oracle's performance emphasis comes from DSS-style history tables with pruning (C-20).",
+    "evidence": [
+      "PGMY-06",
+      "PERF-03",
+      "MSOM-11",
+      "research/design_decision_matrix.md §8, IX-8",
+      "research/architecture_comparison.md §Part C, C-20",
+      "research/official_documentation.md §13, C10"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Each partitioned table records its reason, and the reason is not point lookup speed alone.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-014",
+    "title": "Partition key columns in unique keys",
+    "statement": "On natively partitioned tables, every primary or unique key MUST include all partition key columns unless the engine provides a documented alternative and that alternative is recorded.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "OLAP",
+      "data_warehouse"
+    ],
+    "applies_when": "The table is natively partitioned on an engine that enforces uniqueness.",
+    "rationale": "Engines reject or cannot enforce such keys otherwise, so uniqueness is lost or the design fails at creation.",
+    "exceptions": "A documented engine alternative such as an Oracle global index or a SQL Server nonaligned index, recorded with its maintenance cost.",
+    "engine_notes": "PostgreSQL and MySQL require it (engine-enforced). SQL Server requires the partitioning column in the clustering key and unique nonclustered indexes for alignment, with nonaligned indexes as the alternative. Oracle allows a global index without the partitioning key, so the rule is not universal without this exception (C9). Warehouses whose keys are informational do not enforce it.",
+    "evidence": [
+      "PGMY-06",
+      "PGMY-16",
+      "PERF-03",
+      "MSOM-11",
+      "research/design_decision_matrix.md §8, IX-9",
+      "research/architecture_comparison.md §A1, U6",
+      "research/official_documentation.md §13, C9"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Primary and unique keys on partitioned tables include the partition columns, or the alternative is recorded.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-015",
+    "title": "Bound partition counts",
+    "statement": "Partition counts SHOULD stay within the bound justified for the workload and within what the engine plans efficiently.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "OLAP",
+      "data_warehouse"
+    ],
+    "applies_when": "The table is partitioned.",
+    "rationale": "Too many partitions raise planning time and memory.",
+    "exceptions": "none",
+    "engine_notes": "No universal number exists. PostgreSQL planners handle up to a few thousand when most are pruned; SQL Server advises against many hundreds or thousands unless needed and caps at 15,000; MySQL caps at 8192; Oracle allows up to a million. Warehouse workloads can sensibly use more partitions than OLTP.",
+    "evidence": [
+      "PGMY-06",
+      "PGMY-16",
+      "PERF-03",
+      "MSOM-11",
+      "research/database_design_standards.md §9.3",
+      "research/official_documentation.md §15"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "catalog_query",
+    "check_description": "Partition counts per table are listed and compared with the recorded bound.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-016",
+    "title": "Do not assume foreign keys work with partitioning",
+    "statement": "A design combining foreign keys and partitioned tables SHOULD be confirmed against the target engine before adoption.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A partitioned table is on either side of a foreign key.",
+    "rationale": "Portable designs break when an engine rejects the combination.",
+    "exceptions": "none",
+    "engine_notes": "MySQL does not support foreign keys on user-partitioned InnoDB tables. PostgreSQL allows foreign keys to reference partitioned tables since version 12; the child side was not confirmed in the research.",
+    "evidence": [
+      "PGMY-16",
+      "PGMY-06",
+      "ENG-08",
+      "research/architecture_comparison.md §A2, E7"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Foreign keys touching partitioned tables are confirmed against the engine documentation for the target version.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-017",
+    "title": "Predicates that can use the index",
+    "statement": "Query predicates SHOULD compare values of matching types and SHOULD NOT wrap indexed columns in functions unless a matching expression index exists.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "The query runs on a relational engine using indexes or pruning.",
+    "rationale": "Implicit conversions and functions on columns can prevent index use and force scans.",
+    "exceptions": "none",
+    "engine_notes": "MySQL cannot use a string column's index when comparing it to a number. MySQL and SQL Server use generated or computed columns for expression indexing. `database_design_standards.md` 8.4 labels the matching-types statement MANDATORY; the matrix class RECOMMENDED is followed.",
+    "evidence": [
+      "PERF-17",
+      "PERF-23",
+      "PERF-36",
+      "research/design_decision_matrix.md §8, IX-10",
+      "research/database_design_standards.md §8.2"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Reviewed queries have type-matched predicates and no unindexed function on a filtered column.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-018",
+    "title": "Keep statistics current and check plans",
+    "statement": "Engines with cost-based optimizers SHOULD have statistics kept current, and plans for critical queries SHOULD be checked against observed behaviour.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "The engine uses a cost-based optimizer.",
+    "rationale": "Stale statistics lead the planner to choose poor plans, and unmeasured plans hide regressions.",
+    "exceptions": "none",
+    "engine_notes": "PostgreSQL estimates depend on ANALYZE. EXPLAIN ANALYZE really executes the statement, so side effects occur. The research labels this MANDATORY in one place; the matrix class RECOMMENDED is followed.",
+    "evidence": [
+      "PERF-13",
+      "PERF-17",
+      "research/design_decision_matrix.md §8, IX-10",
+      "research/database_design_standards.md §8.4"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "runtime_monitor",
+    "check_description": "Statistics age is monitored and critical query plans are reviewed after major data or version changes.",
+    "lifecycle_stage": "Monitoring"
+  },
+  {
+    "id": "IDX-019",
+    "title": "Optimizer hints as a last resort",
+    "statement": "Optimizer hints SHOULD be used only as a last resort, with a recorded reason and a review at each engine upgrade.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A hint is proposed on an engine that supports hints or a hint extension.",
+    "rationale": "Hints freeze a plan choice that can become wrong as data and engine versions change.",
+    "exceptions": "Each hint is itself an exception and is approved by the framework exception approver.",
+    "engine_notes": "Evidence is the 2015 PostgreSQL community position, which predates current pg_hint_plan use and has not been re-validated. Oracle and SQL Server hint cautions were not fetched.",
+    "evidence": [
+      "PERF-55",
+      "research/design_decision_matrix.md §8, IX-11",
+      "research/database_design_standards.md §8.3"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Each hint has a recorded reason and a review date.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-020",
+    "title": "Select only needed columns",
+    "statement": "Queries in application and pipeline code SHOULD name the columns they need rather than selecting all columns.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "The query is in maintained code rather than ad hoc analysis.",
+    "rationale": "Selecting all columns can stop covering indexes and columnar pruning from helping, and hides schema dependencies.",
+    "exceptions": "Ad hoc analysis needs no approval.",
+    "engine_notes": "No vendor mandates this. Support is indirect, through covering index and columnar mechanics, so strength is recorded as inference despite the matrix listing multi-vendor first.",
+    "evidence": [
+      "PERF-02",
+      "PERF-04",
+      "PERF-07",
+      "research/design_decision_matrix.md §8, IX-12",
+      "research/database_design_standards.md §8.4"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Maintained queries name their columns.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-021",
+    "title": "Keyset pagination for deep paging",
+    "statement": "Deep or unbounded result paging SHOULD use keyset pagination, with OFFSET limited to shallow random access.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Users or services page through large ordered result sets.",
+    "rationale": "OFFSET reads and discards every skipped row, so cost grows with page depth.",
+    "exceptions": "Features that need arbitrary page jumps, which keyset cannot provide, approved by the framework exception approver.",
+    "engine_notes": "Keyset requires a deterministic sort order.",
+    "evidence": [
+      "PERF-35",
+      "research/design_decision_matrix.md §8, IX-13"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Deep paging endpoints use a keyset with a deterministic sort.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-022",
+    "title": "Avoid per-row query loops",
+    "statement": "Related rows SHOULD be fetched with joins or batched queries rather than one query per parent row.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Application or ORM code loads related data.",
+    "rationale": "Per-row fetching multiplies network round trips and load.",
+    "exceptions": "none",
+    "engine_notes": "Single practitioner source (Winand); the round-trip mechanics are inferred from vendor material.",
+    "evidence": [
+      "PERF-37",
+      "research/design_decision_matrix.md §8, IX-14",
+      "research/database_design_standards.md §8.4"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "runtime_monitor",
+    "check_description": "Query logs are checked for repeated single-row statements within one request.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-023",
+    "title": "Default key type on single-node OLTP engines (judgment)",
+    "statement": "On single-node OLTP engines, generated primary keys SHOULD default to a 64-bit integer identity, and a time-ordered 128-bit identifier in native binary form SHOULD be used only where global or client-generated uniqueness is required.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The primary key is generated on a single-node or non-range-sharded engine.",
+    "rationale": "Random keys scatter index writes and enlarge indexes, and 32-bit keys can overflow. This is a judgment, not a measured finding: no independent benchmark compares bigint, UUIDv7 and UUIDv4, and the practitioner tests agree on direction but not magnitude.",
+    "exceptions": "Natural keys or provably bounded lookup tables, approved by the framework exception approver.",
+    "engine_notes": "[WF] BENCH-02 to BENCH-06 figures are from a summarising fetch and need a re-check against the source pages; BENCH-01 is one raw-confirmed blog test. No UUIDv7 benchmark exists for MySQL. Clustered engines (InnoDB, SQL Server) copy the key into secondary indexes, so width and order cost more there; PostgreSQL has heap storage yet still pays index scatter and write-ahead log costs. Time-ordered identifiers expose creation time. On range-sharded engines this default does not apply; see SCL-005. In pooled or sharded tables the key is composite: it includes the tenant or distribution column under TEN-014 and SCL-006.",
+    "evidence": [
+      "BENCH-01",
+      "BENCH-02",
+      "BENCH-03",
+      "BENCH-04",
+      "BENCH-05",
+      "BENCH-06",
+      "DES-04",
+      "DES-15",
+      "DES-16",
+      "PERF-15",
+      "MSOM-01",
+      "PGMY-12",
+      "research/architecture_comparison.md §B9",
+      "research/architecture_comparison.md §Part C, C-13",
+      "research/design_decision_matrix.md §7, DT-11, DT-12",
+      "research/database_design_standards.md §4.5"
+    ],
+    "evidence_strength": "case_study",
+    "status": "active",
+    "decision_ref": "A3",
+    "check_method": "schema_lint",
+    "check_description": "Generated key columns use the approved default type, or carry a recorded reason for another type.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "IDX-024",
+    "title": "Default surrogate key type in analytical models (judgment)",
+    "statement": "Surrogate keys in dimensional marts SHOULD be numeric, and hash or string keys SHOULD be chosen only where parallel, lookup-free loading is the priority and the choice is recorded.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "A dimensional mart needs surrogate keys. Data Vault and other integration layers are outside this default and record their own key convention.",
+    "rationale": "Integer keys favour join and clustering performance while hashes favour parallel, idempotent loads. This is a judgment: no benchmark in the research settles the choice and conflict C-11 is settled for this framework by owner decision A4.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "Kimball uses integers on dimensions except date, and Snowflake strongly recommends numeric join keys and warns that clustering considers only the first five VARCHAR bytes. Oracle recommends sequential integers for dimensions. dbt style says keys should be strings, and dbt's Kimball tutorial and Databricks' Data Vault guidance use hash keys. Canonical rule for OR-3: TYP-031 and RPT-007 are superseded by this rule.",
+    "evidence": [
+      "DES-12",
+      "DWM-01",
+      "DWM-21",
+      "LAKE-05",
+      "LAKE-14",
+      "LAKE-16",
+      "MSOM-12",
+      "research/architecture_comparison.md §Part C, C-11",
+      "research/design_decision_matrix.md §16, RP-6",
+      "research/official_documentation.md §13, C6"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "A4",
+    "check_method": "manual_review",
+    "check_description": "Each analytical model records its key type and, if not the default, the reason.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "TXN-001",
+    "title": "Specify isolation by guarantee",
+    "statement": "Each OLTP transaction class MUST state its required isolation as a guarantee tied to engine, level and configuration, never by the level's name alone.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "always",
+    "rationale": "Isolation names are not portable: the same name gives different anomalies on different engines, so a design that relies on a name can be silently unsafe.",
+    "exceptions": "none",
+    "engine_notes": "Defaults: PostgreSQL and Oracle read committed; InnoDB repeatable read; SQL Server read committed with locking; Azure SQL Database read committed with row versioning. Oracle SERIALIZABLE behaves as snapshot isolation per Hermitage (C-30). InnoDB repeatable read is unsafe for read-then-write logic per Jepsen (C-31). Hermitage is undated and directional. [WF] Spanner's default (ENG-24) needs a re-check against the page.",
+    "evidence": [
+      "TXN-03",
+      "TXN-08",
+      "TXN-10",
+      "TXN-11",
+      "PGMY-08",
+      "PGMY-18",
+      "MSOM-06",
+      "ENG-24",
+      "research/design_decision_matrix.md §9, TX-1",
+      "research/architecture_comparison.md §A1, U12",
+      "research/architecture_comparison.md §Part C, C-30, C-31",
+      "research/database_design_standards.md §10.2"
+    ],
+    "evidence_strength": "standard",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Each transaction class records engine, level, configuration and the guarantee it depends on.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-002",
+    "title": "Do not assume isolation carries across analytical platforms",
+    "statement": "Pipelines writing to analytical platforms SHOULD rely only on the isolation that platform documents for the operation used.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLAP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "A pipeline depends on concurrent read or write behaviour on the platform.",
+    "rationale": "Isolation names and guarantees differ between platforms, so assumptions from OLTP or from another platform can produce wrong results.",
+    "exceptions": "none",
+    "engine_notes": "This is stated separately from TXN-001 because the research does not cover OLAP transaction semantics in depth. Snowflake tables support only READ COMMITTED. Redshift defaults to SNAPSHOT, and calls SNAPSHOT and SERIALIZABLE both serializable levels although only SERIALIZABLE prevents write skew (C-87). Current Databricks isolation options were not captured. [WF] BigQuery snapshot isolation (ENG-21) and Cosmos DB consistency settings (ENG-26) need a re-check against the pages.",
+    "evidence": [
+      "ENG-19",
+      "ENG-21",
+      "ENG-22",
+      "ENG-26",
+      "research/architecture_comparison.md §A2, E25",
+      "research/architecture_comparison.md §Part C, C-87",
+      "research/official_documentation.md §14"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Pipelines depending on concurrency record the platform guarantee they use.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-003",
+    "title": "Protect read-then-write invariants",
+    "statement": "Cross-row invariants enforced by read-then-write logic MUST be protected by true serializable execution with retries, explicit row locks, or a declarative constraint.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The invariant spans rows and runs under snapshot-class or repeatable-read isolation.",
+    "rationale": "Snapshot isolation allows write skew by construction, so limits such as credit or stock can be broken without any error.",
+    "exceptions": "none",
+    "engine_notes": "PostgreSQL repeatable read is snapshot isolation and allows write skew; SERIALIZABLE uses SSI. Oracle SERIALIZABLE is treated as snapshot isolation (C-30). Do not rely on InnoDB repeatable read for this; use locking reads or SERIALIZABLE (C-31). PostgreSQL says to remove explicit locks when SERIALIZABLE protects, while Leach combines both (C-64).",
+    "evidence": [
+      "TXN-03",
+      "TXN-04",
+      "TXN-11",
+      "PGMY-08",
+      "research/design_decision_matrix.md §9, TX-2",
+      "research/architecture_comparison.md §A1, U14",
+      "research/architecture_comparison.md §Part C, C-64"
+    ],
+    "evidence_strength": "standard",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Each cross-row invariant names the mechanism that protects it.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-004",
+    "title": "Retry whole transactions on concurrency failures",
+    "statement": "Transactions that can fail with serialization, deadlock or write-conflict errors MUST be retried as whole transactions.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The engine can abort the transaction for a concurrency reason.",
+    "rationale": "Surfacing or partly retrying these errors loses work or applies part of a change.",
+    "exceptions": "none",
+    "engine_notes": "Signals differ: PostgreSQL SQLSTATE 40001; SQL Server errors 3960 and 1205; Oracle ORA-08177 and ORA-00060; MongoDB TransientTransactionError and UnknownTransactionCommitResult. Use backoff on managed services (Azure SQL, Cloud SQL guidance).",
+    "evidence": [
+      "PGMY-08",
+      "MSOM-18",
+      "CLOUD-14",
+      "research/design_decision_matrix.md §9, TX-3",
+      "research/architecture_comparison.md §A1, U13",
+      "research/official_documentation.md §15"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "A test forces a concurrency failure and confirms the whole transaction is retried.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-005",
+    "title": "Bound transactions by aggregate",
+    "statement": "A single transaction SHOULD change one aggregate, with changes across aggregates handled through eventual consistency.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Domain aggregates are defined.",
+    "rationale": "Transactions spanning aggregates widen contention and couple parts of the domain.",
+    "exceptions": "Documented cases where an invariant truly spans aggregates, approved by the framework exception approver.",
+    "engine_notes": "MongoDB prefers single-document atomicity. The research records debate over whether this rule is absolute.",
+    "evidence": [
+      "ARCH-02",
+      "ARCH-03",
+      "MSOM-18",
+      "research/design_decision_matrix.md §9, TX-4"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Transactions touching more than one aggregate are listed and justified.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-006",
+    "title": "Keep transactions short",
+    "statement": "Transactions SHOULD be no longer than integrity requires and SHOULD NOT remain open while waiting for user input.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "always",
+    "rationale": "Long transactions hold locks and block maintenance, which leads to contention and engine-specific failures.",
+    "exceptions": "none",
+    "engine_notes": "PostgreSQL long transactions hold back VACUUM and it offers idle-in-transaction timeouts. MongoDB imposes a 60-second transaction limit. Oracle can fail with ORA-01555. SQL Server escalates locks at 5,000 on one statement; consider RCSI or SNAPSHOT and batch large deletes. The standards document labels this MANDATORY; the matrix class RECOMMENDED is followed.",
+    "evidence": [
+      "PGMY-08",
+      "MSOM-18",
+      "research/design_decision_matrix.md §9, TX-5",
+      "research/database_design_standards.md §10.2"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "runtime_monitor",
+    "check_description": "Transaction duration and idle-in-transaction time are monitored against a set limit.",
+    "lifecycle_stage": "Monitoring"
+  },
+  {
+    "id": "TXN-007",
+    "title": "Optimistic control across system transactions",
+    "statement": "Business transactions spanning several system transactions SHOULD use a version column with a compare-and-set update.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A user or process edits data across more than one system transaction.",
+    "rationale": "Without a version check one writer can silently overwrite another.",
+    "exceptions": "High-contention cases using pessimistic or advisory locks, approved by the framework exception approver.",
+    "engine_notes": "An integer or engine version is preferred to a timestamp column, which is not guaranteed unique or monotonic [INFERENCE]. SQL Server provides rowversion. PostgreSQL advisory locks fit pessimistic patterns that sit poorly with MVCC.",
+    "evidence": [
+      "DES-14",
+      "PGMY-08",
+      "research/design_decision_matrix.md §9, TX-6",
+      "research/database_design_standards.md §10.2"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Multi-step edits use a version check and handle a lost compare.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-008",
+    "title": "Consistent lock ordering",
+    "statement": "Transactions that lock several rows or resources SHOULD acquire them in a consistent order.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A transaction takes more than one lock.",
+    "rationale": "Inconsistent ordering causes deadlocks.",
+    "exceptions": "none",
+    "engine_notes": "Grounded on PostgreSQL and SQL Server documentation.",
+    "evidence": [
+      "research/database_design_standards.md §10.2"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Code paths taking multiple locks follow a documented order.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-009",
+    "title": "Idempotency for retried side effects",
+    "statement": "Operations whose retries can cause duplicate effects SHOULD record an idempotency key under a unique constraint scoped to the caller, and SHOULD compare request parameters on replay.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Clients or systems can retry an operation with external or financial effects.",
+    "rationale": "Retries after a timeout can double-apply money movement or other effects.",
+    "exceptions": "none",
+    "engine_notes": "Evidence is Stripe documentation and one practitioner source (D2), so the note labels of MANDATORY are not followed. Tenant scoping is [INFERENCE] from Brandur's user scope. Stripe's suggestion of UUIDv4 for client tokens does not conflict with key locality guidance for primary keys.",
+    "evidence": [
+      "CASE-33",
+      "TXN-19",
+      "research/design_decision_matrix.md §9, TX-7",
+      "research/architecture_comparison.md §Part D, D2"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "A duplicate request with the same key returns the recorded outcome and applies no second effect.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-010",
+    "title": "Idempotency replay and retention policy",
+    "statement": "Idempotency records SHOULD return the saved outcome on replay and SHOULD be retained at least 24 hours.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "TXN-009 applies.",
+    "rationale": "Without a stated policy, clients cannot know whether a replay repeats work or how long a key protects them.",
+    "exceptions": "Longer retention set per business need by the framework exception approver.",
+    "engine_notes": "Stripe API v1 replays saved responses including server errors; v2 retries work to completion. Retention is at least 24 hours at Stripe; Brandur's text gives about 24 hours and about 72 hours in different passages (C-65).",
+    "evidence": [
+      "CASE-33",
+      "TXN-19",
+      "research/architecture_comparison.md §Part C, C-65"
+    ],
+    "evidence_strength": "case_study",
+    "status": "active",
+    "decision_ref": "B19",
+    "check_method": "pipeline_test",
+    "check_description": "Replay behaviour and key expiry match the approved policy.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-011",
+    "title": "Transactional outbox for event publication",
+    "statement": "Where events must match committed changes, the event SHOULD be written to an outbox in the same local transaction as the business change.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "streaming"
+    ],
+    "applies_when": "A service publishes events derived from its own database changes.",
+    "rationale": "Writing to the database and the broker separately loses or invents events on partial failure.",
+    "exceptions": "Log-based CDC as the relay or replacement where it meets the same guarantee, approved by the framework exception approver.",
+    "engine_notes": "microservices.io treats log tailing as one relay option. CockroachDB prefers CDC to outbox tables on range-sharded engines to avoid index-tail contention (PERF-48). No vendor specifies a canonical outbox column list, so none is set. The notes' MANDATORY label is not followed.",
+    "evidence": [
+      "TXN-18",
+      "PIPE-05",
+      "TEN-27",
+      "PERF-48",
+      "PERF-56",
+      "research/design_decision_matrix.md §9, TX-8",
+      "research/database_design_standards.md §10.4"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Events are written in the same transaction as the change, and no separate dual write exists.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-012",
+    "title": "Consumers tolerate redelivery",
+    "statement": "Consumers and pipeline steps on at-least-once delivery MUST produce the same result when a message or run is repeated.",
+    "level": "MANDATORY",
+    "scope": [
+      "streaming",
+      "OLTP"
+    ],
+    "applies_when": "Delivery is at-least-once or a run can repeat, including outbox relays and CDC.",
+    "rationale": "A relay may publish more than once and runs can repeat, so a non-idempotent consumer double-applies effects.",
+    "exceptions": "none",
+    "engine_notes": "This rule also applies to the outbox relay in TXN-011. Check for overlap with the pipeline group's rules when registries are merged.",
+    "evidence": [
+      "PIPE-01",
+      "PIPE-06",
+      "PIPE-08",
+      "PIPE-13",
+      "TXN-18",
+      "research/architecture_comparison.md §A1, U15"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "A test replays messages or runs and confirms the result is unchanged.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-013",
+    "title": "Sagas and managed two-phase commit",
+    "statement": "Multi-service workflows MAY use a saga with persisted state and compensating steps, and MAY use two-phase commit only inside a system or manager that governs it.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A workflow spans stores with no shared transaction.",
+    "rationale": "Sagas have no automatic rollback or isolation across steps, and two-phase commit is not available across independently owned services.",
+    "exceptions": "none",
+    "engine_notes": "Spanner runs two-phase commit over consensus inside a managed system. PostgreSQL restricts prepared transactions to external transaction managers and warns they hold back VACUUM. Saga countermeasure detail references an unread book and is not relied on; status columns as semantic locks are [INFERENCE]. Orchestration against choreography has no comparative evidence.",
+    "evidence": [
+      "TXN-17",
+      "TXN-20",
+      "ARCH-06",
+      "research/design_decision_matrix.md §9, TX-9",
+      "research/architecture_comparison.md §Part C, C-62"
+    ],
+    "evidence_strength": "standard",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Multi-service workflows record their compensation steps and where two-phase commit is used.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-014",
+    "title": "Correct posted ledger entries by new entry",
+    "statement": "Posted ledger entries SHOULD be corrected by a new reversing or compensating entry rather than edited in place.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The store is a financial ledger or subledger.",
+    "rationale": "Editing posted entries destroys the history that auditors and reconciliations depend on.",
+    "exceptions": "Product-specific reversal exceptions recorded and approved by the framework exception approver.",
+    "engine_notes": "No standard or regulation read prescribes append-only storage as a database rule (D1). Convergent vendor and case-study practice is the basis, so the notes' MANDATORY label is not followed. Germany is covered by TXN-015. Check for overlap with the financial controls group. Superseded by FIN-034 under OR-6.",
+    "evidence": [
+      "TEN-41",
+      "TEN-42",
+      "TEN-43",
+      "CASE-30",
+      "CASE-31",
+      "ERP-02",
+      "ERP-06",
+      "research/design_decision_matrix.md §9, TX-10",
+      "research/architecture_comparison.md §Part D, D1"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "superseded",
+    "decision_ref": null,
+    "superseded_by": "FIN-034",
+    "check_method": "manual_review",
+    "check_description": "Posted entries are never updated, and corrections appear as new entries.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-015",
+    "title": "German non-alteration of books",
+    "statement": "Commercial and tax book entries subject to HGB section 239(3) or AO section 146(4) MUST NOT be changed in a way that loses their original content or leaves the timing of the change uncertain.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The books fall under German commercial or tax law (Germany only).",
+    "rationale": "A change that loses original content breaches these statutes where they apply. The statutes prescribe no storage mechanism.",
+    "exceptions": "Requires legal review. No exception is defined here.",
+    "engine_notes": "Superseded by FIN-031 under OR-7.",
+    "evidence": [
+      "ERP-23",
+      "research/design_decision_matrix.md §21, FN-20",
+      "research/design_decision_matrix.md §9, TX-10"
+    ],
+    "evidence_strength": "standard",
+    "status": "superseded",
+    "decision_ref": null,
+    "superseded_by": "FIN-031",
+    "check_method": "manual_review",
+    "check_description": "Reviewers confirm the design keeps original content and change timing ascertainable for in-scope books.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-016",
+    "title": "Balance each journal per currency in the posting transaction",
+    "statement": "Each journal SHOULD be checked to balance per currency within the posting transaction.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The store is a financial ledger.",
+    "rationale": "A journal that does not balance is an error that gets far harder to trace once reporting has run.",
+    "exceptions": "none",
+    "engine_notes": "No standard or regulation read prescribes this as a database rule (D1). Evidence is case studies and product documentation. Superseded by FIN-026 under OR-5.",
+    "evidence": [
+      "TEN-41",
+      "TEN-42",
+      "CASE-31",
+      "research/design_decision_matrix.md §9, TX-11",
+      "research/architecture_comparison.md §Part D, D1"
+    ],
+    "evidence_strength": "case_study",
+    "status": "superseded",
+    "decision_ref": null,
+    "superseded_by": "FIN-026",
+    "check_method": "pipeline_test",
+    "check_description": "A test submits an unbalanced journal and confirms rejection.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-017",
+    "title": "EU invoices carry sequential unique numbers",
+    "statement": "Invoices issued by EU VAT-registered suppliers MUST carry a sequential number that uniquely identifies the invoice.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The supplier is VAT-registered in the EU. Other jurisdictions are covered by the legal numbering rules (LG-2 to LG-9).",
+    "rationale": "Non-compliant numbering breaches the VAT Directive invoice content requirement. The Directive does not say whether sequential excludes gaps.",
+    "exceptions": "Requires legal review. National gap rules differ (C-79).",
+    "engine_notes": "Superseded by NUM-001 under OR-8.",
+    "evidence": [
+      "LEG-01",
+      "TEN-39",
+      "research/design_decision_matrix.md §9, TX-12",
+      "research/design_decision_matrix.md §22, LG-1"
+    ],
+    "evidence_strength": "standard",
+    "status": "superseded",
+    "decision_ref": null,
+    "superseded_by": "NUM-001",
+    "check_method": "manual_review",
+    "check_description": "Reviewers confirm the numbering series is sequential and unique for each in-scope supplier.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-018",
+    "title": "Locked counter for continuous number series",
+    "statement": "Where a document number series must be continuous, the number SHOULD be assigned from a locked per-series counter inside the issuing transaction rather than from a sequence or identity column.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A number series has a continuity requirement in its jurisdiction or policy.",
+    "rationale": "Sequence values are consumed even when transactions roll back, so sequences alone cannot give continuous numbering. A per-series counter limits concurrency to one issuer at a time.",
+    "exceptions": "Requires legal review of the gap rule for each jurisdiction.",
+    "engine_notes": "The explicit statement comes from PostgreSQL; applying it to other engines is [INFERENCE]. The locked-counter design is also inference. No single gap rule exists across jurisdictions (C-41, C-79 unresolved). France reads as continuous; the UK tolerates explained gaps; Saudi Arabia consumes a counter value on rejection. Superseded by NUM-019 under OR-4.",
+    "evidence": [
+      "TEN-33",
+      "TEN-39",
+      "LEG-01",
+      "research/design_decision_matrix.md §9, TX-12",
+      "research/architecture_comparison.md §Part C, C-41, C-79",
+      "research/database_design_standards.md §10.4"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "superseded",
+    "decision_ref": "A6",
+    "superseded_by": "NUM-019",
+    "check_method": "pipeline_test",
+    "check_description": "A test rolls back an issuing transaction and confirms no number is lost in a continuous series.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-019",
+    "title": "Set read and write concerns where snapshot needs them",
+    "statement": "Where an engine's snapshot guarantee depends on explicit read and write concern settings, transactions needing that guarantee MUST set them explicitly.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The engine's transaction guarantees depend on such settings.",
+    "rationale": "Defaults or partial settings do not deliver the snapshot behaviour the design relies on.",
+    "exceptions": "none",
+    "engine_notes": "On MongoDB use read concern snapshot with write concern majority. Jepsen's findings on MongoDB 4.2.6 predate the 5.0 majority default and are dated, but its point that snapshot read concern needs majority write concern stands in the sources.",
+    "evidence": [
+      "MSOM-18",
+      "research/design_decision_matrix.md §9, TX-13",
+      "research/database_design_standards.md §10.2"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": "H3",
+    "check_method": "manual_review",
+    "check_description": "Transaction code on affected engines sets both concerns explicitly.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-020",
+    "title": "Route safety-critical reads to the primary",
+    "statement": "Reads that feed safety-critical decisions SHOULD go to the primary or use an engine guarantee proven for that purpose.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Replicas are in use and the read drives a decision that must see current data.",
+    "rationale": "Replica endpoints can give weaker guarantees than the writer, so decisions may rest on stale or inconsistent data.",
+    "exceptions": "none",
+    "engine_notes": "Jepsen found RDS PostgreSQL multi-AZ reader endpoints did not ensure Snapshot Isolation and recommends the writer endpoint for safety-critical reads. MongoDB needs majority read and write concerns for all causal consistency guarantees.",
+    "evidence": [
+      "PERF-31",
+      "research/design_decision_matrix.md §9, TX-14",
+      "research/database_design_standards.md §9.3"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Safety-critical reads are listed with the endpoint or guarantee used.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-021",
+    "title": "Reassess anomaly assumptions at major versions",
+    "statement": "Isolation and anomaly assumptions SHOULD be rechecked at each major engine version.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A major engine upgrade is planned.",
+    "rationale": "Implementations regress and defaults change, so an unrevised assumption can become wrong silently.",
+    "exceptions": "none",
+    "engine_notes": "Jepsen's PostgreSQL 12.3 finding shows that regressions occur. The rule itself is [INFERENCE].",
+    "evidence": [
+      "TXN-10",
+      "TXN-11",
+      "TXN-12",
+      "research/design_decision_matrix.md §9, TX-15"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Upgrade plans include a recheck of the recorded isolation guarantees.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-022",
+    "title": "Favor consistency for coordinated invariants",
+    "statement": "Systems of record whose invariants need coordination, such as uniqueness, sums or sequential numbering, SHOULD favor consistency over availability and latency.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The system is distributed or replicated and holds financial or equivalent invariants.",
+    "rationale": "Weakening coordination on these invariants allows states that cannot be repaired without compensation.",
+    "exceptions": "none",
+    "engine_notes": "No source states this as a rule for ERP. It is [INFERENCE] from Bailis and Brewer's treatment of invariants.",
+    "evidence": [
+      "TXN-15",
+      "research/database_design_standards.md §10.3"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Designs of distributed systems of record identify coordinated invariants and how they are preserved.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "TXN-023",
+    "title": "Describe distributed trade-offs in PACELC terms",
+    "statement": "Distributed design documents SHOULD describe consistency trade-offs for both partition and normal operation, using PACELC terms rather than CAP two-of-three labels.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The system is distributed or replicated.",
+    "rationale": "Two-of-three reasoning is outdated and hides the latency-consistency trade-off during normal operation.",
+    "exceptions": "Teams may use another framework the framework exception approver accepts.",
+    "engine_notes": "Brewer, Abadi and Kleppmann each frame this differently (C-63), settled for this framework by owner decision C8. Abadi's 2012 system classifications predate current defaults and must not be reused as current facts.",
+    "evidence": [
+      "TXN-14",
+      "TXN-15",
+      "TXN-16",
+      "research/architecture_comparison.md §Part C, C-63",
+      "research/database_design_standards.md §10.3"
+    ],
+    "evidence_strength": "standard",
+    "status": "active",
+    "decision_ref": "C8",
+    "check_method": "manual_review",
+    "check_description": "Design documents state the trade-off in both conditions.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "TXN-024",
+    "title": "Do not use creation time as a global order",
+    "statement": "A timestamp column SHOULD NOT be used as the global order of events, and a single-writer sequence or ledger position SHOULD be used where order matters.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A consumer or process depends on the order of records.",
+    "rationale": "Timestamps are not reliably unique or monotonic, and sequence caching allows out-of-order values across sessions.",
+    "exceptions": "none",
+    "engine_notes": "This is [INFERENCE] from PostgreSQL's CREATE SEQUENCE documentation.",
+    "evidence": [
+      "research/database_design_standards.md §10.4"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Processes that depend on order name an ordering column that is not a timestamp.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-001",
+    "title": "Exhaust simpler scaling before sharding",
+    "statement": "OLTP systems SHOULD exhaust vertical scaling and vertical partitioning before horizontal sharding.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Capacity growth is planned.",
+    "rationale": "Sharding adds lasting complexity, and teams in the sources adopted it only after simpler options ran out.",
+    "exceptions": "Workloads known to divide easily and to outgrow a single node, approved by the framework exception approver.",
+    "engine_notes": "Case studies are observational and survivorship-biased. No source gives a numeric threshold for moving between stages. Azure's guidance fits vertical scaling to workloads that do not divide easily. See SCL-003 on planning keys early.",
+    "evidence": [
+      "CASE-01",
+      "CASE-02",
+      "CASE-04",
+      "CASE-08",
+      "PERF-58",
+      "research/design_decision_matrix.md §17, SM-1"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "A sharding proposal records the simpler options tried and why they fell short.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-002",
+    "title": "Shard key selection",
+    "statement": "A shard key SHOULD be present in nearly every transaction, have high cardinality and even frequency, and keep most transactions on one shard.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The system is horizontally distributed.",
+    "rationale": "Poor shard keys create hot shards and force queries across all shards.",
+    "exceptions": "none",
+    "engine_notes": "Citus advises distribution by tenant or entity and not by timestamp. MongoDB advises hashed sharding for monotonic keys; queries without the shard key go to all shards. Vitess uses a unique Primary Vindex. Time is a good range partition key within a node and a poor distribution key across nodes: same column, different mechanism. Scatter-gather is a liability in OLTP and useful for large aggregations. DynamoDB and Cosmos DB want even distribution across partition keys.",
+    "evidence": [
+      "PERF-29",
+      "PERF-30",
+      "PERF-43",
+      "PERF-45",
+      "PERF-46",
+      "CLOUD-06",
+      "CLOUD-20",
+      "CASE-01",
+      "CASE-02",
+      "CASE-07",
+      "research/design_decision_matrix.md §17, SM-2",
+      "research/database_design_standards.md §9.3"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "The shard key is shown against the top transactions, cardinality and value distribution.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-003",
+    "title": "Plan distribution keys early when distribution is expected",
+    "statement": "Where horizontal distribution is expected, key and co-location design SHOULD be planned before tables grow rather than as an afterthought.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Distribution is a realistic future need.",
+    "rationale": "Retrofitting a distribution key means re-keying large tables under load.",
+    "exceptions": "none",
+    "engine_notes": "Azure says partitioning as an afterthought is harder. This does not conflict with SCL-001: capacity scaling comes first, and key design can still anticipate later distribution [INFERENCE].",
+    "evidence": [
+      "PERF-58",
+      "research/database_design_standards.md §9.3"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Models expected to distribute carry a chosen candidate key.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-004",
+    "title": "Many logical shards on fewer physical nodes",
+    "statement": "Sharded systems SHOULD use more logical shards than physical nodes so that capacity can move without re-keying.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The system uses application or middleware sharding.",
+    "rationale": "Tying shards to physical nodes makes every capacity change a re-keying project.",
+    "exceptions": "none",
+    "engine_notes": "Evidence is case studies only. Matrix SM-3 also lists CASE-05 (Pinterest 2012 slides). It is left out as a precaution because research_gaps.md restricts Pinterest content; that restriction names the unverified Medium post (CASE-06), and CASE-05 is itself verified.",
+    "evidence": [
+      "CASE-02",
+      "CASE-03",
+      "research/design_decision_matrix.md §17, SM-3"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "The sharding design records the logical to physical mapping.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-005",
+    "title": "Avoid monotonic leading keys on range-sharded systems",
+    "statement": "Range-sharded systems SHOULD NOT lead high-write keys with monotonic values and SHOULD use the spreading method the platform documents.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The engine distributes data by key range.",
+    "rationale": "Monotonic keys concentrate inserts on one range, creating a write hotspot.",
+    "exceptions": "Low write-rate tables, approved by the framework exception approver.",
+    "engine_notes": "Spanner recommends UUID version 4, bit-reversal or hash prefixes. CockroachDB recommends UUID keys or hash-sharded indexes, noting that hash-sharding makes range reads scan every shard. UUIDv7 reintroduces the monotonic pattern, so it is not a universal answer. This reverses single-node guidance by topology (C-13); see IDX-023.",
+    "evidence": [
+      "CLOUD-11",
+      "PERF-48",
+      "CLOUD-06",
+      "research/design_decision_matrix.md §17, SM-4",
+      "research/architecture_comparison.md §Part C, C-13",
+      "research/official_documentation.md §13, C1"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "On range-sharded engines, no high-write table leads its key with a monotonic column.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "SCL-006",
+    "title": "Distribution column in keys where the engine requires it",
+    "statement": "Where a distribution engine requires the distribution column in primary and foreign keys, keys MUST include it.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The engine imposes this requirement.",
+    "rationale": "The engine otherwise rejects the constraint or cannot enforce it across nodes.",
+    "exceptions": "none",
+    "engine_notes": "Citus requires the distribution column in primary and foreign keys. Other platforms place tenant columns differently: Microsoft as a leading primary key element on sharded tables, Salesforce as a partition key on generic tables (C-16).",
+    "evidence": [
+      "PERF-44",
+      "TEN-07",
+      "CLOUD-19",
+      "research/database_design_standards.md §9.3",
+      "research/architecture_comparison.md §Part C, C-16"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": "H3",
+    "check_method": "schema_lint",
+    "check_description": "On such engines, keys include the distribution column.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "SCL-007",
+    "title": "Keep transactions within a shard",
+    "statement": "Transactions on sharded systems SHOULD stay within one shard key value where possible.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The system is sharded.",
+    "rationale": "Cross-shard transactions add coordination cost and failure modes that application teams must handle.",
+    "exceptions": "Consensus-based engines designed for distributed transactions, per platform documentation, approved by the framework exception approver.",
+    "engine_notes": "Spanner runs two-phase commit over consensus. Citus co-location keeps joins local to a shard, and Figma and Notion keep joins within shard locality (C-69).",
+    "evidence": [
+      "CASE-01",
+      "CASE-04",
+      "TXN-20",
+      "PERF-44",
+      "research/design_decision_matrix.md §17, SM-5",
+      "research/architecture_comparison.md §Part C, C-69"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Cross-shard transactions are listed and justified.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "SCL-008",
+    "title": "Build or adopt a sharding layer",
+    "statement": "Teams needing sharding MAY adopt an existing sharding layer by default and MAY build one only with a recorded reason.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A sharding layer is needed.",
+    "rationale": "A home-built layer carries lasting maintenance, and adopted layers bring operational and fit limits. No comparative evidence exists, so this is a judgment.",
+    "exceptions": "Decision recorded by the framework exception approver.",
+    "engine_notes": "Figma and Notion built their own, and Slack and GitHub adopted Vitess (X22). The maturity picture changes over time (C-71).",
+    "evidence": [
+      "CASE-01",
+      "CASE-02",
+      "CASE-04",
+      "CASE-07",
+      "research/design_decision_matrix.md §17, SM-6",
+      "research/architecture_comparison.md §A6, X22",
+      "research/architecture_comparison.md §Part C, C-71"
+    ],
+    "evidence_strength": "case_study",
+    "status": "active",
+    "decision_ref": "C9",
+    "check_method": "manual_review",
+    "check_description": "The sharding choice and reason are recorded.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-009",
+    "title": "Read replicas with session guarantees",
+    "statement": "Reads that must see the writer's own changes SHOULD go to the primary or use the engine's session or causal guarantees.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Read replicas are in use.",
+    "rationale": "Replicas lag, so a user can fail to see their own change.",
+    "exceptions": "none",
+    "engine_notes": "PostgreSQL replication is asynchronous by default, with remote_apply to wait for replay. MongoDB needs majority read and write concerns for causal guarantees. [WF] SQL Server redo visibility (ENG-12) and MySQL WAIT_FOR_EXECUTED_GTID_SET (ENG-02) need a re-check against the pages.",
+    "evidence": [
+      "PERF-31",
+      "ENG-02",
+      "ENG-07",
+      "ENG-12",
+      "CASE-53",
+      "research/design_decision_matrix.md §17, SM-7",
+      "research/architecture_comparison.md §A2, E26"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Read-your-writes paths name the endpoint or guarantee used.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-010",
+    "title": "Asynchronous replicas for reporting",
+    "statement": "Asynchronous replicas MAY serve reporting provided their results do not feed transactional decisions.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLAP"
+    ],
+    "applies_when": "Reports run on a replica.",
+    "rationale": "Stale replica data feeding a transactional decision can cause incorrect actions.",
+    "exceptions": "none",
+    "engine_notes": "No independent HTAP isolation benchmark was found, and HTAP claims stay at architecture level (B9).",
+    "evidence": [
+      "research/database_design_standards.md §10.3",
+      "research/architecture_comparison.md §B9"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Replica-based reports are not inputs to transactional processes.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-011",
+    "title": "Connection pooling with known feature limits",
+    "statement": "Connection pooling MAY be used with its feature limits recorded.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Connection count limits throughput.",
+    "rationale": "Transaction pooling silently breaks session-level features.",
+    "exceptions": "none",
+    "engine_notes": "PgBouncer transaction mode disables session-level features such as session advisory locks and SQL-level PREPARE. ProxySQL was not fetched.",
+    "evidence": [
+      "PERF-52",
+      "research/design_decision_matrix.md §17, SM-8"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "The pooling mode is recorded and no session-level feature relies on it.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-012",
+    "title": "Cache-aside for static read-heavy data",
+    "statement": "Cache-aside MAY be used for relatively static, frequently read data with an invalidation approach recorded.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Read load justifies a cache.",
+    "rationale": "Cache-aside does not guarantee consistency, so stale values can be served.",
+    "exceptions": "none",
+    "engine_notes": "none",
+    "evidence": [
+      "PERF-57",
+      "research/design_decision_matrix.md §17, SM-9"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Cached entities name their invalidation approach.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-013",
+    "title": "CQRS and separate read models",
+    "statement": "A separate read store MAY be introduced only when scale or storage needs differ between reads and writes.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The same database cannot serve reads and writes adequately.",
+    "rationale": "A separate read model adds synchronisation and eventual consistency.",
+    "exceptions": "none",
+    "engine_notes": "CQRS is explicitly unsuited to simple CRUD. Azure guidance recommends outbox and idempotent consumers with it.",
+    "evidence": [
+      "PERF-56",
+      "ARCH-07",
+      "research/design_decision_matrix.md §17, SM-10"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "A proposed read store states the scale or storage need.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-014",
+    "title": "Storage engine family choice",
+    "statement": "An LSM engine MAY be chosen for write-heavy workloads, with B-tree remaining the default for read latency.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A storage engine family is being selected.",
+    "rationale": "LSM engines trade write, space and read amplification according to compaction style.",
+    "exceptions": "none",
+    "engine_notes": "RocksDB documents compaction trade-offs. DDIA chapter-level comparisons were not verified and are not used.",
+    "evidence": [
+      "PERF-42",
+      "research/design_decision_matrix.md §17, SM-11"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "The engine family choice records the workload and compaction trade-off.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-015",
+    "title": "Prefer evolving the incumbent engine",
+    "statement": "Teams SHOULD evolve the incumbent engine before rewriting to a new one.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "An engine replacement is proposed.",
+    "rationale": "Teams in the sources repeatedly rejected rewrites as riskier than evolving what they ran.",
+    "exceptions": "A documented limit that the incumbent cannot meet, approved by the framework exception approver.",
+    "engine_notes": "Uber's switch from PostgreSQL to MySQL is contested and must not be generalised (C-66).",
+    "evidence": [
+      "CASE-01",
+      "CASE-02",
+      "CASE-04",
+      "CASE-07",
+      "CASE-09",
+      "research/design_decision_matrix.md §17, SM-12",
+      "research/architecture_comparison.md §Part C, C-66"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "A replacement proposal records why the incumbent cannot meet the need.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "SCL-016",
+    "title": "Stay within SLA-conditioned cloud bounds",
+    "statement": "Managed database deployments that depend on the vendor SLA MUST follow the operational guidelines that condition it.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The instance runs on RDS, Aurora or Cloud SQL and relies on SLA coverage.",
+    "rationale": "Breaching the guidelines removes SLA coverage for the instance.",
+    "exceptions": "Accepted loss of SLA coverage, approved by the framework exception approver.",
+    "engine_notes": "AWS states that the RDS SLA requires following its guidelines; Cloud SQL states the same for its SLA. The 10,000-table figure is shared by RDS and Cloud SQL. Guidelines change, so use the current vendor pages.",
+    "evidence": [
+      "CLOUD-09",
+      "CLOUD-14",
+      "research/design_decision_matrix.md §17, SM-13",
+      "research/official_documentation.md §15"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "runtime_monitor",
+    "check_description": "Instance metrics and table counts are compared with the current vendor guidelines.",
+    "lifecycle_stage": "Monitoring"
+  },
+  {
+    "id": "SCL-017",
+    "title": "Respect published hard limits",
+    "statement": "Schemas MUST stay within the engine's published hard limits for keys, indexes, partitions and identifiers.",
+    "level": "MANDATORY",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "always",
+    "rationale": "Exceeding an engine-enforced limit fails at creation or at run time.",
+    "exceptions": "none",
+    "engine_notes": "Limits vary by engine and are listed per platform in the official documentation review: for example MongoDB allows 64 indexes per collection, SQL Server allows 999 nonclustered indexes, and MySQL allows 8192 partitions.",
+    "evidence": [
+      "MSOM-01",
+      "MSOM-02",
+      "PERF-03",
+      "PGMY-16",
+      "research/official_documentation.md §15",
+      "research/official_documentation.md §14"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Schema objects are checked against the published limits for the target engine.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "SCL-018",
+    "title": "Bound partition size in wide-column stores",
+    "statement": "Partition keys in wide-column stores SHOULD be designed to bound partition size.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The store is wide-column.",
+    "rationale": "Unbounded partitions are what bucketing is meant to prevent, and deletes are writes that leave tombstones.",
+    "exceptions": "none",
+    "engine_notes": "Discord's bucketing is the basis. Evidence is a single company.",
+    "evidence": [
+      "CASE-15",
+      "CASE-16",
+      "research/design_decision_matrix.md §17, SM-14"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "The partition key design states how partition size is bounded.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "SCL-019",
+    "title": "Enforce domain boundaries before moving data",
+    "statement": "Schema domain boundaries SHOULD be enforced by linters or experiments before data is physically moved.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Tables are to be split across clusters or services.",
+    "rationale": "Moving data while cross-domain queries still exist breaks those queries.",
+    "exceptions": "none",
+    "engine_notes": "One organization's practice (GitHub).",
+    "evidence": [
+      "CASE-04",
+      "research/design_decision_matrix.md §17, SM-15"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Cross-domain joins and transactions are detected and cleared before the move.",
+    "lifecycle_stage": "Data Modeling"
+  }
+]

@@ -1,0 +1,4 @@
+Step M2142: Manual: Classify passport_number (national_id) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify passport_number (national_id) and record its required protections.
+Findings: SECA-004-b5868f9e

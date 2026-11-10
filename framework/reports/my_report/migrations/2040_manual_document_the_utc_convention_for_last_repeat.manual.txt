@@ -1,0 +1,4 @@
+Step M2040: Manual: Document the UTC convention for last_repeat_at, or move it to a UTC-normalizing 
+MANUAL: this step has no generated SQL.
+Document the UTC convention for last_repeat_at, or move it to a UTC-normalizing type.
+Findings: SCH-030-f822c70a

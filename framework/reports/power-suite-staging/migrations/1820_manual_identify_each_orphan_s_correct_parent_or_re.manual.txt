@@ -1,0 +1,4 @@
+Step M1820: Manual: Identify each orphan's correct parent or restore the missing parent. Do not dele
+MANUAL: this step has no generated SQL.
+Identify each orphan's correct parent or restore the missing parent. Do not delete records automatically; financial and business records are preserved.
+Findings: DQ-009-ed149d25

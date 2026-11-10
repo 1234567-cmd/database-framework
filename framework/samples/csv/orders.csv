@@ -1,0 +1,5 @@
+order_id,customer_id,amount,status,ordered_on
+1,1,120.50,open,2024-03-01
+2,2,75.00,shipped,2024-03-02
+3,9,33.10,open,2024-03-03
+4,4,18.75,cancelled,2024-03-04

@@ -1,0 +1,4 @@
+Step M2880: Manual: Confirm whether the table is standalone, or retire it.
+MANUAL: this step has no generated SQL.
+Confirm whether the table is standalone, or retire it.
+Findings: SCH-045-1ecdc235

@@ -1,0 +1,14 @@
+%% Proposed schema of power-suite-staging (41 of 80: around car_types)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    car_types {
+        int id PK
+        varchar_255 car_type
+        int display_order
+        varchar_255 car_type_des
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }

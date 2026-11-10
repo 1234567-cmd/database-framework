@@ -1,0 +1,4 @@
+Step M2299: Manual: Document the UTC convention for heartbeat_at, or move it to a UTC-normalizing ty
+MANUAL: this step has no generated SQL.
+Document the UTC convention for heartbeat_at, or move it to a UTC-normalizing type.
+Findings: SCH-030-83e824c9

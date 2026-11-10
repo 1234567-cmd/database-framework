@@ -1,0 +1,4 @@
+Step M1631: Manual: Decide whether the values of doc_status can change; if so, use a reference table
+MANUAL: this step has no generated SQL.
+Decide whether the values of doc_status can change; if so, use a reference table.
+Findings: SCH-034-02ab70ff

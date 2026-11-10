@@ -1,0 +1,424 @@
+# Data quality rules. All read through db.data and respect Profile.data_sample_limit.
+- id: DQ-001
+  check: data_quality.empty_tables
+  title: "Table {table} is empty"
+  category: data_quality
+  severity: informational
+  kind: optional_improvement
+  standards: [DQA-012]
+  requires: [data]
+  root_cause: "The table has no rows; it may be unused or not yet populated."
+  business_impact: "Unused structures add maintenance cost and confusion."
+  technical_impact: "No data can be profiled in {table}."
+  solution: "Confirm whether the table is in use, and remove it through normal change control if it is not."
+  complexity: low
+  migration: "None until the table's purpose is confirmed."
+  risks: "A table can be empty by design in this environment."
+  validation: "Confirm usage with the owning team."
+
+- id: DQ-002
+  check: data_quality.exact_duplicates
+  title: "Duplicate rows in {table}"
+  category: data_quality
+  severity: medium
+  kind: confirmed_defect
+  standards: [DQA-001, DQA-012]
+  requires: [data]
+  root_cause: "No key prevents the same record from being written more than once."
+  business_impact: "Duplicates overstate counts and amounts in reports."
+  technical_impact: "Rows repeat across all compared columns in {table}."
+  solution: "Decide the surviving records under a repair plan, then enforce a key."
+  complexity: medium
+  migration: "Manual repair plan, then a unique constraint. Records are not deleted automatically."
+  risks: "Rows that look identical can be separate business events."
+  validation: "Re-run the check after repair; the duplicate count must be zero."
+  params:
+    sample_limit: 100000
+    min_columns: 2
+
+- id: DQ-003
+  check: data_quality.natural_key_duplicates
+  title: "Likely natural key {table}.{column} has duplicates"
+  category: data_quality
+  severity: medium
+  kind: context_dependent
+  standards: [DQA-001, DQA-012]
+  requires: [data]
+  root_cause: "A column that looks like a business identifier has no unique constraint."
+  business_impact: "Two records with one identifier can cause wrong postings or wrong lookups."
+  technical_impact: "Values of {column} repeat, within the tenant scope where one exists."
+  solution: "Confirm whether {column} is a business key; if so, repair the duplicates under a plan and enforce uniqueness."
+  complexity: medium
+  migration: "Manual repair plan, then a unique index scoped to the tenant where applicable."
+  risks: "The column may not be a key at all; this rests on its name and cardinality."
+  validation: "Re-run the check after repair."
+  confidence: 0.6
+  params:
+    sample_limit: 100000
+    min_distinct_ratio: 0.8
+    name_patterns: ['(^|_)(code|sku|slug|username|email|iban)$', '_(number|no|num|ref|reference)$']
+    exclude_patterns: ['currency', 'country', 'status', 'type', 'language', 'postal', 'zip', 'state', 'phone']
+
+- id: DQ-004
+  check: data_quality.unenforced_key_duplicates
+  title: "Declared key ({key_columns}) on {table} has duplicates"
+  category: data_integrity
+  severity: high
+  kind: confirmed_defect
+  standards: [DQA-003]
+  requires: [data]
+  workloads: [OLAP, data_warehouse, lakehouse]
+  root_cause: "The platform does not enforce the declared key, and the loads do not guarantee it."
+  business_impact: "Joins on this key multiply rows and misstate figures."
+  technical_impact: "({key_columns}) is declared unique but repeats in {table}."
+  solution: "Repair under a plan, then add a uniqueness test and a merge on this key."
+  complexity: medium
+  migration: "Manual repair plan, then pipeline changes."
+  risks: "Optimizer settings that trust the key give wrong results until it is repaired."
+  validation: "Add a recurring uniqueness test on the key."
+
+- id: DQ-005
+  check: data_quality.high_null_rate
+  title: "High NULL rate in {table}.{column} ({null_ratio})"
+  category: data_quality
+  severity: low
+  kind: optional_improvement
+  standards: [DQA-012]
+  requires: [data]
+  root_cause: "The column is rarely populated."
+  business_impact: "Reports relying on this column are incomplete."
+  technical_impact: "{null_ratio} of sampled rows hold NULL in {column}."
+  solution: "Confirm whether the column is needed and whether its source is populating it."
+  complexity: low
+  migration: "None until the need is confirmed."
+  risks: "Sparse columns can be valid by design."
+  validation: "Track completeness over time."
+  params:
+    sample_limit: 100000
+    max_null_ratio: 0.5
+    min_rows: 100
+    exclude_patterns: ['deleted', '_end', 'end_', 'closed', 'cancelled', 'notes?$', 'comment', 'description', '_to$', 'updated_by']
+
+- id: DQ-006
+  check: data_quality.mandatory_looking_nulls
+  title: "NULLs in mandatory-looking column {table}.{column}"
+  category: data_quality
+  severity: medium
+  kind: context_dependent
+  standards: [DQA-001, DQA-012]
+  requires: [data]
+  root_cause: "A column that is mostly populated allows NULL and some rows have none."
+  business_impact: "Records missing a required attribute can fail processing or reporting."
+  technical_impact: "A few rows in {column} are NULL, which suggests a write path that skips it."
+  solution: "Populate the missing values, then add NOT NULL if the attribute is truly required."
+  complexity: low
+  migration: "Manual data repair, then a constraint."
+  risks: "The attribute may legitimately be optional for some records."
+  validation: "Confirm the count of NULL values is zero after repair."
+  confidence: 0.6
+  params:
+    sample_limit: 100000
+    max_null_ratio: 0.2
+    name_patterns: ['(^|_)name$', '(^|_)code$', '(^|_)status$', '(^|_)(amount|total|price|quantity|qty)$', '^created_at$', '^email$']
+    exclude_patterns: ['middle_name', 'nick', 'alias', 'deleted', 'second']
+
+- id: DQ-007
+  check: data_quality.orphans_declared
+  title: "Orphan rows in {table}.{column} ({basis})"
+  category: data_integrity
+  severity: high
+  kind: confirmed_defect
+  standards: [DQA-002]
+  requires: [data]
+  workloads: [OLTP]
+  root_cause: "References exist with no parent, because constraints were disabled or data was loaded around them."
+  business_impact: "Records that point to nothing are dropped by joins, so totals are understated."
+  technical_impact: "Values of {column} have no match in {ref_table}."
+  solution: "Repair each orphan under a plan by restoring or correcting its parent."
+  complexity: medium
+  migration: "Manual repair plan, then validate the foreign key. Records are not deleted automatically."
+  risks: "Repairs can affect posted records; involve the data owner."
+  validation: "Re-run the check; the orphan count must be zero."
+  params: &orphan_params
+    sample_limit: 100000
+
+- id: DQ-008
+  check: data_quality.orphans_declared
+  title: "Orphan rows in analytical table {table}.{column} ({basis})"
+  category: data_integrity
+  severity: high
+  kind: confirmed_defect
+  standards: [DQA-005]
+  requires: [data]
+  workloads: [data_warehouse, lakehouse]
+  root_cause: "The platform does not enforce the relationship, and no ETL lookup or test guards it."
+  business_impact: "Facts with no dimension are lost from reports or grouped under the wrong member."
+  technical_impact: "Values of {column} have no match in {ref_table}."
+  solution: "Repair the load under a plan, and add a relationship test with an orphan count."
+  complexity: medium
+  migration: "Manual repair plan and pipeline change."
+  risks: "Late-arriving dimensions can look like orphans."
+  validation: "Add a recurring relationship test."
+  params: *orphan_params
+
+- id: DQ-009
+  check: data_quality.orphans_inferred
+  title: "Orphan references in {table}.{column} to {ref_table} ({basis})"
+  category: data_integrity
+  severity: high
+  kind: context_dependent
+  standards: [DQA-002]
+  requires: [data]
+  workloads: [OLTP]
+  root_cause: "The column looks like a reference, but no foreign key is declared, so the engine does not enforce it."
+  business_impact: "Records that point to nothing are dropped by joins, so totals are understated."
+  technical_impact: "Some values of {column} have no match in {ref_table}."
+  solution: "Confirm the relationship, repair the orphans under a plan, then declare the foreign key."
+  complexity: medium
+  migration: "Manual repair plan, then a foreign key. Records are not deleted automatically."
+  risks: "The inferred relationship can be wrong when the match rate is low."
+  validation: "Re-run after repair and confirm the foreign key validates."
+  confidence: 0.6
+  params: &inferred_params
+    sample_limit: 100000
+    reference_suffix: _id
+    strong_match_ratio: 0.9
+    min_match_ratio: 0.5
+
+- id: DQ-010
+  check: data_quality.orphans_inferred
+  title: "Orphan references in analytical table {table}.{column} to {ref_table} ({basis})"
+  category: data_integrity
+  severity: medium
+  kind: context_dependent
+  standards: [DQA-005]
+  requires: [data]
+  workloads: [data_warehouse, lakehouse]
+  root_cause: "The relationship is implicit and no test or lookup protects it."
+  business_impact: "Facts with no matching dimension are lost from reports."
+  technical_impact: "Some values of {column} have no match in {ref_table}."
+  solution: "Confirm the relationship and add a relationship test with an orphan count."
+  complexity: medium
+  migration: "Pipeline change and a manual repair plan."
+  risks: "The inferred relationship can be wrong when the match rate is low."
+  validation: "Add a recurring relationship test."
+  confidence: 0.6
+  params: *inferred_params
+
+- id: DQ-011
+  check: data_quality.invalid_formats
+  title: "Invalid {format_name} values in {table}.{column}"
+  category: data_quality
+  severity: medium
+  kind: confirmed_defect
+  standards: [DQA-012]
+  requires: [data]
+  root_cause: "The column is free text, and no validation runs at the point of write."
+  business_impact: "Invalid values break downstream processing and communications."
+  technical_impact: "Some values of {column} do not meet {format_name}."
+  solution: "Correct the values with the data owner and validate them at write."
+  complexity: low
+  migration: "Manual data repair, then a CHECK or application validation."
+  risks: "A wide pattern can reject unusual but valid values."
+  validation: "Re-run the check after repair. Evidence is masked except for code lists."
+  params:
+    sample_limit: 1000
+    max_invalid_ratio: 0.5
+    formats:
+      - {name: email format, name_patterns: ['(^|_)e?mail($|_)'], exclude_patterns: ['_at$', 'verified', 'sent', 'opt'], regex: '[^@\s]+@[^@\s]+\.[A-Za-z]{2,}'}
+      - {name: date text, name_patterns: ['(^|_)date($|_)', '_date$', '_dt$'], exclude_patterns: ['update', 'candidate', 'mandate'], validator: date}
+      - {name: numeric text, name_patterns: ['(^|_)(amount|price|quantity|qty|total)($|_)'], exclude_patterns: ['_text$', 'words'], regex: '[+-]?\d+(\.\d+)?', safe_examples: true}
+      - {name: ISO currency code, name_patterns: ['^currency$', '(^|_)currency_code$', '^currency_iso$'], regex: '[A-Z]{3}', safe_examples: true}
+      - {name: ISO country code, name_patterns: ['^country$', '(^|_)country_code$', '^country_iso$'], regex: '[A-Z]{2,3}', safe_examples: true}
+
+- id: DQ-012
+  check: data_quality.negative_values
+  title: "Negative values in {table}.{column}"
+  category: data_quality
+  severity: medium
+  kind: context_dependent
+  standards: [DQA-012]
+  requires: [data]
+  root_cause: "No CHECK constraint restricts the column, and the write path accepted a negative value."
+  business_impact: "Negative prices or quantities misstate totals."
+  technical_impact: "Sampled rows in {column} are negative."
+  solution: "Confirm negatives are not valid here (for example refunds), correct them, then add a CHECK."
+  complexity: low
+  migration: "Manual data repair, then a CHECK."
+  risks: "Returns and adjustments may be stored as negatives by design."
+  validation: "Re-run after repair."
+  params:
+    sample_limit: 100000
+    non_negative_patterns: ['(^|_)(unit_)?price($|_)', '(^|_)quantity($|_)', '(^|_)qty($|_)']
+    exclude_patterns: ['adjust', 'delta', 'change', 'variance']
+
+- id: DQ-013
+  check: data_quality.future_dates
+  title: "Future dates in {table}.{column}"
+  category: data_quality
+  severity: medium
+  kind: confirmed_defect
+  standards: [DQA-012]
+  requires: [data]
+  root_cause: "A creation timestamp is written from an unreliable clock or from a wrong input."
+  business_impact: "Period reports and aging calculations are misstated."
+  technical_impact: "Values in {column} are later than the current time."
+  solution: "Find the writer producing these dates and correct the values."
+  complexity: low
+  migration: "Manual data repair."
+  risks: "Time-zone handling can produce small offsets, which the tolerance allows for."
+  validation: "Re-run after repair."
+  params:
+    sample_limit: 100000
+    tolerance_days: 1
+    name_patterns: ['^created_(at|on|date)$', '^inserted_at$', '^recorded_at$']
+
+- id: DQ-014
+  check: data_quality.end_before_start
+  title: "End before start in {table}: {column}"
+  category: data_quality
+  severity: medium
+  kind: confirmed_defect
+  standards: [DQA-012]
+  requires: [data]
+  root_cause: "No CHECK constraint relates the two columns."
+  business_impact: "Date ranges that go backward break duration and period logic."
+  technical_impact: "{column} is earlier than {start_column} in some rows."
+  solution: "Correct the rows with the data owner, then add a CHECK."
+  complexity: low
+  migration: "Manual data repair, then a CHECK."
+  risks: "Text-typed dates can compare wrongly; confirm their format first."
+  validation: "Re-run after repair."
+  params:
+    sample_limit: 100000
+    column_pairs:
+      - [start_date, end_date]
+      - [valid_from, valid_to]
+      - [effective_from, effective_to]
+      - [started_at, ended_at]
+      - [starts_at, ends_at]
+      - [period_start, period_end]
+
+- id: DQ-015
+  check: data_quality.casing_variants
+  title: "Case or whitespace variants in {table}.{column}"
+  category: data_quality
+  severity: low
+  kind: optional_improvement
+  standards: [DQA-012]
+  requires: [data]
+  root_cause: "Values are entered as free text with no normalization."
+  business_impact: "One value appears as several categories in reports."
+  technical_impact: "Grouping and joins on {column} treat variants as different."
+  solution: "Agree on the canonical form, normalize the values, and validate at write."
+  complexity: low
+  migration: "Manual normalization plan."
+  risks: "Some case differences are meaningful."
+  validation: "Re-run after normalization. Evidence is masked."
+  params:
+    sample_limit: 100000
+    max_distinct: 200
+    max_length: 255
+    exclude_patterns: ['passw', 'token', 'secret', 'hash']
+
+- id: DQ-016
+  check: data_quality.constant_columns
+  title: "Column {table}.{column} holds a single value"
+  category: data_quality
+  severity: informational
+  kind: optional_improvement
+  standards: [DQA-012]
+  requires: [data]
+  root_cause: "The column holds one value in every sampled row."
+  business_impact: "Unused attributes add cost and can mislead."
+  technical_impact: "{column} carries no information in the sample."
+  solution: "Confirm its purpose; remove it through change control only if it is unused."
+  complexity: low
+  migration: "None until confirmed."
+  risks: "The column may be a default that later data will vary."
+  validation: "Confirm with the owning team."
+  params:
+    sample_limit: 100000
+    min_rows: 100
+    exclude_patterns: ['^is_', '^has_', 'deleted', 'created_by', 'updated_by', 'version']
+
+- id: FINA-001
+  check: financial.ledger_imbalance
+  title: "Unbalanced journals in {table}"
+  category: data_integrity
+  severity: critical
+  kind: confirmed_defect
+  standards: [FIN-025]
+  requires: [data]
+  workloads: [OLTP]
+  root_cause: "Journal entries were written without a balance check in the posting transaction."
+  business_impact: "Debits and credits that do not match mean the books are misstated."
+  technical_impact: "SUM of debits differs from SUM of credits per {journal_column}."
+  solution: "Investigate each journal with finance, and correct through reversing or correcting entries."
+  complexity: high
+  migration: "Manual repair through correcting entries. Posted entries are preserved."
+  risks: "Corrections to closed periods need finance approval."
+  validation: "Re-run after correction; every posted journal must net to zero."
+  params: &fin_params
+    sample_limit: 100000
+    tolerance: 0.005
+    journal_table_patterns: ['journal', 'ledger', 'gl_', 'posting']
+    debit_columns: [debit, debit_amount, dr, dr_amount, debit_amt]
+    credit_columns: [credit, credit_amount, cr, cr_amount, credit_amt]
+    journal_id_columns: [journal_id, journal_entry_id, entry_id, voucher_id, header_id, journal_no, voucher_no]
+    status_columns: [status, state, doc_status, posting_status]
+    posted_values: [posted, approved, booked, final, finalized, completed, closed]
+
+- id: FINA-002
+  check: financial.document_totals
+  title: "Posted documents in {table} do not match {line_table}"
+  category: data_integrity
+  severity: high
+  kind: context_dependent
+  standards: [FIN-028]
+  requires: [data]
+  workloads: [OLTP]
+  root_cause: "A stored total differs from the sum of its lines."
+  business_impact: "Document totals cannot be reconciled to their detail."
+  technical_impact: "{column} differs from the sum of line amounts in {line_table}."
+  solution: "Reconcile each document with finance; correct through credit or adjusting documents."
+  complexity: high
+  migration: "Manual repair. Posted documents are preserved."
+  risks: "Tax, discount or rounding held on the document can explain differences, so review before concluding."
+  validation: "Re-run after correction."
+  params:
+    sample_limit: 100000
+    tolerance: 0.01
+    document_table_patterns: ['invoice', 'bill', 'order', 'receipt', 'credit_note', 'debit_note', 'voucher']
+    line_table_patterns: ['line', 'item', 'detail']
+    line_amount_columns: [line_total, line_amount, net_amount, amount, total]
+    net_total_columns: [subtotal, sub_total, net_total, net_amount, total_net]
+    gross_total_columns: [total, total_amount, grand_total, amount]
+    adjustment_columns: [tax, tax_amount, vat, vat_amount, discount, discount_amount, shipping, freight]
+    status_columns: [status, state, doc_status, posting_status]
+    posted_values: [posted, approved, booked, final, finalized, completed, closed, issued, paid]
+
+- id: FINA-003
+  check: financial.document_number_gaps
+  title: "Gaps in document numbers in {table}.{column}"
+  category: governance
+  severity: medium
+  kind: context_dependent
+  standards: [NUM-015, NUM-018]
+  requires: [data]
+  workloads: [OLTP]
+  root_cause: "Numbers are missing from the series, for example from rollbacks or a plain sequence."
+  business_impact: "Requires legal review: some jurisdictions require explained or gap-free numbering, and others do not."
+  technical_impact: "The series in {column} has missing numbers."
+  solution: "Requires legal review for each legal entity. Record the reason for each gap; do not renumber issued documents."
+  complexity: medium
+  migration: "No automatic change."
+  risks: "The series rule depends on the jurisdiction; this check does not assume one."
+  validation: "Compare the series with the register of cancelled and spoiled numbers."
+  confidence: 0.6
+  params:
+    sample_limit: 100000
+    document_table_patterns: ['invoice', 'credit_note', 'debit_note', 'bill', 'receipt']
+    exclude_table_patterns: ['line', 'item', 'detail']
+    number_column_patterns: ['(^|_)(number|num|no)$']
+    number_regex: '^(.*?)(\d+)$'

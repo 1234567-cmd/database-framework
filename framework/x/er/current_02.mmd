@@ -1,0 +1,14 @@
+%% Current schema of clean_postgres (2 of 2: around audit_log)
+erDiagram
+    audit_log {
+        bigint audit_log_id PK
+        character_varying_63 table_name
+        character_varying_100 record_key
+        character_varying_10 action
+        timestamp_with_time_zone changed_at
+        character_varying_60 changed_by
+    }
+    schema_migrations {
+        character_varying_40 version PK
+        timestamp_with_time_zone applied_at
+    }

@@ -1,0 +1,4 @@
+Step M2799: Manual: Check the contents of order_ids; if it holds lists, move them to a child table.
+MANUAL: this step has no generated SQL.
+Check the contents of order_ids; if it holds lists, move them to a child table.
+Findings: SCH-011-98027315

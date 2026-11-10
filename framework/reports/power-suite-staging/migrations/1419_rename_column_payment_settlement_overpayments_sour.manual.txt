@@ -1,0 +1,4 @@
+Step M1419: Rename column payment_settlement_overpayments.source_payment_id to payment_settlement_payment_id
+MANUAL: this step has no generated SQL.
+Table payment_settlement_overpayments matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column payment_settlement_overpayments.source_payment_id to payment_settlement_payment_id.
+Findings: SCH-058-c26a450c

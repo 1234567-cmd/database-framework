@@ -1,0 +1,193 @@
+%% Current schema of power-suite-staging (55 of 57: around admin_audit_log)
+erDiagram
+    admin_audit_log {
+        bigint id PK
+        int admin_user_id
+        varchar_100 action
+        varchar_50 target_type
+        varchar_100 target_id
+        varchar_255 company_code
+        json detail
+        varchar_45 ip_address
+        datetime created_at
+    }
+    airline_equipments {
+        int id PK
+        varchar_255 airline_equipment_code
+        varchar_255 airline_equipment_description
+    }
+    car_company_maintenances {
+        int id PK
+        varchar_255 car_company_code
+        varchar_255 car_company_name
+    }
+    car_rate_maintenances {
+        int id PK
+        varchar_255 rate_type
+        varchar_255 car_rate_type_description
+        int display_order
+        varchar_255 host_code
+    }
+    customer_amends {
+        int id PK
+        varchar_255 credit_term_code
+        int credit_days_amend
+        tinyint_1 credit_days
+        tinyint_1 bsp_payment_terms
+        tinyint_1 bsp_payment_addon
+        tinyint_1 statement_date
+        tinyint_1 last_day_month
+        tinyint_1 other_due_date
+        tinyint_1 weekly
+        datetime created_at
+        datetime updated_at
+        int customer_id
+    }
+    customer_categories {
+        int id PK
+        varchar_45 category
+        timestamp created_at
+        timestamp updated_at
+        varchar_45 company_code
+    }
+    customer_contacts {
+        int id PK
+        int customer_id
+        enum_contact_emergency contact_type
+        varchar_200 name
+        varchar_200 surname
+        varchar_200 title
+        varchar_20 tel1
+        varchar_20 tel2
+        varchar_20 mobile_number
+        varchar_20 ex1
+        varchar_20 ex2
+        varchar_100 job_title
+        varchar_100 role
+        varchar_160 email
+        timestamp created_at
+        timestamp updated_at
+    }
+    data_migrations {
+        varchar_190 name PK
+        datetime applied_at
+    }
+    flyway_schema_history {
+        int installed_rank PK
+        varchar_50 version
+        varchar_200 description
+        varchar_20 type
+        varchar_1000 script
+        int checksum
+        varchar_100 installed_by
+        timestamp installed_on
+        int execution_time
+        tinyint_1 success
+    }
+    hotel_statuses {
+        int id PK
+        varchar_255 label
+        varchar_255 code
+        datetime createdAt
+        datetime updatedAt
+    }
+    intake_cache {
+        varchar_64 cache_key PK
+        json payload
+        datetime fetched_at
+    }
+    intake_items {
+        char_36 issue_id PK
+        enum_customer_staff created_by_type
+        int created_by_customer_id
+        int created_by_staff_id
+        varchar_255 company_code
+        varchar_32 last_notified_status
+        varchar_120 last_notified_progress
+        datetime submission_notified_at
+        datetime created_at
+        datetime updated_at
+    }
+    intake_legacy_company_labels {
+        int id PK
+        varchar_255 legacy_label
+        varchar_255 company_code
+        varchar_255 mapped_by
+        varchar_500 notes
+        datetime created_at
+        datetime updated_at
+    }
+    intake_notifications {
+        int id PK
+        varchar_128 delivery_id
+        char_36 issue_id
+        varchar_255 recipient
+        datetime sent_at
+    }
+    intake_sessions {
+        int id PK
+        enum_customer_staff principal_type
+        int principal_id
+        char_64 token_hash
+        varchar_45 ip_address
+        varchar_255 user_agent
+        datetime issued_at
+        datetime expires_at
+        datetime revoked_at
+        datetime last_seen_at
+    }
+    intake_trackers {
+        char_36 issue_id PK
+        enum_customer_staff principal_type PK
+        int principal_id PK
+        datetime assigned_at
+        tinyint_1 auto_assigned
+    }
+    integrity_snapshots {
+        bigint id PK
+        datetime taken_at
+        varchar_64 check_key
+        varchar_255 company_code
+        int count
+        json meta
+    }
+    invoice_footers {
+        int id PK
+        text invoice_footer
+        datetime createdAt
+        datetime updatedAt
+    }
+    issued_document_numbers {
+        int id PK
+        varchar_200 company_code
+        varchar_20 document_type
+        varchar_255 document_number
+        int first_document_id
+        int issued_by
+        varchar_30 source
+        datetime issued_at
+    }
+    iur_file_imports {
+        int id PK
+        varchar_255 company_code
+        varchar_255 file_name
+        varchar_255 file_key
+        varchar_64 content_key
+        enum_processing_completed_failed status
+        varchar_120 claimed_by
+        datetime claimed_at
+        datetime settled_at
+        int user_id
+        varchar_50 pnr
+        int order_id
+        varchar_50 order_number
+        text service_ids
+        int service_count
+        int voided_count
+        text document_numbers
+        text message
+        int repeat_posts
+        datetime last_repeat_at
+        datetime created_at
+        datetime updated_at
+    }

@@ -1,0 +1,4 @@
+Step M2250: Manual: Classify bank_account_id (bank_account) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify bank_account_id (bank_account) and record its required protections.
+Findings: SECA-004-e4f6df98

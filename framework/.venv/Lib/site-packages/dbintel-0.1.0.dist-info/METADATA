@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: dbintel
+Version: 0.1.0
+Summary: Enterprise Database Intelligence and Data Engineering Framework
+Requires-Python: >=3.10
+Requires-Dist: sqlglot>=25
+Requires-Dist: PyYAML>=6
+Provides-Extra: postgres
+Requires-Dist: psycopg[binary]>=3.1; extra == "postgres"
+Provides-Extra: mysql
+Requires-Dist: PyMySQL>=1.1; extra == "mysql"
+Provides-Extra: excel
+Requires-Dist: openpyxl>=3.1; extra == "excel"
+Provides-Extra: all
+Requires-Dist: psycopg[binary]>=3.1; extra == "all"
+Requires-Dist: PyMySQL>=1.1; extra == "all"
+Requires-Dist: openpyxl>=3.1; extra == "all"
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"

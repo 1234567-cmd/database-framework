@@ -1,0 +1,20 @@
+%% Proposed schema of power-suite-staging (66 of 80: around service_umrah_contacts)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    service_umrah_contacts {
+        int id PK
+        int service_umrah_id FK
+        varchar_255 location
+        varchar_255 name
+        varchar_255 phone
+        varchar_255 title
+        varchar_255 phone2
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_umrahs {
+        external stub "see the diagram that holds this table"
+    }
+    service_umrahs ||--o{ service_umrah_contacts : "service_umrah_id (proposed)"

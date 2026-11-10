@@ -1,0 +1,4 @@
+Step M1497: Manual: Classify header_email (email) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify header_email (email) and record its required protections.
+Findings: SECA-004-a5e48e5d

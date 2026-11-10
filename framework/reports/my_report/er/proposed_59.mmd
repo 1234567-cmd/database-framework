@@ -1,0 +1,18 @@
+%% Proposed schema of power-suite-staging (59 of 80: around invoice_taxes)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    invoice_taxes {
+        bigint id PK "proposed: changed"
+        int invoice_id FK
+        varchar_255 tax_code
+        decimal_12_4 tax_amount "proposed: changed"
+        text remarks
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    invoices {
+        external stub "see the diagram that holds this table"
+    }
+    invoices ||--o{ invoice_taxes : "invoice_id"

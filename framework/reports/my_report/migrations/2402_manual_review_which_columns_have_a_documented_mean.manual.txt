@@ -1,0 +1,4 @@
+Step M2402: Manual: Review which columns have a documented meaning for NULL and set the rest NOT NUL
+MANUAL: this step has no generated SQL.
+Review which columns have a documented meaning for NULL and set the rest NOT NULL.
+Findings: SCH-038-9a6102c7

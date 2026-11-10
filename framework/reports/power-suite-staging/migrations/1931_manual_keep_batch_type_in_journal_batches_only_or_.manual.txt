@@ -1,0 +1,4 @@
+Step M1931: Manual: Keep batch_type in journal_batches only, or maintain the copy through one contro
+MANUAL: this step has no generated SQL.
+Keep batch_type in journal_batches only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-3219529f

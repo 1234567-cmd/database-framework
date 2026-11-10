@@ -1,0 +1,60 @@
+%% Proposed schema of clean_demo (1 of 2: around currencies)
+%% 9 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    currencies {
+        character_3 currency_code PK
+        character_varying_60 name
+        smallint minor_units
+    }
+    customers {
+        bigint customer_id PK
+        character_varying_254 email
+        character_varying_120 display_name
+        boolean is_active
+        timestamp_with_time_zone created_at
+        timestamp_with_time_zone updated_at
+        character_varying_60 created_by
+        character_varying_60 updated_by
+    }
+    products {
+        bigint product_id PK
+        character_varying_40 sku
+        character_varying_160 name
+        numeric_14_4 unit_price
+        character_3 currency_code FK
+        boolean is_active
+        timestamp_with_time_zone created_at
+        timestamp_with_time_zone updated_at
+        character_varying_60 created_by
+        character_varying_60 updated_by
+    }
+    orders {
+        bigint order_id PK
+        bigint customer_id FK
+        character_varying_20 status
+        numeric_14_4 total_amount
+        character_3 currency_code FK
+        timestamp_with_time_zone ordered_at
+        timestamp_with_time_zone created_at
+        timestamp_with_time_zone updated_at
+        character_varying_60 created_by
+        character_varying_60 updated_by
+    }
+    order_items {
+        bigint order_item_id PK
+        bigint order_id FK
+        bigint product_id FK
+        integer quantity
+        numeric_14_4 unit_price
+        character_3 currency_code FK
+        timestamp_with_time_zone created_at
+        timestamp_with_time_zone updated_at
+        character_varying_60 created_by
+        character_varying_60 updated_by
+    }
+    currencies ||--o{ products : "currency_code"
+    customers ||--o{ orders : "customer_id"
+    currencies ||--o{ orders : "currency_code"
+    orders ||--o{ order_items : "order_id"
+    products ||--o{ order_items : "product_id"
+    currencies ||--o{ order_items : "currency_code"

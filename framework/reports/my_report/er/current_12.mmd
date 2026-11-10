@@ -1,0 +1,17 @@
+%% Current schema of power-suite-staging (12 of 57: around iur_settings)
+erDiagram
+    iur_settings {
+        int id PK
+        varchar_255 company_code FK
+        int domestic_service_type_id FK
+        int international_service_type_id FK
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ iur_settings : "company_code"
+    service_types ||--o{ iur_settings : "domestic_service_type_id"
+    service_types ||--o{ iur_settings : "international_service_type_id"

@@ -1,0 +1,4 @@
+Step M141: Manual: Pipeline daily_ledger_snapshot, step snapshot_journal: list the columns explicit
+MANUAL: this step has no generated SQL.
+Pipeline daily_ledger_snapshot, step snapshot_journal: list the columns explicitly.
+Findings: DE-014-42e81796

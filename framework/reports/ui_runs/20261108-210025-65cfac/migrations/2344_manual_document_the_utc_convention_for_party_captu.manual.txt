@@ -1,0 +1,4 @@
+Step M2344: Manual: Document the UTC convention for party_captured_at, or move it to a UTC-normalizi
+MANUAL: this step has no generated SQL.
+Document the UTC convention for party_captured_at, or move it to a UTC-normalizing type.
+Findings: SCH-030-362b2172

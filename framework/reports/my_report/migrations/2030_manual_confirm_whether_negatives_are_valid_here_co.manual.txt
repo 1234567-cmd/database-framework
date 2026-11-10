@@ -1,0 +1,4 @@
+Step M2030: Manual: Confirm whether negatives are valid here; correct them, then add a CHECK.
+MANUAL: this step has no generated SQL.
+Confirm whether negatives are valid here; correct them, then add a CHECK.
+Findings: DQ-012-eb87ca60

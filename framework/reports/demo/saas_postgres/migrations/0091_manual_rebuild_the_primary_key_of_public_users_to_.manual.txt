@@ -1,0 +1,4 @@
+Step M091: Manual: Rebuild the primary key of public.users to include tenant_id; plan dependent key
+MANUAL: this step has no generated SQL.
+Rebuild the primary key of public.users to include tenant_id; plan dependent keys.
+Findings: TENA-004-e5b8ecaa

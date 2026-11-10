@@ -1,0 +1,18 @@
+%% Proposed schema of power-suite-staging (42 of 80: around cost_taxes)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    cost_taxes {
+        bigint id PK "proposed: changed"
+        int cost_id FK
+        varchar_255 tax_code
+        decimal_12_4 tax_amount "proposed: changed"
+        text remarks
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    costs {
+        external stub "see the diagram that holds this table"
+    }
+    costs ||--o{ cost_taxes : "cost_id"

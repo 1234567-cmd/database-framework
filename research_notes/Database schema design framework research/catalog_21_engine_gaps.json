@@ -1,0 +1,824 @@
+[
+  {
+    "id": "ENG-01",
+    "title": "MySQL 8.4 Online DDL Operations",
+    "url": "https://dev.mysql.com/doc/refman/8.4/en/innodb-online-ddl-operations.html",
+    "organization_author": "Oracle Corporation (MySQL)",
+    "category": "schema_evolution",
+    "subcategory": "online_ddl",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "ALGORITHM=INSTANT",
+      "INPLACE",
+      "table rebuild",
+      "concurrent DML",
+      "row versions"
+    ],
+    "engineering_principles": "DDL cost differs per operation; INSTANT has row-version and table-type limits.",
+    "practical_examples": "Adding a foreign key in place requires foreign_key_checks disabled; dropping a primary key alone requires COPY.",
+    "why_it_matters": "Gives the operation-level matrix needed to judge migration locking on MySQL.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference manual.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Covers MySQL 8.4; page also cites a 255 row-version limit as of 9.1.0."
+  },
+  {
+    "id": "ENG-02",
+    "title": "MySQL 8.4 SHOW REPLICA STATUS",
+    "url": "https://dev.mysql.com/doc/refman/8.4/en/show-replica-status.html",
+    "organization_author": "Oracle Corporation (MySQL)",
+    "category": "replication",
+    "subcategory": "lag_and_read_your_writes",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "Seconds_Behind_Source",
+      "GTID wait",
+      "semisynchronous replication",
+      "group_replication_consistency"
+    ],
+    "engineering_principles": "Seconds_Behind_Source is an approximation; waiting on a GTID set is the documented way to wait for a known write.",
+    "practical_examples": "WAIT_FOR_EXECUTED_GTID_SET returns 0 on success and 1 on timeout; semisync acknowledges relay-log receipt, not apply.",
+    "why_it_matters": "Shows which MySQL lag signals are unreliable and which mechanisms exist for read-your-writes.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference manual.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Covers 8.4. Supporting pages opened: https://dev.mysql.com/doc/refman/8.4/en/gtid-functions.html ; https://dev.mysql.com/doc/refman/8.4/en/replication-semisync.html ; https://dev.mysql.com/doc/refman/8.4/en/group-replication-configuring-consistency-guarantees.html ; https://dev.mysql.com/doc/refman/8.4/en/group-replication-system-variables.html (default BEFORE_ON_PRIMARY_FAILOVER). No page uses the term read-your-writes as prescriptive guidance."
+  },
+  {
+    "id": "ENG-03",
+    "title": "MySQL 8.4 Restrictions and Limitations on Partitioning",
+    "url": "https://dev.mysql.com/doc/refman/8.4/en/partitioning-limitations.html",
+    "organization_author": "Oracle Corporation (MySQL)",
+    "category": "partitioning",
+    "subcategory": "foreign_keys",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "partitioned InnoDB",
+      "foreign key restriction"
+    ],
+    "engineering_principles": "Partitioned InnoDB tables cannot participate in foreign keys on either side.",
+    "practical_examples": "A CREATE or ALTER that would combine partitioning and foreign keys is rejected.",
+    "why_it_matters": "Forces a choice between declarative referential integrity and partitioning on MySQL.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference manual.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Covers 8.4."
+  },
+  {
+    "id": "ENG-04",
+    "title": "MySQL 8.4 DATE, DATETIME, and TIMESTAMP Types",
+    "url": "https://dev.mysql.com/doc/refman/8.4/en/datetime.html",
+    "organization_author": "Oracle Corporation (MySQL)",
+    "category": "data_types",
+    "subcategory": "date_time",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "TIMESTAMP UTC conversion",
+      "DATETIME no conversion",
+      "2038 range",
+      "fractional seconds"
+    ],
+    "engineering_principles": "TIMESTAMP converts through the session time zone; DATETIME is stored as written.",
+    "practical_examples": "A TIMESTAMP read under a different session time zone returns a different value than was stored.",
+    "why_it_matters": "Determines instant versus wall-clock semantics for MySQL columns.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference manual.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Covers 8.4. Time zone support page not opened."
+  },
+  {
+    "id": "ENG-05",
+    "title": "MySQL 8.4 CREATE INDEX Statement",
+    "url": "https://dev.mysql.com/doc/refman/8.4/en/create-index.html",
+    "organization_author": "Oracle Corporation (MySQL)",
+    "category": "constraints",
+    "subcategory": "unique_null",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "UNIQUE index",
+      "multiple NULLs",
+      "functional key parts"
+    ],
+    "engineering_principles": "A UNIQUE index permits multiple NULLs on nullable columns.",
+    "practical_examples": "Functional key parts are allowed in UNIQUE indexes but not in primary keys or foreign keys.",
+    "why_it_matters": "Needed for cross-engine comparison of NULL behaviour in uniqueness.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference manual.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Covers 8.4."
+  },
+  {
+    "id": "ENG-06",
+    "title": "MySQL 8.4 GRANT Statement",
+    "url": "https://dev.mysql.com/doc/refman/8.4/en/grant.html",
+    "organization_author": "Oracle Corporation (MySQL)",
+    "category": "security",
+    "subcategory": "row_column_access",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "column privileges",
+      "privilege levels",
+      "SQL SECURITY INVOKER",
+      "data masking"
+    ],
+    "engineering_principles": "Column-level privileges exist; the GRANT page lists no row-level privilege.",
+    "practical_examples": "GRANT SELECT (col1), INSERT (col1, col2) ON mydb.mytbl.",
+    "why_it_matters": "Clarifies which access granularity MySQL documents natively.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference manual.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Covers 8.4. Supporting pages opened: https://dev.mysql.com/doc/refman/8.4/en/stored-objects-security.html ; https://dev.mysql.com/doc/refman/8.4/en/data-masking.html (commercial Enterprise feature). Absence of row-level privileges is from pages read only."
+  },
+  {
+    "id": "ENG-07",
+    "title": "PostgreSQL 18 Log-Shipping Standby Servers",
+    "url": "https://www.postgresql.org/docs/current/warm-standby.html",
+    "organization_author": "PostgreSQL Global Development Group",
+    "category": "replication",
+    "subcategory": "lag_and_read_your_writes",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "streaming replication",
+      "synchronous_commit",
+      "remote_apply",
+      "causal consistency",
+      "replay_lag"
+    ],
+    "engineering_principles": "Replication is asynchronous by default; remote_apply waits for replay on synchronous standbys.",
+    "practical_examples": "Setting synchronous_commit to remote_apply for load balancing with causal consistency, at much larger commit delay.",
+    "why_it_matters": "Primary source for read-your-writes options on PostgreSQL standbys.",
+    "authority_level": 5,
+    "authority_rationale": "Project reference documentation.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Page title reports version 18. Supporting pages opened: https://www.postgresql.org/docs/current/hot-standby.html ; https://www.postgresql.org/docs/current/runtime-config-wal.html ; https://www.postgresql.org/docs/current/monitoring-stats.html"
+  },
+  {
+    "id": "ENG-08",
+    "title": "PostgreSQL 12 Release Notes",
+    "url": "https://www.postgresql.org/docs/release/12.0/",
+    "organization_author": "PostgreSQL Global Development Group",
+    "category": "partitioning",
+    "subcategory": "foreign_keys",
+    "resource_type": "official_documentation",
+    "publication_date": "2019-10-03",
+    "core_concepts": [
+      "foreign keys referencing partitioned tables",
+      "partition key in unique constraint"
+    ],
+    "engineering_principles": "Foreign keys may reference partitioned tables since version 12; unique keys must include all partition key columns.",
+    "practical_examples": "Detaching a partition takes a SHARE lock on tables referencing the partitioned table.",
+    "why_it_matters": "Establishes when referenced-side support arrived and the key constraint it depends on.",
+    "authority_level": 5,
+    "authority_rationale": "Project release notes.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Supporting pages opened (version 18): https://www.postgresql.org/docs/current/ddl-partitioning.html ; https://www.postgresql.org/docs/current/sql-createtable.html ; https://www.postgresql.org/docs/current/sql-altertable.html . Child-side FK support on partitioned tables not confirmed in pages read."
+  },
+  {
+    "id": "ENG-09",
+    "title": "datetimeoffset (Transact-SQL)",
+    "url": "https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetimeoffset-transact-sql?view=sql-server-ver17",
+    "organization_author": "Microsoft",
+    "category": "data_types",
+    "subcategory": "date_time",
+    "resource_type": "official_documentation",
+    "publication_date": "2025-08-28",
+    "core_concepts": [
+      "datetimeoffset",
+      "UTC comparison",
+      "datetime2",
+      "datetime deprecation advice"
+    ],
+    "engineering_principles": "datetimeoffset compares in UTC and keeps the offset; datetime is advised against for new work.",
+    "practical_examples": "AT TIME ZONE applied twice to convert UTC datetime2 values to datetimeoffset across DST changes.",
+    "why_it_matters": "Defines SQL Server instant and offset semantics.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference documentation.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Applies to SQL Server 2017 onward, Azure SQL and Fabric (moniker sql-server-ver17). Page has an internal DST inconsistency (see notes). Supporting pages opened: datetime2 https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetime2-transact-sql?view=sql-server-ver17 (2024-10-25); datetime https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetime-transact-sql?view=sql-server-ver17 (2026-06-29)."
+  },
+  {
+    "id": "ENG-10",
+    "title": "Unique constraints and check constraints",
+    "url": "https://learn.microsoft.com/en-us/sql/relational-databases/tables/unique-constraints-and-check-constraints?view=sql-server-ver17",
+    "organization_author": "Microsoft",
+    "category": "constraints",
+    "subcategory": "unique_null_and_deferrable",
+    "resource_type": "official_documentation",
+    "publication_date": "2023-12-29",
+    "core_concepts": [
+      "UNIQUE NULL handling",
+      "filtered index",
+      "no deferrable syntax",
+      "NOT FOR REPLICATION"
+    ],
+    "engineering_principles": "A UNIQUE constraint allows only one NULL per column; CREATE TABLE grammar shows no deferrable option.",
+    "practical_examples": "Filters cannot be applied to UNIQUE constraints but can be applied to indexes with the UNIQUE property.",
+    "why_it_matters": "SQL Server NULL uniqueness differs from MySQL and Oracle, and deferred checking is not in its grammar.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference documentation.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Applies to SQL Server 2017 onward and Azure SQL. Supporting pages opened: https://learn.microsoft.com/en-us/sql/t-sql/statements/create-table-transact-sql?view=sql-server-ver17 (read in full; no DEFERRABLE keyword) ; https://learn.microsoft.com/en-us/sql/relational-databases/indexes/create-filtered-indexes?view=sql-server-ver17 (2025-06-27). No explicit statement of non-support located."
+  },
+  {
+    "id": "ENG-11",
+    "title": "Hibernate ORM Envers user guide chapter source",
+    "url": "https://raw.githubusercontent.com/hibernate/hibernate-orm/main/documentation/src/main/asciidoc/userguide/chapters/envers/Envers.adoc",
+    "organization_author": "Hibernate project",
+    "category": "audit",
+    "subcategory": "temporal_audit_strategy",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "ValidityAuditStrategy",
+      "DefaultAuditStrategy",
+      "REVEND",
+      "REVINFO"
+    ],
+    "engineering_principles": "Validity strategy trades slower writes for faster audit queries.",
+    "practical_examples": "Set org.hibernate.envers.audit_strategy to the validity strategy class; REVEND holds the end revision.",
+    "why_it_matters": "Documents the write versus read trade-off of end-revision audit tables.",
+    "authority_level": 4,
+    "authority_rationale": "Official project documentation source on the main branch, not a released version page.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Main branch source. Published guide https://docs.hibernate.org/orm/current/userguide/html_single/Hibernate_User_Guide.html (title 7.4.15.Final) was opened but returned text stopped before the Envers chapter."
+  },
+  {
+    "id": "ENG-12",
+    "title": "Availability Modes for an Availability Group",
+    "url": "https://learn.microsoft.com/en-us/sql/database-engine/availability-groups/windows/availability-modes-always-on-availability-groups?view=sql-server-ver17",
+    "organization_author": "Microsoft",
+    "category": "high_availability",
+    "subcategory": "always_on",
+    "resource_type": "official_documentation",
+    "publication_date": "2025-06-26",
+    "core_concepts": [
+      "synchronous commit",
+      "asynchronous commit",
+      "readable secondary latency",
+      "forced failover"
+    ],
+    "engineering_principles": "Synchronous commit waits for log hardening, not redo, so secondaries can still lag for readers.",
+    "practical_examples": "Run read workloads on the primary where data latency is unacceptable.",
+    "why_it_matters": "Defines loss and staleness behaviour of SQL Server replicas.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference documentation.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Applies to SQL Server 2017 onward. Supporting page opened: https://learn.microsoft.com/en-us/sql/database-engine/availability-groups/windows/overview-of-always-on-availability-groups-sql-server?view=sql-server-ver17 (2026-01-26)."
+  },
+  {
+    "id": "ENG-13",
+    "title": "BSON Types",
+    "url": "https://www.mongodb.com/docs/manual/reference/bson-types/",
+    "organization_author": "MongoDB Inc.",
+    "category": "data_types",
+    "subcategory": "date_time",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "BSON Date",
+      "UTC datetime",
+      "BSON timestamp internal use",
+      "local time offset"
+    ],
+    "engineering_principles": "Use BSON Date for application dates; store an offset separately to reconstruct local time.",
+    "practical_examples": "Store { date: now, offset: now.getTimezoneOffset() } and reapply the offset on read.",
+    "why_it_matters": "MongoDB has no native time zone in its date type.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference manual.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Version selector shows 9.0 (Current). Supporting page opened: https://www.mongodb.com/docs/manual/tutorial/model-iot-data/ (the requested model-time-data URL redirected there)."
+  },
+  {
+    "id": "ENG-14",
+    "title": "Auditing on Self-Managed Deployments",
+    "url": "https://www.mongodb.com/docs/manual/core/auditing/",
+    "organization_author": "MongoDB Inc.",
+    "category": "audit",
+    "subcategory": "database_audit",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "Enterprise auditing",
+      "audit destinations",
+      "audit filter",
+      "Atlas auditing"
+    ],
+    "engineering_principles": "Auditing is an Enterprise feature for self-managed deployments.",
+    "practical_examples": "Set --auditDestination to console, syslog, JSON file or BSON file.",
+    "why_it_matters": "Audit availability depends on edition or Atlas tier.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference manual.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Version selector shows 9.0 (Current)."
+  },
+  {
+    "id": "ENG-15",
+    "title": "Oracle SQL Language Reference: constraint",
+    "url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/sqlrf/constraint.html",
+    "organization_author": "Oracle Corporation",
+    "category": "constraints",
+    "subcategory": "unique_null_and_deferrable",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "composite unique NULL rule",
+      "DEFERRABLE",
+      "INITIALLY DEFERRED"
+    ],
+    "engineering_principles": "A partially NULL composite key can still violate uniqueness; deferrability is fixed at creation.",
+    "practical_examples": "Two rows with NULLs in some key columns and identical values in the rest violate the constraint.",
+    "why_it_matters": "Oracle-specific NULL and deferral semantics.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference documentation.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. URL path says 23; page metadata reported as release 26 (Oracle AI Database 26ai)."
+  },
+  {
+    "id": "ENG-16",
+    "title": "Oracle Security Guide: Introduction to Auditing",
+    "url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/dbseg/introduction-to-auditing.html",
+    "organization_author": "Oracle Corporation",
+    "category": "audit",
+    "subcategory": "unified_auditing",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "Unified Auditing",
+      "traditional auditing desupport",
+      "AUD$UNIFIED",
+      "AUDIT_ADMIN",
+      "AUDIT_VIEWER"
+    ],
+    "engineering_principles": "Unified auditing is the recommended framework; traditional auditing is desupported starting in 26ai.",
+    "practical_examples": "Keep the audit trail in a separate tablespace and manage it with DBMS_AUDIT_MGMT.",
+    "why_it_matters": "Establishes the current Oracle audit baseline and the migration need.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference documentation.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. URL path says 23; page text refers to 26ai. Mixed mode not covered on this page."
+  },
+  {
+    "id": "ENG-17",
+    "title": "Oracle Administrator's Guide: Managing Archived Redo Log Files",
+    "url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/admin/managing-archived-redo-log-files.html",
+    "organization_author": "Oracle Corporation",
+    "category": "backup_recovery",
+    "subcategory": "archivelog_rman",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "ARCHIVELOG",
+      "NOARCHIVELOG",
+      "online backup",
+      "RMAN",
+      "fast recovery area"
+    ],
+    "engineering_principles": "ARCHIVELOG is needed for complete media recovery and online backups.",
+    "practical_examples": "BACKUP DATABASE PLUS ARCHIVELOG on an open ARCHIVELOG database.",
+    "why_it_matters": "Determines recoverability and backup method.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference documentation.",
+    "applies_to": [
+      "OLTP",
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. URL path says 23; links point to release 26. Supporting page opened: https://docs.oracle.com/en/database/oracle/oracle-database/23/bradv/getting-started-rman.html (page refers to 26ai)."
+  },
+  {
+    "id": "ENG-18",
+    "title": "Oracle Data Guard Protection Modes",
+    "url": "https://docs.oracle.com/en/database/oracle/oracle-database/23/sbydb/oracle-data-guard-protection-modes.html",
+    "organization_author": "Oracle Corporation",
+    "category": "high_availability",
+    "subcategory": "data_guard",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "Maximum Performance",
+      "Maximum Availability",
+      "Maximum Protection",
+      "physical standby",
+      "Active Data Guard"
+    ],
+    "engineering_principles": "Protection mode trades commit latency against data loss; default is Maximum Performance.",
+    "practical_examples": "Maximum Protection shuts down the primary if no synchronized standby can acknowledge.",
+    "why_it_matters": "Defines data-loss exposure for Oracle standby designs.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor reference documentation.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. URL path says 23; links point to release 26. Supporting page opened: https://docs.oracle.com/en/database/oracle/oracle-database/23/sbydb/introduction-to-oracle-data-guard-concepts.html"
+  },
+  {
+    "id": "ENG-19",
+    "title": "Snowflake Transactions",
+    "url": "https://docs.snowflake.com/en/sql-reference/transactions",
+    "organization_author": "Snowflake Inc.",
+    "category": "transactions",
+    "subcategory": "isolation_defaults",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "READ COMMITTED",
+      "statement-level visibility",
+      "hybrid table locks"
+    ],
+    "engineering_principles": "READ COMMITTED is the only isolation level for tables.",
+    "practical_examples": "Two successive statements in one transaction can see different data if another transaction commits between them.",
+    "why_it_matters": "Sets concurrency expectations on Snowflake.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Hybrid table isolation not established beyond row locking."
+  },
+  {
+    "id": "ENG-20",
+    "title": "Snowflake Identifier Requirements",
+    "url": "https://docs.snowflake.com/en/sql-reference/identifiers-syntax",
+    "organization_author": "Snowflake Inc.",
+    "category": "naming",
+    "subcategory": "identifiers",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "unquoted uppercase resolution",
+      "quoted case sensitivity",
+      "255 character limit"
+    ],
+    "engineering_principles": "Unquoted identifiers resolve as uppercase; quoted identifiers are case-sensitive.",
+    "practical_examples": "An unquoted id is stored and resolved as ID.",
+    "why_it_matters": "Identifier casing affects portability and tooling.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. "
+  },
+  {
+    "id": "ENG-21",
+    "title": "BigQuery Multi-statement transactions",
+    "url": "https://docs.cloud.google.com/bigquery/docs/transactions",
+    "organization_author": "Google Cloud",
+    "category": "transactions",
+    "subcategory": "isolation_defaults",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "snapshot isolation",
+      "table-level lock on mutation",
+      "no queueing of conflicting transactions"
+    ],
+    "engineering_principles": "Transactions use snapshot isolation; conflicting mutating transactions fail immediately.",
+    "practical_examples": "A transaction can mutate at most 100 tables and 100,000 partition modifications.",
+    "why_it_matters": "Sets retry and concurrency expectations on BigQuery.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. cloud.google.com URL redirected to this host."
+  },
+  {
+    "id": "ENG-22",
+    "title": "Amazon Redshift Isolation Levels",
+    "url": "https://docs.aws.amazon.com/redshift/latest/dg/c_serial_isolation.html",
+    "organization_author": "Amazon Web Services",
+    "category": "transactions",
+    "subcategory": "isolation_defaults",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "SNAPSHOT default",
+      "SERIALIZABLE",
+      "write skew"
+    ],
+    "engineering_principles": "SNAPSHOT is the default for new provisioned clusters and serverless workgroups.",
+    "practical_examples": "Under SERIALIZABLE one conflicting transaction is terminated with a serializable violation.",
+    "why_it_matters": "Default isolation allows anomalies that SERIALIZABLE prevents.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. "
+  },
+  {
+    "id": "ENG-23",
+    "title": "Amazon Redshift Table Constraints",
+    "url": "https://docs.aws.amazon.com/redshift/latest/dg/t_Defining_constraints.html",
+    "organization_author": "Amazon Web Services",
+    "category": "constraints",
+    "subcategory": "informational_constraints",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "informational constraints",
+      "NOT NULL enforced",
+      "planner hints"
+    ],
+    "engineering_principles": "Key constraints are informational only but used by the planner, which assumes validity.",
+    "practical_examples": "A SELECT DISTINCT can return duplicates if a declared primary key is not unique.",
+    "why_it_matters": "Integrity must be enforced outside Redshift.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. "
+  },
+  {
+    "id": "ENG-24",
+    "title": "Spanner isolation levels",
+    "url": "https://docs.cloud.google.com/spanner/docs/isolation-levels",
+    "organization_author": "Google Cloud",
+    "category": "transactions",
+    "subcategory": "isolation_defaults",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "serializable default",
+      "external consistency",
+      "repeatable read"
+    ],
+    "engineering_principles": "Serializable is the default; repeatable read is available for selected workloads.",
+    "practical_examples": "Isolation level is chosen when creating a transaction.",
+    "why_it_matters": "Defines the default anomaly profile on Spanner.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. cloud.google.com URL redirected to this host."
+  },
+  {
+    "id": "ENG-25",
+    "title": "DynamoDB read consistency",
+    "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html",
+    "organization_author": "Amazon Web Services",
+    "category": "transactions",
+    "subcategory": "isolation_defaults",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated on page",
+    "core_concepts": [
+      "eventual default",
+      "strong reads on tables and LSIs",
+      "GSI eventual"
+    ],
+    "engineering_principles": "Reads default to eventually consistent; GSIs and streams are always eventually consistent.",
+    "practical_examples": "Eventually consistent reads are half the cost of strongly consistent reads.",
+    "why_it_matters": "Read-your-writes requires strongly consistent reads and cannot use GSIs.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Transactional isolation page not read."
+  },
+  {
+    "id": "ENG-26",
+    "title": "Azure Cosmos DB consistency levels",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels",
+    "organization_author": "Microsoft",
+    "category": "transactions",
+    "subcategory": "isolation_defaults",
+    "resource_type": "official_documentation",
+    "publication_date": "2025-09-03",
+    "core_concepts": [
+      "five consistency levels",
+      "session tokens",
+      "bounded staleness",
+      "RPO"
+    ],
+    "engineering_principles": "Consistency is account-configured and can be overridden per request for reads.",
+    "practical_examples": "Session tokens are partition-bound; share the token to read your writes across clients.",
+    "why_it_matters": "Maps consistency choice to latency, throughput and RPO.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read via WebFetch model summary; paraphrased, re-check details against the page. Page does not name a product-wide default level."
+  },
+  {
+    "id": "ENG-27",
+    "title": "Databricks Transactions",
+    "url": "https://docs.databricks.com/aws/en/transactions/",
+    "organization_author": "Databricks",
+    "category": "transactions",
+    "subcategory": "multi_statement",
+    "resource_type": "official_documentation",
+    "publication_date": "2026-10-19",
+    "core_concepts": [
+      "multi-statement transactions",
+      "catalog commits",
+      "repeatable reads",
+      "DDL not supported"
+    ],
+    "engineering_principles": "Transactions require Unity Catalog managed tables with catalog commits and exclude DDL.",
+    "practical_examples": "BEGIN ATOMIC ... END for non-interactive transactions.",
+    "why_it_matters": "Current GA status and limits for lakehouse multi-table atomicity.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation and release notes.",
+    "applies_to": [
+      "data_lake",
+      "data_warehouse"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Release notes opened: https://docs.databricks.com/aws/en/release-notes/product/2026/march (Public Preview); https://docs.databricks.com/aws/en/release-notes/product/2026/july (GA, Delta); https://docs.databricks.com/aws/en/release-notes/product/2026/october (GA, Delta and Iceberg)."
+  },
+  {
+    "id": "ENG-28",
+    "title": "Unity Catalog metric views",
+    "url": "https://docs.databricks.com/aws/en/uc-semantics/metric-views",
+    "organization_author": "Databricks",
+    "category": "semantic_layer",
+    "subcategory": "metric_views",
+    "resource_type": "official_documentation",
+    "publication_date": "2026-10-29",
+    "core_concepts": [
+      "metric views",
+      "measures and dimensions",
+      "materialization"
+    ],
+    "engineering_principles": "Measures are defined once and grouped at query time.",
+    "practical_examples": "Sum of revenue divided by distinct customer count, grouped by any available field.",
+    "why_it_matters": "Status matters before relying on metric views in a design.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation and release notes.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. https://docs.databricks.com/aws/en/metric-views/ redirected here. Release note https://docs.databricks.com/aws/en/release-notes/product/2025/may gives Public Preview; no GA note for the whole feature found through November 2026."
+  },
+  {
+    "id": "ENG-29",
+    "title": "Optimize queries with RELY on primary key and unique constraints",
+    "url": "https://docs.databricks.com/aws/en/sql/user/queries/query-optimization-constraints",
+    "organization_author": "Databricks",
+    "category": "constraints",
+    "subcategory": "rely",
+    "resource_type": "official_documentation",
+    "publication_date": "2026-10-26",
+    "core_concepts": [
+      "RELY",
+      "NORELY default",
+      "DISTINCT removal",
+      "join elimination"
+    ],
+    "engineering_principles": "RELY lets the optimizer use unenforced constraints; validity is the user's responsibility.",
+    "practical_examples": "ALTER TABLE adding a primary key with RELY enables DISTINCT removal and join elimination.",
+    "why_it_matters": "Incorrect RELY can produce incorrect query results.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP",
+      "data_lake"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Supporting page opened: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-constraint (2026-10-29; DBR 14.2 PK, 15.4 FK, 18.2 UNIQUE). No preview label on either page."
+  },
+  {
+    "id": "ENG-30",
+    "title": "Databricks SQL Names",
+    "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names",
+    "organization_author": "Databricks",
+    "category": "naming",
+    "subcategory": "identifiers",
+    "resource_type": "official_documentation",
+    "publication_date": "2026-11-02",
+    "core_concepts": [
+      "Unity Catalog name limit",
+      "backtick escaping",
+      "Hive metastore name limits"
+    ],
+    "engineering_principles": "Unity Catalog object names cannot exceed 255 characters.",
+    "practical_examples": "Names with special characters such as hyphens need backticks in SQL.",
+    "why_it_matters": "Identifier limits differ between Unity Catalog and Hive metastore.",
+    "authority_level": 5,
+    "authority_rationale": "Vendor documentation.",
+    "applies_to": [
+      "data_lake",
+      "data_warehouse"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Text extracted directly with curl. Supporting page opened: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-identifiers (2026-09-11). Column-name length limit not separately confirmed."
+  }
+]

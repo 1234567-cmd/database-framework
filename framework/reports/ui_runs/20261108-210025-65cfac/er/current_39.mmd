@@ -1,0 +1,18 @@
+%% Current schema of power-suite-staging (39 of 57: around iur_ingest_claims)
+erDiagram
+    iur_ingest_claims {
+        int id PK
+        varchar_255 company_code FK
+        varchar_255 file_name
+        varchar_160 webdav_username
+        varchar_120 claimed_by
+        datetime claimed_at
+        datetime released_at
+        varchar_30 outcome
+        datetime created_at
+        datetime updated_at
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ iur_ingest_claims : "company_code"

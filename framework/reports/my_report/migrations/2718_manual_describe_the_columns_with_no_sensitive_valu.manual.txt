@@ -1,0 +1,4 @@
+Step M2718: Manual: Describe the columns, with no sensitive values.
+MANUAL: this step has no generated SQL.
+Describe the columns, with no sensitive values.
+Findings: GVN-002-30769358

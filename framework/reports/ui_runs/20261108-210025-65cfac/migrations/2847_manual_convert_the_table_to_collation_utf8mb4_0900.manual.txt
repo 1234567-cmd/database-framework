@@ -1,0 +1,4 @@
+Step M2847: Manual: Convert the table to collation utf8mb4_0900_ai_ci.
+MANUAL: this step has no generated SQL.
+Convert the table to collation utf8mb4_0900_ai_ci.
+Findings: SCH-043-2d64e654

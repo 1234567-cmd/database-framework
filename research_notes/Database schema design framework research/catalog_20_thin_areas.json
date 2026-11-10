@@ -1,0 +1,810 @@
+[
+  {
+    "id": "THIN-01",
+    "title": "FIPS PUB 184: Integration Definition for Information Modeling (IDEF1X)",
+    "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub184.pdf",
+    "organization_author": "NIST Computer Systems Laboratory",
+    "category": "ER design",
+    "subcategory": "Notation standard",
+    "resource_type": "international_standard",
+    "publication_date": "1993-12-21",
+    "core_concepts": [
+      "identifying relationship",
+      "non-identifying relationship",
+      "cardinality",
+      "category cluster",
+      "discriminator",
+      "non-specific relationship"
+    ],
+    "engineering_principles": "Separates identifying, mandatory non-identifying and optional non-identifying relationships. Defines complete and incomplete category clusters. Requires non-specific relationships to be refined in the key-based phase.",
+    "practical_examples": "Employee with salaried and hourly categories; project and task identifying relationship; robber and bank many-to-many resolution.",
+    "why_it_matters": "The only full, freely readable formal specification of an ER-style notation found in this pass.",
+    "authority_level": 5,
+    "authority_rationale": "Primary US federal standard text, read in full by pdftotext. Withdrawn, so authority is historical.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "A US government standard, not an ISO one, so resource_type is the closest enum value. Withdrawal date and the ISO/IEC/IEEE 31320-2:2012 successor come only from https://en.wikipedia.org/wiki/IDEF1X (opened); no NIST withdrawal notice was opened."
+  },
+  {
+    "id": "THIN-02",
+    "title": "Crow's Foot Notation",
+    "url": "https://www.red-gate.com/blog/crow-s-foot-notation/",
+    "organization_author": "Redgate (formerly published by Vertabelo)",
+    "category": "ER design",
+    "subcategory": "Notation history",
+    "resource_type": "engineering_blog",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "crow's foot",
+      "inverted arrow",
+      "Everest 1976",
+      "cardinality symbols"
+    ],
+    "engineering_principles": "Reports Everest's own explanation of the symbol as non-directional and showing manyness.",
+    "practical_examples": "Footnote cites Computing Systems 1976, Proceedings Fifth Texas Conference on Computing Systems, Austin, TX, pages 39-46.",
+    "why_it_matters": "Closest readable source for the origin of the notation; it quotes Everest by correspondence.",
+    "authority_level": 3,
+    "authority_rationale": "Vendor blog carrying a personal communication; the 1976 paper itself was not opened.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "The vertabelo.com URL redirects here. Second source: https://runestone.academy/ns/books/published/practical_db/PART2_DATA_MODELING/04-other-notations/other-notations.html (opened), which attributes the family to Everest 1976 and explains maximum and minimum cardinality symbols. Body text and footnote name the venue differently."
+  },
+  {
+    "id": "THIN-03",
+    "title": "Inheritance mapping patterns: Single Table, Class Table, Concrete Table Inheritance",
+    "url": "https://martinfowler.com/eaaCatalog/singleTableInheritance.html",
+    "organization_author": "Martin Fowler",
+    "category": "ER design",
+    "subcategory": "Supertype and subtype",
+    "resource_type": "book",
+    "publication_date": "2003-03-05",
+    "core_concepts": [
+      "single table inheritance",
+      "class table inheritance",
+      "concrete table inheritance"
+    ],
+    "engineering_principles": "Names the three mapping patterns and the motive of each: fewer joins, clear mapping to objects, one row per object.",
+    "practical_examples": "None on the public pages; they refer to Chapter 12 of the book.",
+    "why_it_matters": "Common vocabulary for the three options.",
+    "authority_level": 4,
+    "authority_rationale": "Well-known author, but public pages are short catalog summaries of Patterns of Enterprise Application Architecture.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Also opened: https://martinfowler.com/eaaCatalog/classTableInheritance.html and https://martinfowler.com/eaaCatalog/concreteTableInheritance.html. The book chapter was not read, so no detailed trade-offs are drawn from Fowler."
+  },
+  {
+    "id": "THIN-04",
+    "title": "An Introduction to Hibernate 6: inheritance mapping and naming strategies",
+    "url": "https://docs.hibernate.org/orm/6.6/introduction/html_single/",
+    "organization_author": "Hibernate project",
+    "category": "ER design",
+    "subcategory": "Supertype and subtype",
+    "resource_type": "official_documentation",
+    "publication_date": "not captured (version 6.6)",
+    "core_concepts": [
+      "SINGLE_TABLE",
+      "JOINED",
+      "TABLE_PER_CLASS",
+      "implicit naming",
+      "physical naming"
+    ],
+    "engineering_principles": "Compares three strategies on query shape, NOT NULL, foreign keys and normalization.",
+    "practical_examples": "Subclass columns cannot be NOT NULL under SINGLE_TABLE; associations to a superclass cannot have a foreign key under TABLE_PER_CLASS.",
+    "why_it_matters": "The clearest readable constraint-level comparison found.",
+    "authority_level": 5,
+    "authority_rationale": "Official project documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "The user guide was also opened for naming strategy defaults: https://docs.hibernate.org/orm/6.6/userguide/html_single/ (the docs.jboss.org address redirects there)."
+  },
+  {
+    "id": "THIN-05",
+    "title": "EF Core: Inheritance",
+    "url": "https://learn.microsoft.com/en-us/ef/core/modeling/inheritance",
+    "organization_author": "Microsoft",
+    "category": "ER design",
+    "subcategory": "Supertype and subtype",
+    "resource_type": "official_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "TPH",
+      "TPT",
+      "TPC",
+      "discriminator",
+      "nullable columns"
+    ],
+    "engineering_principles": "TPH is the default and makes columns nullable as needed. The page states TPT often performs worse than TPH.",
+    "practical_examples": "Blog and RssBlog mapped under all three strategies, with generated DDL.",
+    "why_it_matters": "Vendor default and vendor performance statement for subtype storage.",
+    "authority_level": 5,
+    "authority_rationale": "Official Microsoft documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "The linked performance page with measured numbers was not opened."
+  },
+  {
+    "id": "THIN-06",
+    "title": "EF Core: Many-to-many relationships",
+    "url": "https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many",
+    "organization_author": "Microsoft",
+    "category": "ER design",
+    "subcategory": "Many-to-many",
+    "resource_type": "official_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "join table",
+      "skip navigation",
+      "two one-to-many relationships"
+    ],
+    "engineering_principles": "A many-to-many cannot be represented with a simple foreign key and needs a join table.",
+    "practical_examples": "Post and Tag with PostTag join table and generated schema.",
+    "why_it_matters": "Shows how an ORM treats the join table as a real or hidden entity.",
+    "authority_level": 5,
+    "authority_rationale": "Official Microsoft documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Read in part by keyword extraction."
+  },
+  {
+    "id": "THIN-07",
+    "title": "SQL Server: Hierarchical data",
+    "url": "https://learn.microsoft.com/en-us/sql/relational-databases/hierarchical-data-sql-server",
+    "organization_author": "Microsoft",
+    "category": "ER design",
+    "subcategory": "Hierarchies",
+    "resource_type": "official_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "hierarchyid",
+      "parent/child",
+      "subtree query",
+      "subtree move"
+    ],
+    "engineering_principles": "Compares hierarchyid with parent/child by operation and lists when parent/child is better.",
+    "practical_examples": "Subtree queries are faster with hierarchyid; moving a parent/child row touches one row, against n rows for hierarchyid.",
+    "why_it_matters": "The only vendor-written comparison of hierarchy designs found.",
+    "authority_level": 5,
+    "authority_rationale": "Official vendor documentation, read directly; comparative statements have no numbers.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "PostgreSQL cycle handling in recursive queries: https://www.postgresql.org/docs/current/queries-with.html (opened). The PostgreSQL ltree page was downloaded but only its title was reviewed."
+  },
+  {
+    "id": "THIN-08",
+    "title": "ISO/IEC FCD 11179-5 Naming and identification principles (2004 committee draft)",
+    "url": "https://www.jtc1sc32.org/doc/N1051-1100/32N1073T-FCD11179-5_doc",
+    "organization_author": "ISO/IEC JTC 1/SC 32",
+    "category": "Naming",
+    "subcategory": "Metadata registry naming",
+    "resource_type": "international_standard",
+    "publication_date": "2004-01-09 (draft date in file)",
+    "core_concepts": [
+      "object class term",
+      "property term",
+      "representation term",
+      "qualifier term",
+      "semantic, syntactic and lexical rules",
+      "scope and authority of a convention"
+    ],
+    "engineering_principles": "A convention documents scope, authority, semantic, syntactic, lexical and uniqueness rules. The annex shows an object class, qualifier, property, representation ordering.",
+    "practical_examples": "Cost Budget Period Total Amount; Employee Last Name; Tree Height Measure.",
+    "why_it_matters": "First text of the 11179-5 rule structure read in this research; it goes beyond the scope statement.",
+    "authority_level": 3,
+    "authority_rationale": "Committee document, not a published edition. Annex A is informative and the download was truncated.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Download stopped at 143,828 bytes with 139,820 bytes missing. Extracted text reaches at least Annex A.4 and is incomplete. Do not cite as the published 2005 or 2015 edition."
+  },
+  {
+    "id": "THIN-09",
+    "title": "ISO/IEC JTC 1/SC 32 Freely Available Standards",
+    "url": "https://jtc1sc32.org/free_standards.html",
+    "organization_author": "ISO/IEC JTC 1/SC 32",
+    "category": "Naming",
+    "subcategory": "Standards availability",
+    "resource_type": "other",
+    "publication_date": "not stated",
+    "core_concepts": [
+      "freely available standards",
+      "ISO/IEC 11179 parts 1-6"
+    ],
+    "engineering_principles": "Lists ISO/IEC 11179-5:2005 (2nd edition) among freely available SC 32 standards.",
+    "practical_examples": "Table of editions, including 11179-1:2004 through 11179-6:2005.",
+    "why_it_matters": "Indicates an older published edition of the naming part was released free.",
+    "authority_level": 4,
+    "authority_rationale": "Committee's own page, but it lists superseded editions and links to the old ISO location.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "https://standards.iso.org/ittf/PubliclyAvailableStandards/index.html (opened) says the ITTF site is closed and deliverables are on the ISO and IEC webstores. The free copy itself was not obtained."
+  },
+  {
+    "id": "THIN-10",
+    "title": "Active Record Basics",
+    "url": "https://guides.rubyonrails.org/active_record_basics.html",
+    "organization_author": "Ruby on Rails",
+    "category": "Naming",
+    "subcategory": "ORM conventions",
+    "resource_type": "official_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "plural table names",
+      "singularized_table_name_id",
+      "created_at",
+      "lock_version",
+      "polymorphic _type"
+    ],
+    "engineering_principles": "Convention over configuration: singular class, plural snake_case table.",
+    "practical_examples": "BookClub maps to book_clubs; foreign keys such as order_id.",
+    "why_it_matters": "Primary evidence for the plural convention in a major framework.",
+    "authority_level": 5,
+    "authority_rationale": "Official framework guide, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": ""
+  },
+  {
+    "id": "THIN-11",
+    "title": "Django Model Meta options",
+    "url": "https://docs.djangoproject.com/en/5.2/ref/models/options/",
+    "organization_author": "Django Software Foundation",
+    "category": "Naming",
+    "subcategory": "ORM conventions",
+    "resource_type": "official_documentation",
+    "publication_date": "version 5.2 docs",
+    "core_concepts": [
+      "app label prefix",
+      "db_table",
+      "lowercase table names"
+    ],
+    "engineering_principles": "Table name is app label plus model class name, so it is singular by default.",
+    "practical_examples": "App bookstore and class Book give bookstore_book.",
+    "why_it_matters": "Primary evidence that a major framework defaults to singular with an app prefix.",
+    "authority_level": 5,
+    "authority_rationale": "Official framework documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": ""
+  },
+  {
+    "id": "THIN-12",
+    "title": "EF Core: Indexes and constraints",
+    "url": "https://learn.microsoft.com/en-us/ef/core/modeling/indexes",
+    "organization_author": "Microsoft",
+    "category": "Testing and schema validation",
+    "subcategory": "ORM conventions",
+    "resource_type": "official_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "foreign key index by convention",
+      "IX_ naming"
+    ],
+    "engineering_principles": "EF Core creates an index on foreign key properties by convention.",
+    "practical_examples": "Default index name IX_<type name>_<property name>.",
+    "why_it_matters": "Shows that foreign key indexing can be a framework default, not a lint rule.",
+    "authority_level": 5,
+    "authority_rationale": "Official Microsoft documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Table naming: https://learn.microsoft.com/en-us/ef/core/modeling/entity-types (opened). Pending model check: https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/managing (opened)."
+  },
+  {
+    "id": "THIN-13",
+    "title": "Prisma: Database mapping",
+    "url": "https://www.prisma.io/docs/orm/v7/prisma-schema/data-model/database-mapping",
+    "organization_author": "Prisma",
+    "category": "Naming",
+    "subcategory": "ORM conventions",
+    "resource_type": "official_documentation",
+    "publication_date": "v7 docs path",
+    "core_concepts": [
+      "@map",
+      "@@map",
+      "singular PascalCase model",
+      "default constraint names"
+    ],
+    "engineering_principles": "Decouples model names from table names. Says plural snake_case tables are common but recommends singular PascalCase models.",
+    "practical_examples": "Model Comment mapped to table comments.",
+    "why_it_matters": "A primary source that separates application naming from database naming.",
+    "authority_level": 5,
+    "authority_rationale": "Official vendor documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "The older /docs/orm/prisma-schema path redirected to a v7 path."
+  },
+  {
+    "id": "THIN-14",
+    "title": "GitLab: Foreign keys and associations",
+    "url": "https://docs.gitlab.com/development/database/foreign_keys/",
+    "organization_author": "GitLab",
+    "category": "Naming",
+    "subcategory": "Organization standards",
+    "resource_type": "official_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "index before foreign key",
+      "bigint foreign keys",
+      "composite index coverage"
+    ],
+    "engineering_principles": "Requires an index for foreign keys, and accepts a composite index with the foreign key in first position.",
+    "practical_examples": "Constraint naming: fk_<table name>_<column name>_<foreign table name>, for example fk_projects_group_id_groups.",
+    "why_it_matters": "A public organization rule on foreign key indexes with the reason stated.",
+    "authority_level": 4,
+    "authority_rationale": "Public engineering standards of a large PostgreSQL application; binding only inside GitLab.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Naming page: https://docs.gitlab.com/development/database/constraint_naming_convention/ (opened). Tenant key detail: https://docs.gitlab.com/development/database/multiple_databases/ (opened) says the sharding key section moved; the new location was not opened."
+  },
+  {
+    "id": "THIN-15",
+    "title": "Oracle Database 19c SQL Language Reference: Database Object Names and Qualifiers",
+    "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/Database-Object-Names-and-Qualifiers.html",
+    "organization_author": "Oracle",
+    "category": "Naming",
+    "subcategory": "Vendor rules and guidelines",
+    "resource_type": "official_documentation",
+    "publication_date": "19c docs",
+    "core_concepts": [
+      "identifier length",
+      "quoted identifiers",
+      "reserved words",
+      "naming guidelines"
+    ],
+    "engineering_principles": "Nonquoted identifiers cannot be reserved words. Names reach 128 bytes under COMPATIBLE 12.2 or higher. Advises same names for same things across tables.",
+    "practical_examples": "department_id used in both employees and departments; fin_ prefix for a FINANCE application.",
+    "why_it_matters": "Corrects the gap note that no vendor prescribes naming beyond identifier rules, at least for Oracle.",
+    "authority_level": 5,
+    "authority_rationale": "Official vendor documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Says nothing on singular or plural in the text read."
+  },
+  {
+    "id": "THIN-16",
+    "title": "Schemalint",
+    "url": "https://raw.githubusercontent.com/kristiandupont/schemalint/main/README.md",
+    "organization_author": "Kristian Dupont and contributors",
+    "category": "Testing and schema validation",
+    "subcategory": "Schema linter",
+    "resource_type": "tool_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "name-casing",
+      "name-inflection",
+      "index-referencing-column",
+      "require-primary-key",
+      "mandatory-columns",
+      "row-level-security"
+    ],
+    "engineering_principles": "Lints a live PostgreSQL catalog, with built-in rules and custom plugins.",
+    "practical_examples": "Rule config such as name-inflection singular; missing index reports a suggested CREATE INDEX.",
+    "why_it_matters": "Has built-in checks for foreign key indexes, primary keys, required columns and RLS.",
+    "authority_level": 4,
+    "authority_rationale": "Project README and rule source read directly; community project.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Rule source opened under https://raw.githubusercontent.com/kristiandupont/schemalint/main/src/rules/ (references.ts, requirePrimaryKey.ts, mandatoryColumns.ts, rowLevelSecurity.ts, types.ts, nameCasing.ts, nameInflection.ts). PostgreSQL only."
+  },
+  {
+    "id": "THIN-17",
+    "title": "Squawk rules",
+    "url": "https://squawkhq.com/docs/rules",
+    "organization_author": "Squawk authors",
+    "category": "Testing and schema validation",
+    "subcategory": "Migration linter",
+    "resource_type": "tool_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "migration safety",
+      "lock-aware rules",
+      "identifier-too-long",
+      "prefer-bigint-over-int"
+    ],
+    "engineering_principles": "Focuses on statements that could block reads or writes or break clients.",
+    "practical_examples": "adding-foreign-key-constraint recommends NOT VALID then VALIDATE CONSTRAINT.",
+    "why_it_matters": "Defines the boundary: migration safety rather than schema design policy.",
+    "authority_level": 4,
+    "authority_rationale": "Official tool documentation; rule list read, only a few rule pages opened.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Also opened: https://squawkhq.com/docs/adding-foreign-key-constraint, https://squawkhq.com/docs/identifier-too-long, https://squawkhq.com/docs/prefer-identity."
+  },
+  {
+    "id": "THIN-18",
+    "title": "SQLFluff: References rules",
+    "url": "https://docs.sqlfluff.com/en/stable/reference/rules/references.html",
+    "organization_author": "SQLFluff contributors",
+    "category": "Testing and schema validation",
+    "subcategory": "SQL linter",
+    "resource_type": "tool_documentation",
+    "publication_date": "stable docs",
+    "core_concepts": [
+      "RF04 references.keywords",
+      "quoted and unquoted identifier policy"
+    ],
+    "engineering_principles": "RF04 flags keywords used as identifiers, with policy options for aliases and other identifiers.",
+    "practical_examples": "Rule overview reports 79 rules in 11 categories.",
+    "why_it_matters": "Only documented reserved-word style lint found, with a stated limit.",
+    "authority_level": 4,
+    "authority_rationale": "Official tool documentation, read directly.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Overview: https://docs.sqlfluff.com/en/stable/reference/rules/ (opened). Convention and capitalisation pages opened; aliasing, ambiguous, structure, layout and dialect pages not read."
+  },
+  {
+    "id": "THIN-19",
+    "title": "Atlas: Migration analyzers",
+    "url": "https://atlasgo.io/lint/analyzers",
+    "organization_author": "Ariga",
+    "category": "Testing and schema validation",
+    "subcategory": "Schema and migration linter",
+    "resource_type": "tool_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "naming analyzer",
+      "destructive change checks",
+      "custom schema rules",
+      "predicates"
+    ],
+    "engineering_principles": "Analyzers for naming and destructive changes. Custom rule language can assert schema conditions.",
+    "practical_examples": "Documented rule examples: require-index-fk-columns, table-required-columns, id-column-required, ensure-row-security-enabled.",
+    "why_it_matters": "Custom rule docs include a ready example for foreign key indexes and required columns.",
+    "authority_level": 4,
+    "authority_rationale": "Official vendor documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Custom rule language: https://atlasgo.io/lint/rules (opened), stated to be available exclusively to Pro users."
+  },
+  {
+    "id": "THIN-20",
+    "title": "Liquibase Secure custom policy checks",
+    "url": "https://docs.liquibase.com/secure/user-guide-5-0/implement-liquibase-secure-custom-policy-checks",
+    "organization_author": "Liquibase",
+    "category": "Testing and schema validation",
+    "subcategory": "Policy checks",
+    "resource_type": "tool_documentation",
+    "publication_date": "user guide 5.0",
+    "core_concepts": [
+      "checks run",
+      "custom policy checks",
+      "changelog and database scope"
+    ],
+    "engineering_principles": "Custom checks confirm specific syntax or objects are present in a changelog or database.",
+    "practical_examples": "Check names TableColumnLimit and ObjectNameMustMatch appear in the checks run reference.",
+    "why_it_matters": "Commercial option for governance checks.",
+    "authority_level": 3,
+    "authority_rationale": "Official documentation, but the built-in check catalog could not be opened.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Requires a Liquibase Secure license. Also opened: https://docs.liquibase.com/reference-guide/policy-check-and-flow-commands-and-parameters/checks-run (redirected) and https://raw.githubusercontent.com/liquibase/custom_policychecks/main/README.md."
+  },
+  {
+    "id": "THIN-21",
+    "title": "pgTAP documentation",
+    "url": "https://pgtap.org/documentation.html",
+    "organization_author": "pgTAP project",
+    "category": "Testing and schema validation",
+    "subcategory": "Database unit tests",
+    "resource_type": "tool_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "has_pk",
+      "col_is_pk",
+      "has_fk",
+      "fk_ok",
+      "col_type_is",
+      "is_indexed",
+      "columns_are",
+      "tables_are"
+    ],
+    "engineering_principles": "Assertion functions test named objects inside PostgreSQL.",
+    "practical_examples": "SELECT has_pk( :table ); tables_are( :schema, :tables ).",
+    "why_it_matters": "Assertion coverage for primary keys, foreign keys, column types and indexes.",
+    "authority_level": 5,
+    "authority_rationale": "Official project documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Functions assert named objects; a schema-wide sweep would need generated tests, which is inference."
+  },
+  {
+    "id": "THIN-22",
+    "title": "tSQLt: AssertEqualsTableSchema",
+    "url": "https://tsqlt.org/user-guide/assertions/assertequalstableschema/",
+    "organization_author": "tSQLt / sqlity.net",
+    "category": "Testing and schema validation",
+    "subcategory": "Database unit tests",
+    "resource_type": "tool_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "AssertEqualsTableSchema",
+      "FakeTable",
+      "AssertObjectExists"
+    ],
+    "engineering_principles": "Compares table metadata against an expected table. FakeTable removes constraints from the object under test.",
+    "practical_examples": "FakeTable page warns that a faked table does not test constraints.",
+    "why_it_matters": "SQL Server test option, with a documented blind spot.",
+    "authority_level": 4,
+    "authority_rationale": "Official documentation, read directly; user guide footer dates to 2020.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Also opened: https://tsqlt.org/user-guide/ and https://tsqlt.org/user-guide/isolating-dependencies/faketable/."
+  },
+  {
+    "id": "THIN-23",
+    "title": "utPLSQL expectations",
+    "url": "https://www.utplsql.org/utPLSQL/latest/userguide/expectations.html",
+    "organization_author": "utPLSQL project",
+    "category": "Testing and schema validation",
+    "subcategory": "Database unit tests",
+    "resource_type": "tool_documentation",
+    "publication_date": "latest docs",
+    "core_concepts": [
+      "annotations",
+      "expectations",
+      "to_equal"
+    ],
+    "engineering_principles": "General purpose PL/SQL test framework based on annotations and expectations.",
+    "practical_examples": "Documentation example counts rows in a named table and expects zero.",
+    "why_it_matters": "Oracle test option; no schema-specific assertion found.",
+    "authority_level": 4,
+    "authority_rationale": "Official documentation, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Home page also opened: https://www.utplsql.org/utPLSQL/latest/."
+  },
+  {
+    "id": "THIN-24",
+    "title": "prisma-lint rules",
+    "url": "https://raw.githubusercontent.com/loop-payments/prisma-lint/main/RULES.md",
+    "organization_author": "Loop Payments",
+    "category": "Testing and schema validation",
+    "subcategory": "Schema linter",
+    "resource_type": "tool_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "require-field-index forAllRelations",
+      "require-field",
+      "require-field-type",
+      "model-name-grammatical-number",
+      "field-order"
+    ],
+    "engineering_principles": "Lints Prisma schema files, not the database.",
+    "practical_examples": "tenantId is used in the rule examples for field-order and ignore comments.",
+    "why_it_matters": "Only source found whose own examples use a tenant key.",
+    "authority_level": 3,
+    "authority_rationale": "Third-party open source project, rules file read directly. Not a Prisma product.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "README also opened."
+  },
+  {
+    "id": "THIN-25",
+    "title": "Testcontainers: Getting started",
+    "url": "https://testcontainers.com/getting-started/",
+    "organization_author": "Testcontainers project",
+    "category": "Testing and schema validation",
+    "subcategory": "Test infrastructure",
+    "resource_type": "tool_documentation",
+    "publication_date": "not captured",
+    "core_concepts": [
+      "real services in containers",
+      "test dependencies"
+    ],
+    "engineering_principles": "Tests run against real services in Docker, without mocks or in-memory services.",
+    "practical_examples": "PostgreSQL module examples across languages at https://testcontainers.com/modules/postgresql/.",
+    "why_it_matters": "Replaces the definition gap recorded in research_gaps.md.",
+    "authority_level": 5,
+    "authority_rationale": "Official project site, read directly.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Infrastructure only: it runs checks but performs none."
+  },
+  {
+    "id": "THIN-26",
+    "title": "DAMA-DMBOK",
+    "url": "https://dama.org/learning-resources/dama-data-management-body-of-knowledge-dmbok/",
+    "organization_author": "DAMA International",
+    "category": "Documentation and governance",
+    "subcategory": "Body of knowledge",
+    "resource_type": "official_documentation",
+    "publication_date": "page copyright 2026",
+    "core_concepts": [
+      "DMBOK2 Revised Edition",
+      "DMBOK 3.0 project",
+      "11 knowledge areas"
+    ],
+    "engineering_principles": "Describes itself as not a prescriptive standard, not a regulation and not exhaustive.",
+    "practical_examples": "Publisher pages sell print and PDF formats.",
+    "why_it_matters": "Settles the status question: DMBOK is a reference, so it cannot be cited as a binding rule.",
+    "authority_level": 4,
+    "authority_rationale": "Publisher's own page, read directly; book content remains unread.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Also opened: https://dama.org/about-dama/what-is-data-management/ (states 11 knowledge areas, names only 6), https://dama.org/dama-dmbok2-revised-edition-faqs/ (April 2024 availability), https://dama.org/dama-dmbok-3-0-project/, https://technicspub.com/dmbok2/."
+  },
+  {
+    "id": "THIN-27",
+    "title": "DCAM",
+    "url": "https://edmcouncil.org/frameworks/dcam/",
+    "organization_author": "EDM Council / EDM Association",
+    "category": "Documentation and governance",
+    "subcategory": "Capability model",
+    "resource_type": "official_documentation",
+    "publication_date": "not stated",
+    "core_concepts": [
+      "DCAM v3",
+      "eight components",
+      "34 capabilities",
+      "101 sub-capabilities",
+      "scoring with evidence"
+    ],
+    "engineering_principles": "Capability assessment with auditable evidence and scoring. The page says DCAM is available exclusively to member firms.",
+    "practical_examples": "None public beyond structure counts.",
+    "why_it_matters": "Establishes what can be cited publicly: structure only.",
+    "authority_level": 3,
+    "authority_rationale": "Owner's marketing page; framework text is members only.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Names of the eight components were not captured from the text."
+  },
+  {
+    "id": "THIN-28",
+    "title": "ISO/IEC 25012 data quality model summary",
+    "url": "https://iso25000.com/index.php/en/iso-25000-standards/iso-25012",
+    "organization_author": "iso25000.com portal",
+    "category": "Documentation and governance",
+    "subcategory": "Data quality model",
+    "resource_type": "community_reference",
+    "publication_date": "site copyright 2024",
+    "core_concepts": [
+      "15 characteristics",
+      "inherent",
+      "system-dependent"
+    ],
+    "engineering_principles": "Definitions of all 15 characteristics, grouped as inherent, both, and system-dependent.",
+    "practical_examples": "Traceability defined around an audit trail of access and changes.",
+    "why_it_matters": "Resolves the gap on the list of characteristics, from a secondary site.",
+    "authority_level": 3,
+    "authority_rationale": "Secondary portal, not ISO; wording may differ from the standard.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Paginated with ?start=N; pages 0 to 14 were opened to obtain all 15 definitions."
+  },
+  {
+    "id": "THIN-29",
+    "title": "ISO 8000 (Wikipedia list of parts)",
+    "url": "https://en.wikipedia.org/wiki/ISO_8000",
+    "organization_author": "Wikipedia contributors",
+    "category": "Documentation and governance",
+    "subcategory": "Data quality standards",
+    "resource_type": "community_reference",
+    "publication_date": "not stated",
+    "core_concepts": [
+      "ISO 8000 part inventory",
+      "master data",
+      "data quality management"
+    ],
+    "engineering_principles": "Lists parts including 8000-2, 8000-8, 8000-61 and the 8000-1xx master data parts.",
+    "practical_examples": "ISO 8000-150:2022 roles and responsibilities; ISO 8000-110:2021 master data exchange.",
+    "why_it_matters": "Only opened inventory of parts; ISO's own pages returned 403.",
+    "authority_level": 2,
+    "authority_rationale": "Community reference. Use for orientation only.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "https://eccma.org/what-is-iso-8000/ was also opened. No free official ISO 8000 part was found."
+  },
+  {
+    "id": "THIN-30",
+    "title": "Documenting Architecture Decisions",
+    "url": "https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+    "organization_author": "Michael Nygard",
+    "category": "Documentation and governance",
+    "subcategory": "Decision records",
+    "resource_type": "engineering_blog",
+    "publication_date": "2011-11-15",
+    "core_concepts": [
+      "ADR",
+      "context",
+      "decision",
+      "status",
+      "consequences"
+    ],
+    "engineering_principles": "Records context, decision, status and consequences, because past rationale otherwise gets lost.",
+    "practical_examples": "AWS guidance adds owner, Proposed, Accepted and Rejected states and supersession.",
+    "why_it_matters": "Origin of the common ADR format, applicable to schema decisions.",
+    "authority_level": 4,
+    "authority_rationale": "Widely referenced original post, read directly.",
+    "applies_to": [
+      "general"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Also opened: https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html and https://adr.github.io/. Data dictionary support via https://www.postgresql.org/docs/current/sql-comment.html (opened)."
+  }
+]

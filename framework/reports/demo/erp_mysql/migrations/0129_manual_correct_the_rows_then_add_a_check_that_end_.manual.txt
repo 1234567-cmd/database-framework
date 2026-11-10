@@ -1,0 +1,4 @@
+Step M129: Manual: Correct the rows, then add a CHECK that end_date >= start_date.
+MANUAL: this step has no generated SQL.
+Correct the rows, then add a CHECK that end_date >= start_date.
+Findings: DQ-014-5fde5855

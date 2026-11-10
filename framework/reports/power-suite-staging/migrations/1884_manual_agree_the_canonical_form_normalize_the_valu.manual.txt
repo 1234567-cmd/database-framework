@@ -1,0 +1,4 @@
+Step M1884: Manual: Agree the canonical form, normalize the values and validate at write.
+MANUAL: this step has no generated SQL.
+Agree the canonical form, normalize the values and validate at write.
+Findings: DQ-015-eb39472f

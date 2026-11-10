@@ -1,0 +1,4 @@
+Step M1515: Manual: Keep header_licence_no in branch_document_template only, or maintain the copy th
+MANUAL: this step has no generated SQL.
+Keep header_licence_no in branch_document_template only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-c5173389

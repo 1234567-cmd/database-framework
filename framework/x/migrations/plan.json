@@ -1,0 +1,584 @@
+{
+  "backup_recommendation": "Take a verified physical base backup with continuous WAL archiving (pg_basebackup or your backup platform), or confirm the latest one is usable. pg_dump is a supplement only, useful for portable or partial restore. A replica or standby is not a backup. Restore the backup to a separate instance and verify it before relying on it, and record the time so the recovery point is known.",
+  "database": "clean_postgres",
+  "dialect": "postgres",
+  "notes": [],
+  "plan_hash": "8405f08dccead9fadbb15156d5c94d1cc2349560f5fc40a6bacd5da43ef4f7f2",
+  "satisfied_findings": [],
+  "source_dialect": "postgres",
+  "steps": [
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"audit_log\" DROP COLUMN \"created_at\""
+      ],
+      "finding_ids": [
+        "SCH-044-0caedc85"
+      ],
+      "id": "M001",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 1,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column audit_log.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.audit_log exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'audit_log' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column audit_log.created_at does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.audit_log",
+      "title": "Add column audit_log.created_at timestamptz",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"audit_log\" ADD COLUMN \"created_at\" timestamptz DEFAULT CURRENT_TIMESTAMP"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"audit_log\" DROP COLUMN \"created_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-7f111f22"
+      ],
+      "id": "M002",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 2,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column audit_log.created_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.audit_log exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'audit_log' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column audit_log.created_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.audit_log",
+      "title": "Add column audit_log.created_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"audit_log\" ADD COLUMN \"created_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"audit_log\" DROP COLUMN \"updated_at\""
+      ],
+      "finding_ids": [
+        "SCH-044-79f1bf6e"
+      ],
+      "id": "M003",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 3,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column audit_log.updated_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = 'public' AND column_name = 'updated_at'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.audit_log exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'audit_log' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column audit_log.updated_at does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = 'public' AND column_name = 'updated_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.audit_log",
+      "title": "Add column audit_log.updated_at timestamptz",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"audit_log\" ADD COLUMN \"updated_at\" timestamptz DEFAULT CURRENT_TIMESTAMP"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"audit_log\" DROP COLUMN \"updated_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-a725eb56"
+      ],
+      "id": "M004",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 4,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column audit_log.updated_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.audit_log exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'audit_log' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column audit_log.updated_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.audit_log",
+      "title": "Add column audit_log.updated_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"audit_log\" ADD COLUMN \"updated_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-006-c4b98957"
+      ],
+      "id": "M005",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Requires legal review: define retention by record class, jurisdiction, start event and hold.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 5,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: Requires legal review: define retention by record class, jurisdiction, start eve",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-0f1973fd"
+      ],
+      "id": "M006",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 6,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.audit_log",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-06270498"
+      ],
+      "id": "M007",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 7,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.customers",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "email",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SECA-004-8e7326c0"
+      ],
+      "id": "M008",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Classify email (email) and record its required protections.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 8,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.customers",
+      "title": "Manual: Classify email (email) and record its required protections.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "email",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SECA-005-1f1879fc"
+      ],
+      "id": "M009",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Classify email (email) and protect it accordingly.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 9,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.customers",
+      "title": "Manual: Classify email (email) and protect it accordingly.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-009a9307"
+      ],
+      "id": "M010",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 10,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.order_items",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-af0ef4d2"
+      ],
+      "id": "M011",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 11,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.orders",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-f6ba99c7"
+      ],
+      "id": "M012",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 12,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.products",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-6b148219"
+      ],
+      "id": "M013",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 13,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.schema_migrations",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    }
+  ],
+  "unaddressed_findings": [
+    "DQ-001-88b232e6",
+    "REL-003-6a433c2c"
+  ]
+}

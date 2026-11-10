@@ -1,0 +1,4 @@
+Step M1453: Manual: Document the UTC convention for last_login_at, or move it to a UTC-normalizing t
+MANUAL: this step has no generated SQL.
+Document the UTC convention for last_login_at, or move it to a UTC-normalizing type.
+Findings: SCH-030-a2bed4fa

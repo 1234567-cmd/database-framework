@@ -1,0 +1,4 @@
+Step M1476: Manual: Store request_id in binary(16) or the engine's native UUID form, and update read
+MANUAL: this step has no generated SQL.
+Store request_id in binary(16) or the engine's native UUID form, and update readers.
+Findings: SCH-036-b3ad3bd6

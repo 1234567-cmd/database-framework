@@ -1,0 +1,4 @@
+Step M122: Manual: Rewrite the predicate on email so the column stands alone, or add a matching exp
+MANUAL: this step has no generated SQL.
+Rewrite the predicate on email so the column stands alone, or add a matching expression index.
+Findings: PERF-010-7a914eb5

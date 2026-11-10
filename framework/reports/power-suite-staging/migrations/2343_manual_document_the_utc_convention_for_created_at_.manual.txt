@@ -1,0 +1,4 @@
+Step M2343: Manual: Document the UTC convention for created_at, or move it to a UTC-normalizing type
+MANUAL: this step has no generated SQL.
+Document the UTC convention for created_at, or move it to a UTC-normalizing type.
+Findings: SCH-030-8fc5d6d8

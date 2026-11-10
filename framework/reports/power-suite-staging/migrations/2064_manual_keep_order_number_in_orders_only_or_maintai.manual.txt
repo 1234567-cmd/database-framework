@@ -1,0 +1,4 @@
+Step M2064: Manual: Keep order_number in orders only, or maintain the copy through one controlled me
+MANUAL: this step has no generated SQL.
+Keep order_number in orders only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-3681f0c5

@@ -1,0 +1,11 @@
+-- Step M025: Add column audit_log.updated_at timestamp
+-- Direction: up
+-- Findings: DE-005-816737e4, SCH-044-9efc9b30
+-- Destructive: False. Reversible: True. Data loss risk: none. Lock risk: low.
+-- PROPOSAL ONLY. Review before use.
+-- Precheck: Table audit_log exists. Expect 1: SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'audit_log' AND table_schema = DATABASE()
+-- Precheck: Column audit_log.updated_at does not exist. Expect 0: SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'audit_log' AND table_schema = DATABASE() AND column_name = 'updated_at'
+-- Note: Rollback drops the column and discards any values written to it after the change.
+-- Note: MySQL 8.0 allows ADD COLUMN with INPLACE and LOCK=NONE; INSTANT may also be available from 8.0.12 and later.
+SET SESSION lock_wait_timeout = 5;
+ALTER TABLE `audit_log` ADD COLUMN `updated_at` timestamp, ALGORITHM=INPLACE, LOCK=NONE;

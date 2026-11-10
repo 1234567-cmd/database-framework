@@ -1,0 +1,55 @@
+%% Proposed schema of power-suite-staging (11 of 80: around gl_settle_accounts)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    gl_settle_accounts {
+        int id PK
+        int chart_of_account_id FK
+        varchar_200 company_code
+        datetime createdAt
+        datetime updatedAt
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    fee_type_maintenances {
+        int id PK
+        varchar_45 company_code
+        varchar_50 fee_code
+        varchar_255 description
+        int gl_settle_account_id FK "proposed: added"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    receipt_settlement_payments {
+        int id PK
+        int receipt_settlement_id FK
+        decimal_12_4 amount "proposed: changed"
+        int customer_deposit_id FK
+        datetime created_at
+        datetime updated_at
+        int gl_account_id FK
+        varchar_10 currency_code
+        decimal_10_4 exchange_rate
+        decimal_12_4 base_amount "proposed: changed"
+        text remarks
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    customer_deposits {
+        external stub "see the diagram that holds this table"
+    }
+    receipt_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts ||--o{ gl_settle_accounts : "chart_of_account_id"
+    gl_settle_accounts ||--o{ fee_type_maintenances : "gl_settle_account_id (proposed)"
+    customer_deposits ||--o{ receipt_settlement_payments : "customer_deposit_id"
+    receipt_settlements ||--o{ receipt_settlement_payments : "receipt_settlement_id"
+    gl_settle_accounts ||--o{ receipt_settlement_payments : "gl_account_id"

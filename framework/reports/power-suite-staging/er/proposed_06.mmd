@@ -1,0 +1,192 @@
+%% Proposed schema of power-suite-staging (6 of 80: around airline_codes)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    airline_codes {
+        int id PK
+        varchar_45 airline_ticket_prefix
+        int airline_ticket
+        varchar_200 airline_name
+        varchar_70 airline_code
+        tinyint bsp_airline
+        tinyint lcc
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    fee_airlines {
+        int id PK
+        int maintenance_fee_group_id FK "proposed: added"
+        int airline_code_id FK "proposed: added"
+        timestamp updated_at "proposed: added"
+    }
+    service_hajj_flights {
+        int id PK
+        int service_hajj_id FK
+        varchar_255 flight
+        int airline_code_id FK "proposed: added"
+        varchar_255 flight_airline_code
+        datetime date_at "proposed: added"
+        varchar_255 dep_port
+        varchar_255 arr_port
+        varchar_255 dep_time
+        varchar_255 arr_time
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_umrah_flights {
+        int id PK
+        int service_umrah_id FK
+        varchar_255 flight
+        int airline_code_id FK "proposed: added"
+        varchar_255 flight_airline_code
+        date date
+        varchar_255 dep_port
+        varchar_255 arr_port
+        varchar_255 dep_time
+        varchar_255 arr_time
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    ticket_inventory_details {
+        int id PK
+        int iata_maintenance_id FK "proposed: added"
+        int service_type_id FK "proposed: added"
+        int airline_code_id FK "proposed: added"
+        varchar_45 start_no
+        varchar_45 end_no
+        int service_passenger_id FK
+        int no_of_tickets
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    maintenance_fee_groups {
+        int id PK
+        int group_id
+        varchar_255 fee_name
+        int iata_no_id
+        varchar_255 region_code
+        varchar_255 haul
+        varchar_255 fare_type
+        varchar_255 charge_type
+        varchar_255 comm
+        varchar_255 booking_channel
+        int currency_id FK
+        varchar_255 currency_from
+        varchar_255 currency_to
+        varchar_255 calculation_basis
+        varchar_255 tax_option
+        varchar_255 international_air
+        varchar_255 domestic_air
+        varchar_255 other_air
+        varchar_255 transaction_fee_method
+        bigint transaction_fee_percent "proposed: changed"
+        decimal_18_4 transaction_fee_amount "proposed: changed"
+        bigint transaction_fee_max_amount "proposed: changed"
+        bigint transaction_fee_min_amount "proposed: changed"
+        varchar_255 discount
+        varchar_255 discount_hold_tax
+        varchar_255 remarks
+        varchar_45 ticket_type
+        varchar_45 airline
+        int segment_from
+        int segment_to
+        varchar_45 air_class
+        tinyint use_rbd
+        enum_All_International_Domestic_Specific_Routing routing
+        tinyint origin_base
+        int country_id
+        date validity_period_from_date "proposed: added"
+        date validity_period_to_date "proposed: added"
+        varchar_45 markup_fee_method
+        bigint markup_fee_percent "proposed: changed"
+        decimal_18_4 markup_fee_amount "proposed: changed"
+        tinyint is_markup_fee_rule
+        int departure_city_id
+        int arrival_city_id
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    iata_maintenances {
+        int id PK
+        int iata_number
+        varchar_255 iata_name
+        varchar_45 company_code
+        tinyint_1 is_def "proposed: added"
+        datetime createdAt
+        datetime updatedAt
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    currencies {
+        int id PK
+        varchar_255 from_currency
+        varchar_255 to_currency
+        decimal_10_2 exchange_rate
+        varchar_45 company_code
+    }
+    fee_class_airlines {
+        int id PK
+        int maintenance_fee_group_id FK "proposed: added"
+        int airline_class_code_id FK "proposed: added"
+        timestamp updated_at "proposed: added"
+    }
+    fee_main_product_codes {
+        int id PK
+        int maintenance_fee_group_id FK "proposed: added"
+        int service_type_id FK "proposed: added"
+        timestamp updated_at "proposed: added"
+    }
+    airline_class_codes {
+        int id PK
+        varchar_255 class_code
+        varchar_255 airline_code
+        varchar_255 class_description
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_hajjs {
+        external stub "see the diagram that holds this table"
+    }
+    service_passengers {
+        external stub "see the diagram that holds this table"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    service_umrahs {
+        external stub "see the diagram that holds this table"
+    }
+    maintenance_fee_groups ||--o{ fee_airlines : "maintenance_fee_group_id (proposed)"
+    airline_codes ||--o{ fee_airlines : "airline_code_id (proposed)"
+    airline_codes ||--o{ service_hajj_flights : "airline_code_id (proposed)"
+    service_hajjs ||--o{ service_hajj_flights : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_flights : "service_hajj_id"
+    airline_codes ||--o{ service_umrah_flights : "airline_code_id (proposed)"
+    service_umrahs ||--o{ service_umrah_flights : "service_umrah_id (proposed)"
+    airline_codes ||--o{ ticket_inventory_details : "airline_code_id (proposed)"
+    iata_maintenances ||--o{ ticket_inventory_details : "iata_maintenance_id (proposed)"
+    service_types ||--o{ ticket_inventory_details : "service_type_id (proposed)"
+    service_passengers ||--o{ ticket_inventory_details : "service_passenger_id"
+    currencies ||--o{ maintenance_fee_groups : "currency_id (proposed)"
+    maintenance_fee_groups ||--o{ fee_class_airlines : "maintenance_fee_group_id (proposed)"
+    airline_class_codes ||--o{ fee_class_airlines : "airline_class_code_id (proposed)"
+    maintenance_fee_groups ||--o{ fee_main_product_codes : "maintenance_fee_group_id (proposed)"
+    service_types ||--o{ fee_main_product_codes : "service_type_id (proposed)"

@@ -1,0 +1,28 @@
+# The clean sample must have no critical or high confirmed defects and none of these false positives.
+source: clean_postgres.sql
+name: clean_demo
+profile: profiles/clean.yaml
+expected: []
+no_confirmed_at_or_above: high
+minimum_overall_score: 90
+absent:
+  - {rule: SCH-001}
+  - {rule: SCH-002}
+  - {rule: SCH-003}
+  - {rule: SCH-011}
+  - {rule: SCH-020}
+  - {rule: SCH-030}
+  - {rule: SCH-031}
+  - {rule: SCH-044}
+  - {rule: SCH-046}
+  - {rule: SCH-057}
+  - {rule: SCH-058}
+  - {rule: SCH-059}
+  - {rule: PERF-001}
+  - {rule: DQ-002}
+  - {rule: DQ-007}
+  - {rule: DQ-009}
+  - {rule: FINA-001}
+  - {rule: TENA-010}
+never_in_reports:
+  - "alice@example.com"

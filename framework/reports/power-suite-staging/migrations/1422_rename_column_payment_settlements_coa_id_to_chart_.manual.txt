@@ -1,0 +1,4 @@
+Step M1422: Rename column payment_settlements.coa_id to chart_of_account_id
+MANUAL: this step has no generated SQL.
+Table payment_settlements matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column payment_settlements.coa_id to chart_of_account_id.
+Findings: SCH-058-63f913eb

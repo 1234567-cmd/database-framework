@@ -1,0 +1,4 @@
+Step M120: Manual: Convert the table to the database's approved Unicode encoding.
+MANUAL: this step has no generated SQL.
+Convert the table to the database's approved Unicode encoding.
+Findings: SCH-043-86d21fe7

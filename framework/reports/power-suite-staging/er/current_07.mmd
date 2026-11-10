@@ -1,0 +1,58 @@
+%% Current schema of power-suite-staging (7 of 57: around cruise_services)
+erDiagram
+    cruise_services {
+        int id PK
+        int service_id FK
+        varchar_255 voyage_name
+        varchar_255 voyage_no
+        int cruise_company_id FK
+        int ship_name_id FK
+        datetime embark_date
+        int embark_port_id FK
+        datetime disembark_date
+        int disembark_port_id FK
+        varchar_255 duration
+        int cabin_type_id FK
+        varchar_255 cabin_no
+        varchar_255 grade_no
+        varchar_255 grade_type
+        varchar_255 booking_ref
+        varchar_255 deck_no
+        varchar_255 deck_name
+        varchar_255 dining
+        varchar_255 on_board_credit
+        varchar_255 group_id
+        varchar_255 status
+        varchar_255 itin_remarks
+        varchar_255 remarks
+        varchar_255 cancellation_policy
+        varchar_255 region
+        varchar_255 cruise_offer
+    }
+    cabin_type_maintenances {
+        int id PK
+        varchar_255 cabin_type
+    }
+    cruise_company_maintenances {
+        int id PK
+        varchar_255 cruise_company
+    }
+    seaport_code_maintenances {
+        int id PK
+        varchar_255 port_name
+        varchar_255 city_code
+    }
+    ship_name_maintenances {
+        int id PK
+        varchar_255 cruise_company
+        varchar_255 ship_name
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    services ||--o{ cruise_services : "service_id"
+    cruise_company_maintenances ||--o{ cruise_services : "cruise_company_id"
+    ship_name_maintenances ||--o{ cruise_services : "ship_name_id"
+    seaport_code_maintenances ||--o{ cruise_services : "embark_port_id"
+    seaport_code_maintenances ||--o{ cruise_services : "disembark_port_id"
+    cabin_type_maintenances ||--o{ cruise_services : "cabin_type_id"

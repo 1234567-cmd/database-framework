@@ -1,0 +1,4 @@
+Step M1341: Decision needed: conflicting proposals for suppliers.mint_EFT
+MANUAL: this step has no generated SQL.
+Cannot rename suppliers.mint_EFT to an existing column 'mint_eft'.
+Findings: SCH-052-c7e6c47d

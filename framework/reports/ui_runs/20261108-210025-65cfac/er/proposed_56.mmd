@@ -1,0 +1,21 @@
+%% Proposed schema of power-suite-staging (56 of 80: around intake_items)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    intake_items {
+        char_36 issue_id PK
+        enum_customer_staff created_by_type
+        int created_by_customer_id FK
+        int created_by_staff_id
+        varchar_255 company_code
+        varchar_32 last_notified_status
+        varchar_120 last_notified_progress
+        datetime submission_notified_at
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customers {
+        external stub "see the diagram that holds this table"
+    }
+    customers ||--o{ intake_items : "created_by_customer_id (proposed)"

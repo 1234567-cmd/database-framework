@@ -1,0 +1,4 @@
+Step M049: Contract: drop the old invoices.issued_at__dbintel_old
+MANUAL: this step has no generated SQL.
+Table invoices matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change. Intended change: Contract: drop the old invoices.issued_at__dbintel_old.
+Findings: SCH-030-bbf7e5c3

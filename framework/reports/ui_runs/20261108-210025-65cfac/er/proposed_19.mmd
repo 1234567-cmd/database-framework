@@ -1,0 +1,35 @@
+%% Proposed schema of power-suite-staging (19 of 80: around integration_sources)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    integration_sources {
+        int id PK
+        varchar_255 company_code FK
+        varchar_50 name
+        tinyint_1 is_inactive "proposed: added"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    user_other_ids {
+        bigint id PK "proposed: changed"
+        int user_id FK
+        int integration_source_id FK "proposed: added"
+        varchar_100 other_user_id
+        varchar_500 password_enc
+        varchar_255 remark
+        int sort_order
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ integration_sources : "company_code"
+    integration_sources ||--o{ user_other_ids : "integration_source_id (proposed)"
+    users ||--o{ user_other_ids : "user_id"

@@ -1,0 +1,35 @@
+%% Proposed schema of power-suite-staging (17 of 80: around branch_document_templates)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    branch_document_templates {
+        int id PK "proposed: added"
+        int branch_id FK "proposed: added"
+        varchar_255 company_code FK "proposed: added"
+        enum_invoice_cost_receipt_payment_deposit_credit_note_debit_note_advance_payment document_type "proposed: added"
+        mediumtext document_title "proposed: added"
+        varchar_255 header_name "proposed: added"
+        text header_address "proposed: added"
+        varchar_100 header_phone "proposed: added"
+        varchar_255 header_email "proposed: added"
+        varchar_100 header_licence_no "proposed: added"
+        varchar_100 header_ntn "proposed: added"
+        text footer_text "proposed: added"
+        timestamp created_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        mediumtext header_content "proposed: added"
+        mediumtext footer_content "proposed: added"
+        mediumtext stamp_image "proposed: added"
+        int stamp_opacity "proposed: added"
+        int stamp_width "proposed: added"
+        int stamp_height "proposed: added"
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    branches ||--o{ branch_document_templates : "branch_id (proposed)"
+    companies ||--o{ branch_document_templates : "company_code (proposed)"

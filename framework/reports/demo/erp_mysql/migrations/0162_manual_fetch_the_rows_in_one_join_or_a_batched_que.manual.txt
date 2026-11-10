@@ -1,0 +1,4 @@
+Step M162: Manual: Fetch the rows in one join, or a batched query on company_id.
+MANUAL: this step has no generated SQL.
+Fetch the rows in one join, or a batched query on company_id.
+Findings: PERF-015-f03a33b8

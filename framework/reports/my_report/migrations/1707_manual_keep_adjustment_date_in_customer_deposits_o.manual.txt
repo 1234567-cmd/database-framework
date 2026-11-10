@@ -1,0 +1,4 @@
+Step M1707: Manual: Keep adjustment_date in customer_deposits only, or maintain the copy through one
+MANUAL: this step has no generated SQL.
+Keep adjustment_date in customer_deposits only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-cf42f706

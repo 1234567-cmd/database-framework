@@ -1,0 +1,29 @@
+%% Proposed schema of power-suite-staging (14 of 80: around payment_settlement_expenses)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    payment_settlement_expenses {
+        int id PK
+        int payment_settlement_id FK
+        int coa_id FK
+        int branch_id FK
+        varchar_255 remarks
+        decimal_12_4 debit "proposed: changed"
+        decimal_12_4 credit "proposed: changed"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    payment_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts ||--o{ payment_settlement_expenses : "coa_id"
+    payment_settlements ||--o{ payment_settlement_expenses : "payment_settlement_id"
+    branches ||--o{ payment_settlement_expenses : "branch_id (proposed)"

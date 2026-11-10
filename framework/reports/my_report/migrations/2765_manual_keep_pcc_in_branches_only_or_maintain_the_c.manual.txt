@@ -1,0 +1,4 @@
+Step M2765: Manual: Keep pcc in branches only, or maintain the copy through one controlled mechanism
+MANUAL: this step has no generated SQL.
+Keep pcc in branches only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-b1b7987c

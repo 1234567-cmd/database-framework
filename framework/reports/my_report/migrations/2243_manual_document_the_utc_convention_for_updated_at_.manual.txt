@@ -1,0 +1,4 @@
+Step M2243: Manual: Document the UTC convention for updated_at, or move it to a UTC-normalizing type
+MANUAL: this step has no generated SQL.
+Document the UTC convention for updated_at, or move it to a UTC-normalizing type.
+Findings: SCH-030-cda84a08

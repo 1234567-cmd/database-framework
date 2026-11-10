@@ -1,0 +1,4 @@
+Step M2236: Manual: Keep je_generated in credit_notes only, or maintain the copy through one control
+MANUAL: this step has no generated SQL.
+Keep je_generated in credit_notes only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-7aa589aa

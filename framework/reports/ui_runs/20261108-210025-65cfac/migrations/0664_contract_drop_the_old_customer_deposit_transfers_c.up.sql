@@ -1,0 +1,10 @@
+-- Step M664: Contract: drop the old customer_deposit_transfers.current_amount__dbintel_old
+-- Direction: up
+-- Findings: SCH-023-86767b82
+-- Destructive: True. Reversible: False. Data loss risk: high. Lock risk: medium.
+-- PROPOSAL ONLY. Review before use.
+-- Requires a verified backup first.
+-- Precheck: Column customer_deposit_transfers.current_amount__dbintel_old exists. Expect 1: SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'customer_deposit_transfers' AND table_schema = DATABASE() AND column_name = 'current_amount__dbintel_old'
+-- Note: Run only after the new column has been verified in production through at least one release (MIG-004).
+SET SESSION lock_wait_timeout = 5;
+ALTER TABLE `customer_deposit_transfers` DROP COLUMN `current_amount__dbintel_old`, ALGORITHM=INPLACE, LOCK=NONE;

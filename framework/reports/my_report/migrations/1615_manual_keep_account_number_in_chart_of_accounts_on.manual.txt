@@ -1,0 +1,4 @@
+Step M1615: Manual: Keep account_number in chart_of_accounts only, or maintain the copy through one 
+MANUAL: this step has no generated SQL.
+Keep account_number in chart_of_accounts only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-2c6b6d58

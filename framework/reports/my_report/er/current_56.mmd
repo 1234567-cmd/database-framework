@@ -1,0 +1,173 @@
+%% Current schema of power-suite-staging (56 of 57: around lcc_profile_templates)
+erDiagram
+    lcc_profile_templates {
+        int id PK
+        text label
+        varchar_10 type
+        int company_id
+        datetime created_at
+        datetime updated_at
+    }
+    migration_test {
+        int id PK
+        varchar_255 note
+        datetime created_at
+    }
+    name_titles {
+        int id PK
+        varchar_255 label
+    }
+    pay_types {
+        int id PK
+        varchar_255 label
+    }
+    payment_settlement_customer_deposits {
+        int id PK
+        int payment_settlement_id
+        int customer_deposit_id
+        decimal_20_2 amount
+        decimal_10_4 exchange_rate
+        decimal_20_2 base_amount
+        text remarks
+        datetime created_at
+        datetime updated_at
+    }
+    payment_settlement_customer_transfers {
+        int id PK
+        int payment_settlement_id
+        int customer_deposit_transfer_id
+        decimal_20_2 amount
+        decimal_10_4 exchange_rate
+        decimal_20_2 base_amount
+        text remarks
+        datetime created_at
+        datetime updated_at
+    }
+    payment_settlement_deposits {
+        int id PK
+        int payment_settlement_id
+        int supplier_deposit_id
+        decimal_10_2 amount
+        datetime created_at
+        datetime updated_at
+    }
+    payment_settlement_opening_invoices {
+        int id PK
+        int payment_settlement_id
+        int invoice_id
+        decimal_20_2 amount
+        decimal_10_4 exchange_rate
+        decimal_20_2 base_amount
+        text remarks
+        datetime created_at
+        datetime updated_at
+    }
+    personal_dependents {
+        int id PK
+        varchar_255 code
+        varchar_255 label
+    }
+    personal_genders {
+        int id PK
+        varchar_255 label
+    }
+    pk_province {
+        int id PK
+        varchar_255 name
+    }
+    report_group {
+        int id PK
+        varchar_255 code
+        varchar_255 description
+        varchar_45 company_code
+    }
+    service_umrah_contacts {
+        int id PK
+        int service_umrah_id
+        varchar_255 location
+        varchar_255 name
+        varchar_255 phone
+        varchar_255 title
+        varchar_255 phone2
+        datetime created_at
+        datetime updated_at
+    }
+    service_umrah_tours {
+        int id PK
+        int service_umrah_id
+        varchar_255 sector_route
+        date date
+        varchar_255 vehicle
+        varchar_255 type
+        int quantity
+        datetime created_at
+        datetime updated_at
+    }
+    service_umrah_transports {
+        int id PK
+        int service_umrah_id
+        varchar_255 sector_route
+        date date
+        varchar_255 vehicle
+        varchar_255 type
+        int quantity
+        datetime created_at
+        datetime updated_at
+    }
+    special_meal {
+        int id PK
+        varchar_255 code
+        varchar_255 description
+    }
+    special_seat {
+        int id PK
+        varchar_255 code
+        varchar_255 description
+    }
+    supplier_deposits {
+        int id PK
+        varchar_50 payment_number
+        int user_id
+        int supplier_id
+        int chart_of_account_id
+        int branch_id
+        int pay_type_id
+        int currency_id
+        decimal_10_2 amount
+        decimal_10_2 current_amount
+        decimal_10_4 exchange_rate
+        decimal_10_2 base_amount
+        varchar_50 cash_box
+        varchar_50 client_refrence
+        int bank_id
+        varchar_255 bank_name
+        varchar_50 check_number
+        int card_type_id
+        varchar_50 card_number
+        varchar_50 voucher_number
+        varchar_50 gl_account_box
+        int gl_account_id
+        varchar_50 account_number
+        varchar_255 remarks
+        text void_remarks
+        enum_Raised_Printed_Void status
+        datetime created_at
+        datetime updated_at
+        tinyint_1 je_generated
+        varchar_50 settled_invoice_number
+        date adjustment_date
+        tinyint is_edited
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+    }
+    system_date_setting {
+        int id PK
+        int no_of_days
+        varchar_255 company_code
+    }
+    system_table {
+        int id PK
+        varchar_255 table_name
+    }

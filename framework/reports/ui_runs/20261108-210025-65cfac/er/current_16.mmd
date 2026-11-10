@@ -1,0 +1,18 @@
+%% Current schema of power-suite-staging (16 of 57: around product_account_relations)
+erDiagram
+    product_account_relations {
+        int id PK
+        int chart_of_account_id FK
+        int product_id FK
+        enum_Debit_Credit transaction_type
+        datetime created_at
+        datetime updated_at
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts ||--o{ product_account_relations : "chart_of_account_id"
+    service_types ||--o{ product_account_relations : "product_id"

@@ -1,0 +1,4 @@
+Step M1344: Decision needed: conflicting proposals for gl_settle_accounts.createdAt
+MANUAL: this step has no generated SQL.
+Cannot rename gl_settle_accounts.createdAt to an existing column 'created_at'.
+Findings: SCH-052-69ad25ee

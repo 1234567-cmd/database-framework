@@ -1,0 +1,4 @@
+Step M155: Manual: After legal review, tokenize or render the stored values unreadable.
+MANUAL: this step has no generated SQL.
+After legal review, tokenize or render the stored values unreadable.
+Findings: SECA-007-3c5a9618

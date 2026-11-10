@@ -1,0 +1,9 @@
+%% Current schema of power-suite-staging (31 of 57: around currencies)
+erDiagram
+    currencies {
+        int id PK
+        varchar_255 from_currency
+        varchar_255 to_currency
+        decimal_10_2 exchange_rate
+        varchar_45 company_code
+    }

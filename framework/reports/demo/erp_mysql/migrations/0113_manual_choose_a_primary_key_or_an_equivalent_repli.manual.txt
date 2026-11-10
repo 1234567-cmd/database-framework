@@ -1,0 +1,4 @@
+Step M113: Manual: Choose a primary key or an equivalent replica identity before capture.
+MANUAL: this step has no generated SQL.
+Choose a primary key or an equivalent replica identity before capture.
+Findings: DE-006-7188b248

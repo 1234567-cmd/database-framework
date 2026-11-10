@@ -1,0 +1,40 @@
+%% Current schema of power-suite-staging (42 of 57: around service_hotels)
+erDiagram
+    service_hotels {
+        int id PK
+        int service_id FK
+        varchar_255 city
+        varchar_255 hotel_name
+        varchar_255 hotel_chain
+        date check_in
+        date check_out
+        tinyint_1 same_day_check_out
+        int no_of_nights
+        int no_of_rooms
+        int room_id
+        int room_category_id
+        int guest_per_room
+        varchar_255 meals
+        varchar_255 other_services
+        varchar_255 remarks
+        varchar_255 address
+        varchar_255 rate_description
+        varchar_255 tel
+        varchar_255 fax
+        int status
+        varchar_255 itin_remarks
+        varchar_255 refrence_code
+        varchar_255 confirmation_no
+        varchar_255 hotel_code
+        datetime confirmation_date
+        varchar_255 confirmation_by
+        varchar_255 cancellation_policy
+        datetime created_at
+        datetime updated_at
+        int allotment_room_id
+        tinyint rooms_released
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    services ||--o{ service_hotels : "service_id"

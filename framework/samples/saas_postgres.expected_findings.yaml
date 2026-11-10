@@ -1,0 +1,23 @@
+# Expected findings for saas_postgres.sql, pooled tenancy. Column may be omitted when a finding is about a whole table.
+source: saas_postgres.sql
+name: saas_demo
+profile: profiles/saas.yaml
+expected:
+  - {rule: TENA-001, table: public.tasks, column: tenant_id, severity: critical, kind: confirmed_defect}
+  - {rule: TENA-001, table: public.comments, column: tenant_id, severity: critical, kind: confirmed_defect}
+  - {rule: TENA-003, table: public.users, column: tenant_id, severity: critical, kind: confirmed_defect}
+  - {rule: SCH-020, table: public.invoices, column: total, severity: critical, kind: confirmed_defect}
+  - {rule: TENA-006, table: public.projects, column: owner_id, severity: high, kind: context_dependent}
+  - {rule: TENA-007, table: public.users, severity: high, kind: context_dependent}
+  - {rule: TENA-007, table: public.projects, severity: high, kind: context_dependent}
+  - {rule: TENA-007, table: public.invoices, severity: high, kind: context_dependent}
+  - {rule: SECA-002, evidence_contains: app_user, severity: high, kind: confirmed_defect}
+  - {rule: TENA-005, table: public.users, column: email, severity: medium, kind: optional_improvement}
+  - {rule: SECA-005, table: public.users, column: email, severity: medium}
+  - {rule: SCH-030, table: public.users, column: created_at, severity: medium, kind: context_dependent}
+absent:
+  - {rule: SCH-001}
+  - {rule: DQ-007}
+  - {rule: FINA-001}
+never_in_reports:
+  - "alice@example.com"

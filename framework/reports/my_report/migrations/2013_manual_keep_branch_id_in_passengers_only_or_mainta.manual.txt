@@ -1,0 +1,4 @@
+Step M2013: Manual: Keep branch_id in passengers only, or maintain the copy through one controlled m
+MANUAL: this step has no generated SQL.
+Keep branch_id in passengers only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-9de92d9e

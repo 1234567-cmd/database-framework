@@ -1,0 +1,4 @@
+Step M1423: Rename column payment_settlements.je_generated to is_je_generated
+MANUAL: this step has no generated SQL.
+Table payment_settlements matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column payment_settlements.je_generated to is_je_generated.
+Findings: SCH-060-ebd9b91c

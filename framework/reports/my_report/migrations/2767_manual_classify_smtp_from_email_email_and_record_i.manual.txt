@@ -1,0 +1,4 @@
+Step M2767: Manual: Classify smtp_from_email (email) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify smtp_from_email (email) and record its required protections.
+Findings: SECA-004-1dc7469e

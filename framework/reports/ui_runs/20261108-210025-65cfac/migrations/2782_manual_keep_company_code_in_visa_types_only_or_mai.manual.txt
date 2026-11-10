@@ -1,0 +1,4 @@
+Step M2782: Manual: Keep company_code in visa_types only, or maintain the copy through one controlle
+MANUAL: this step has no generated SQL.
+Keep company_code in visa_types only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-d6ec7908

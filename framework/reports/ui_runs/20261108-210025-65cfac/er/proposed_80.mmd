@@ -1,0 +1,125 @@
+%% Proposed schema of power-suite-staging (80 of 80: around sales_ids)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    sales_ids {
+        int id PK "proposed: added"
+        varchar_45 company_code "proposed: added"
+        varchar_160 sales_person_name "proposed: added"
+        varchar_20 sales_person_identity "proposed: added"
+        decimal_10_2 interest_rate "proposed: added"
+        varchar_200 email "proposed: added"
+        int team_id "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    special_meals {
+        int id PK "proposed: added"
+        varchar_255 code "proposed: added"
+        varchar_255 description "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    special_seats {
+        int id PK "proposed: added"
+        varchar_255 code "proposed: added"
+        varchar_255 description "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    system_date_settings {
+        int id PK "proposed: added"
+        int no_of_days "proposed: added"
+        varchar_255 company_code "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    system_tables {
+        int id PK "proposed: added"
+        varchar_255 table_name "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    tax_rate_maintenances {
+        int id PK "proposed: added"
+        varchar_255 tax_type "proposed: added"
+        varchar_255 description "proposed: added"
+        double tax_rate "proposed: added"
+        int display_order "proposed: added"
+        varchar_255 created_by "proposed: added"
+        datetime created_date "proposed: added"
+        varchar_255 revised_by "proposed: added"
+        datetime revised_at "proposed: added"
+        varchar_255 tax_code "proposed: added"
+        varchar_45 tax_code_type "proposed: added"
+        int province_id "proposed: added"
+        varchar_255 company_code "proposed: added"
+        timestamp created_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    tcids {
+        int id PK
+        varchar_255 code
+        varchar_255 name
+        varchar_255 manager
+        varchar_255 email
+        varchar_255 display_email_name
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    user_branches {
+        int id PK
+        varchar_255 branch_code
+        varchar_255 branch_name
+        varchar_255 branch_document
+        varchar_255 branch_location
+        varchar_255 branch_IATA_NO
+        varchar_255 branch_PCC
+        varchar_255 branch_City_Codes
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    vehicle_maintenances {
+        int id PK
+        varchar_255 vehicle_code
+        varchar_255 vehicle_category
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    wht_taxes {
+        int id PK "proposed: added"
+        varchar_255 tax_type "proposed: added"
+        varchar_255 description "proposed: added"
+        double tax_rate "proposed: added"
+        varchar_255 company_code "proposed: added"
+        varchar_255 tax_code "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }

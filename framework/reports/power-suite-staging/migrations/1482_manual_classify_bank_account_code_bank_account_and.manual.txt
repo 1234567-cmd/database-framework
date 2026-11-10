@@ -1,0 +1,4 @@
+Step M1482: Manual: Classify bank_account_code (bank_account) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify bank_account_code (bank_account) and record its required protections.
+Findings: SECA-004-33a13bd7

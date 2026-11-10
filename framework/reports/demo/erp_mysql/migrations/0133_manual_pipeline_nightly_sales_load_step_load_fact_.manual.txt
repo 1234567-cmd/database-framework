@@ -1,0 +1,4 @@
+Step M133: Manual: Pipeline nightly_sales_load, step load_fact_sales: declare a merge key or delete
+MANUAL: this step has no generated SQL.
+Pipeline nightly_sales_load, step load_fact_sales: declare a merge key or delete the interval before insert so a rerun leaves one copy.
+Findings: DE-001-82d7cae4

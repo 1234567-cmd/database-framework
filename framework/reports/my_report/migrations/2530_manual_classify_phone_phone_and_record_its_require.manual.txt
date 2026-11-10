@@ -1,0 +1,4 @@
+Step M2530: Manual: Classify phone (phone) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify phone (phone) and record its required protections.
+Findings: SECA-004-33c15cd4

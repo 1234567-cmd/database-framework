@@ -1,0 +1,4 @@
+Step M1644: Manual: Keep service_provided in suppliers only, or maintain the copy through one contro
+MANUAL: this step has no generated SQL.
+Keep service_provided in suppliers only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-182d3a16

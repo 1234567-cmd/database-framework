@@ -1,0 +1,18 @@
+/* Print stylesheet: used by the browser's print dialog, which is how Save as PDF works. */
+:root { --bg: #fff; --surface: #fff; --surface-2: #f4f4f4; --border: #bbb; --border-strong: #888; --text: #000; --muted: #444; --accent: #000; }
+.sidebar, .topbar, .no-print, .pager, .filters, .toasts, #drawer-root, #modal-root, .btn, .skip-link { display: none !important; }
+.app { display: block; min-height: 0; }
+.content { padding: 0; max-width: none; }
+body { background: #fff; color: #000; font-size: 11pt; }
+.card, .tile, .cat-card, .table-wrap, .notice { background: #fff !important; border: 1px solid #999; break-inside: avoid; }
+.cat-card.cat-low, .cat-card.cat-na { background: #fff !important; border-style: dashed; }
+table.data { font-size: 9.5pt; }
+table.data thead { display: table-header-group; }
+table.data thead th { position: static; background: #eee; }
+tr, .print-finding { break-inside: avoid; }
+h1, h2, h3 { break-after: avoid; }
+.print-section { break-before: auto; margin-top: 16pt; }
+.badge { border: 1px solid #666; color: #000 !important; background: #fff !important; }
+.dist-bar, .meter { border: 1px solid #999; }
+a { color: #000; text-decoration: none; }
+pre.code { max-height: none; overflow: visible; white-space: pre-wrap; }

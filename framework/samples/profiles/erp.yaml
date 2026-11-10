@@ -1,0 +1,8 @@
+# Multi-company ERP on MySQL.
+workload: OLTP
+tenancy: none
+multi_company: true
+company_column: company_id
+system_of_record: true
+target_engines: [mysql]
+financial_table_patterns: ["journal", "ledger", "invoice", "payment"]

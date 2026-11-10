@@ -1,0 +1,4 @@
+Step M2699: Manual: Classify display_email_name (email) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify display_email_name (email) and record its required protections.
+Findings: SECA-004-afa7fb6b

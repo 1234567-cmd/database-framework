@@ -1,0 +1,4 @@
+Step M1475: Manual: Move parent_type to the table identified by parent_id and join to it.
+MANUAL: this step has no generated SQL.
+Move parent_type to the table identified by parent_id and join to it.
+Findings: SCH-013-aa303d8e

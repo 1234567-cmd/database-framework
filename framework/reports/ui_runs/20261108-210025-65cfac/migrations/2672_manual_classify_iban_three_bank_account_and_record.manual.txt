@@ -1,0 +1,4 @@
+Step M2672: Manual: Classify iban_three (bank_account) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify iban_three (bank_account) and record its required protections.
+Findings: SECA-004-0148556d

@@ -1,0 +1,4 @@
+Step M2233: Manual: Keep company_code in chart_of_accounts only, or maintain the copy through one co
+MANUAL: this step has no generated SQL.
+Keep company_code in chart_of_accounts only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-b2f2e47f

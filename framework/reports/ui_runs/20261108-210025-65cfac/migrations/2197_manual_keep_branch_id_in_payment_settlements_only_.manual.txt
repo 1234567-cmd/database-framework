@@ -1,0 +1,4 @@
+Step M2197: Manual: Keep branch_id in payment_settlements only, or maintain the copy through one con
+MANUAL: this step has no generated SQL.
+Keep branch_id in payment_settlements only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-1d662389

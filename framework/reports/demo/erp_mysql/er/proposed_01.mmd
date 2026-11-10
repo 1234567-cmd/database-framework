@@ -1,0 +1,166 @@
+%% Proposed schema of erp_demo
+%% 83 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    companies {
+        int id PK
+        varchar_100 name
+        char_2 country
+        datetime created_at
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    users {
+        int id PK
+        int company_id FK
+        varchar_60 username
+        varchar_120 email
+        varchar_64 password
+        tinyint is_admin
+        datetime created_at
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customers {
+        bigint id PK "proposed: added"
+        int customer_id
+        int company_id FK
+        varchar_20 customer_code
+        varchar_100 name
+        varchar_120 email
+        varchar_30 phone
+        varchar_255 tags
+        decimal_19_4 credit_limit "proposed: changed"
+        datetime created_at
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    products {
+        int id PK
+        int company_id FK
+        varchar_30 sku
+        varchar_120 name
+        decimal_19_4 price "proposed: changed"
+        decimal_19_4 cost "proposed: changed"
+        varchar_100 category_ids
+        varchar_20 status
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    orders {
+        int id PK
+        int company_id FK
+        int customer_id
+        date order_date "proposed: changed"
+        decimal_19_4 total "proposed: changed"
+        varchar_20 status
+        datetime created_at
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    order_items {
+        bigint id PK "proposed: added"
+        int order_id FK
+        int product_id FK
+        int quantity
+        float unit_price
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    accounts {
+        int id PK
+        int company_id FK
+        varchar_10 code
+        varchar_80 name
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    journal_entries {
+        int id PK
+        int company_id FK
+        varchar_20 entry_number
+        date entry_date
+        varchar_200 description
+        varchar_20 status
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    journal_lines {
+        int id PK
+        int journal_entry_id FK
+        int account_id FK
+        decimal_19_4 debit "proposed: changed"
+        decimal_19_4 credit "proposed: changed"
+        bigint company_id "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    payments {
+        int id PK
+        int company_id FK
+        int order_id FK
+        varchar_19 card_number
+        varchar_4 cvv
+        decimal_19_4 amount "proposed: changed"
+        datetime paid_at
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    employees {
+        int id PK
+        int company_id FK
+        varchar_100 full_name
+        varchar_30 national_id
+        decimal_19_4 salary "proposed: changed"
+        date start_date
+        date end_date
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    companies ||--o{ users : "company_id (proposed)"
+    companies ||--o{ customers : "company_id (proposed)"
+    companies ||--o{ products : "company_id (proposed)"
+    companies ||--o{ orders : "company_id (proposed)"
+    orders ||--o{ order_items : "order_id (proposed)"
+    products ||--o{ order_items : "product_id (proposed)"
+    companies ||--o{ accounts : "company_id (proposed)"
+    companies ||--o{ journal_entries : "company_id (proposed)"
+    accounts ||--o{ journal_lines : "account_id (proposed)"
+    journal_entries ||--o{ journal_lines : "journal_entry_id (proposed)"
+    companies ||--o{ payments : "company_id (proposed)"
+    orders ||--o{ payments : "order_id (proposed)"
+    companies ||--o{ employees : "company_id (proposed)"

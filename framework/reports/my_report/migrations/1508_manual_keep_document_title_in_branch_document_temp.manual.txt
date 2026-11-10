@@ -1,0 +1,4 @@
+Step M1508: Manual: Keep document_title in branch_document_template only, or maintain the copy throu
+MANUAL: this step has no generated SQL.
+Keep document_title in branch_document_template only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-30432381

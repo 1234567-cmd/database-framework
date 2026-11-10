@@ -1,0 +1,4 @@
+Step M1634: Manual: Keep je_generated in invoices only, or maintain the copy through one controlled 
+MANUAL: this step has no generated SQL.
+Keep je_generated in invoices only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-f19c5c17

@@ -1,0 +1,406 @@
+[
+  {
+    "id": "BENCH-01",
+    "title": "uuid benchmark war",
+    "url": "https://ardentperf.com/2024/02/03/uuid-benchmark-war/",
+    "organization_author": "Ardent Performance Computing blog (byline not captured)",
+    "category": "Benchmark evidence",
+    "subcategory": "Primary keys - PostgreSQL",
+    "resource_type": "engineering_blog",
+    "publication_date": "2024-02-03",
+    "core_concepts": [
+      "UUIDv7",
+      "UUIDv4",
+      "bigint identity",
+      "insert with concurrent reads"
+    ],
+    "engineering_principles": "Time-ordered keys narrowed the insert gap to bigint in this test; bigint stayed smallest.",
+    "practical_examples": "c7a.medium (1 core, 2 GB), gp3 16k IOPS, Ubuntu 22.04, PostgreSQL main branch of 2024-01-29 with v17 UUIDv7 patch, shared_buffers=1G, 20M initial rows, 1M inserted. uuid::text 410 s/2421 tps/4.31 GB; uuidv4 375 s/2670 tps/2.65 GB; uuidv7 290 s/3420 tps/2.47 GB; bigint 290 s/3480 tps/1.97 GB.",
+    "why_it_matters": "Best published script for the three-way key comparison on PostgreSQL.",
+    "authority_level": 3,
+    "authority_rationale": "Individual practitioner, but setup and copy-paste scripts are published; not peer reviewed.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures confirmed against raw downloaded text. Pre-release patch, single small host, not PostgreSQL 18 GA. Employer and conflict of interest not established."
+  },
+  {
+    "id": "BENCH-02",
+    "title": "A deeper look at old UUIDv4 vs new UUIDv7 in PostgreSQL 18",
+    "url": "https://www.credativ.de/en/blog/postgresql-en/a-deeper-look-at-old-uuidv4-vs-new-uuidv7-in-postgresql-18/",
+    "organization_author": "Josef Machytka, credativ blog",
+    "category": "Benchmark evidence",
+    "subcategory": "Primary keys - PostgreSQL",
+    "resource_type": "engineering_blog",
+    "publication_date": "2025-12-05",
+    "core_concepts": [
+      "UUIDv7",
+      "UUIDv4",
+      "B-tree fragmentation",
+      "physical correlation"
+    ],
+    "engineering_principles": "Random keys lower leaf density and destroy physical correlation.",
+    "practical_examples": "PostgreSQL 18; hardware not stated. 50M into empty table: v4 1,239,840 ms, v7 106,343 ms. Next 50M: v4 2,776,881 ms, v7 100,354 ms. Index at 100M: 3,956 MB vs 3,008 MB. 1M rows pgstatindex: density 71 vs 89.98, fragmentation 49.99 vs 0.",
+    "why_it_matters": "Largest PostgreSQL 18 data size found, and exposes index internals.",
+    "authority_level": 3,
+    "authority_rationale": "Named specialist with SQL shown, but single-run, no hardware details; PostgreSQL services firm.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures come from a WebFetch model summary only; curl of this page failed, so they are NOT confirmed against raw text. No bigint arm. Commercial interest: credativ sells PostgreSQL support. The post's prose ratios disagree with its own numbers, so use the raw timings."
+  },
+  {
+    "id": "BENCH-03",
+    "title": "UUIDv7 in Spring Boot and Postgres: The Right Way",
+    "url": "https://stevenpg.com/posts/uuidv7-in-spring-boot-and-postgres/",
+    "organization_author": "Coding Steve site (no byline; GitHub handle StevenPG)",
+    "category": "Benchmark evidence",
+    "subcategory": "Primary keys - PostgreSQL",
+    "resource_type": "engineering_blog",
+    "publication_date": "2026-07-15",
+    "core_concepts": [
+      "UUIDv7",
+      "UUIDv4",
+      "bigint identity",
+      "Testcontainers"
+    ],
+    "engineering_principles": "At small size on a laptop, v7 tracks bigint and v4 carries about 50 percent leaf fragmentation.",
+    "practical_examples": "PostgreSQL 18 container on M-series MacBook, 1M rows, batches of 1,000. bigint 3,615 ms/21 MB; v7 3,820 ms/30 MB; v4 4,837 ms/38 MB.",
+    "why_it_matters": "Only source found with all three key types on PostgreSQL 18 and a linked harness.",
+    "authority_level": 2,
+    "authority_rationale": "Personal blog, laptop, 1M rows that likely fit in memory.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures come from a WebFetch model summary only; curl of this page failed, so they are NOT confirmed against raw text. Repository github.com/StevenPG/DemosAndArticleContent (blog/uuidv7-spring-boot) was not opened. No conflict stated."
+  },
+  {
+    "id": "BENCH-04",
+    "title": "Storing UUID Values in MySQL",
+    "url": "https://www.percona.com/blog/store-uuid-optimized-way/",
+    "organization_author": "Karthik Appigatla, Percona",
+    "category": "Benchmark evidence",
+    "subcategory": "Primary keys - MySQL",
+    "resource_type": "engineering_blog",
+    "publication_date": "2014-12-19",
+    "core_concepts": [
+      "ordered UUID",
+      "binary(16)",
+      "InnoDB clustered index"
+    ],
+    "engineering_principles": "Rearranging UUID bits to be time-ordered gave BIGINT-like insert and size behaviour.",
+    "practical_examples": "25M rows in batches of 25K; MySQL version and hardware not stated. .ibd size: ordered UUID 13 GB, BIGINT PK plus UUID index 15 GB, random UUID PK 20 GB. Insert times are charts only.",
+    "why_it_matters": "Closest available InnoDB evidence for ordered versus random keys, predating UUIDv7.",
+    "authority_level": 3,
+    "authority_rationale": "Recognised MySQL consultancy, SQL procedures shown; old and missing versions.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures come from a WebFetch model summary only; curl of this page failed, so they are NOT confirmed against raw text. Percona sells MySQL services and distribution. Ordered UUID is a proxy for UUIDv7, not UUIDv7."
+  },
+  {
+    "id": "BENCH-05",
+    "title": "Illustrating Primary Key models in InnoDB and their impact on disk usage",
+    "url": "https://www.percona.com/blog/illustrating-primary-key-models-in-innodb-and-their-impact-on-disk-usage/",
+    "organization_author": "Michael Coburn, Percona",
+    "category": "Benchmark evidence",
+    "subcategory": "Primary keys - MySQL",
+    "resource_type": "engineering_blog",
+    "publication_date": "2015-04-03",
+    "core_concepts": [
+      "page splits",
+      "InnoDB page fill",
+      "char(36) UUID"
+    ],
+    "engineering_principles": "Random inserts leave leaf pages near half full.",
+    "practical_examples": "About 60,880 records per test table. Leaf pages: AUTO_INCREMENT 99 at 90 percent fill; ordered binary(16) 147 at 91 percent; UUID() char(36) estimated 399 at slightly above 50 percent.",
+    "why_it_matters": "Direct page-level picture of the mechanism behind the size difference.",
+    "authority_level": 2,
+    "authority_rationale": "Vendor consultant, tiny test, mixes key type with key width.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures come from a WebFetch model summary only; curl of this page failed, so they are NOT confirmed against raw text. Customer context was Percona Server 5.5; test server version not stated. No throughput measured."
+  },
+  {
+    "id": "BENCH-06",
+    "title": "Are MySQL UUID inserts really that slow?",
+    "url": "https://site-89o.pages.dev/blog/benchmarking-uuid-mysql",
+    "organization_author": "Ayaan Zaidi",
+    "category": "Benchmark evidence",
+    "subcategory": "Primary keys - MySQL",
+    "resource_type": "engineering_blog",
+    "publication_date": "2022-10-11",
+    "core_concepts": [
+      "sysbench",
+      "UUIDv1",
+      "UUIDv4",
+      "small buffer pool"
+    ],
+    "engineering_principles": "Under a tiny buffer pool, UUIDv1 matched INT while UUIDv4 fell away as the table grew.",
+    "practical_examples": "MySQL 8.0.30, AMD EPYC 7642 4 vCPU, sysbench 16 threads, innodb_buffer_pool_size 64 MB. v4: INT(11) led CHAR(36) by over 2,000 inserts/s at 500 s (about 4M rows), nearly 4,000 at doubled duration (about 64M rows); p99 about 6x better for INT.",
+    "why_it_matters": "Only MySQL 8 sysbench run with published Lua scripts found.",
+    "authority_level": 3,
+    "authority_rationale": "Individual, but scripts and configuration are disclosed.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures come from a WebFetch model summary only; curl of this page failed, so they are NOT confirmed against raw text. Linode supplied hosting credits. Repository github.com/obviyus/posts not opened. No UUIDv7 arm. The URL is a pages.dev mirror-style host."
+  },
+  {
+    "id": "BENCH-07",
+    "title": "Does Postgres RLS actually ruin performance? Let's look at the data.",
+    "url": "https://dev.to/ashwin_sridhar_koto7/does-postgres-rls-actually-ruin-performance-lets-look-at-the-data-24jf",
+    "organization_author": "Ashwin Sridhar (CTO, koto7)",
+    "category": "Benchmark evidence",
+    "subcategory": "Row-level security",
+    "resource_type": "engineering_blog",
+    "publication_date": "2026-05-29 (year inferred from author join date)",
+    "core_concepts": [
+      "RLS",
+      "tenant_id index",
+      "policy evaluation"
+    ],
+    "engineering_principles": "With a simple policy the index matters far more than policy evaluation.",
+    "practical_examples": "1M rows, one tenant about 10 percent, 50 runs less 3 warmup. p95 difference under 2 percent without index (count 73.3 ms vs 74.9 ms); with index count 2.2 ms vs 2.7 ms.",
+    "why_it_matters": "Only opened RLS measurement with a controlled bypass comparison.",
+    "authority_level": 1,
+    "authority_rationale": "Single developer post; PostgreSQL version, hardware and scripts not given.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures confirmed against raw downloaded text. Single-condition policy only; subquery and join policies untested by the author's own statement. Author chose RLS for his platform before testing."
+  },
+  {
+    "id": "BENCH-08",
+    "title": "Foreign Keys vs Performance (Part 1): The INSERT Story",
+    "url": "https://my-blog-agv.pages.dev/posts/foreign-keys-vs-performance-part-1",
+    "organization_author": "Thyago de Oliveira Perez",
+    "category": "Benchmark evidence",
+    "subcategory": "Foreign key enforcement",
+    "resource_type": "engineering_blog",
+    "publication_date": "2026-01-19",
+    "core_concepts": [
+      "foreign key checks",
+      "BenchmarkDotNet",
+      "concurrent inserts"
+    ],
+    "engineering_principles": "Measured overhead depends on insert pattern; the small test does not show contention amplifying it.",
+    "practical_examples": "PostgreSQL 16, unspecified dev machine, 100K users, 250K accounts, 5K merchants, 4 FKs, 1,000 operations. Without vs with FK: batch 114.2/151.6 ms; concurrent (10 threads) 817.2/818.5 ms; mixed 2,697.4/2,870.9 ms; sequential 5,012.4/5,286.2 ms.",
+    "why_it_matters": "Only reproducible with/without FK harness found.",
+    "authority_level": 2,
+    "authority_rationale": "Individual author with repository; small scale and a development machine.",
+    "applies_to": [
+      "OLTP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures come from a WebFetch model summary only; curl of this page failed, so they are NOT confirmed against raw text. Concurrent difference is well inside the reported error. Not at scale. Article mentions both .NET 8 and .NET 10, and states a batch overhead in seconds that disagrees with its 37.4 ms measurement. Repository github.com/Thyago-Oliveira-Perez/fk-benchmark not opened."
+  },
+  {
+    "id": "BENCH-09",
+    "title": "Data warehouse modeling: Star schema vs. OBT",
+    "url": "https://www.fivetran.com/blog/star-schema-vs-obt",
+    "organization_author": "Michael Kaminsky, on Fivetran blog",
+    "category": "Benchmark evidence",
+    "subcategory": "One Big Table vs star schema",
+    "resource_type": "engineering_blog",
+    "publication_date": "2022-08-16",
+    "core_concepts": [
+      "OBT",
+      "star schema",
+      "TPC-DS"
+    ],
+    "engineering_principles": "Flat tables were faster in BI-style queries at a large storage cost; results varied by engine.",
+    "practical_examples": "TPC-DS scale 100 subset. Redshift dc2.large x1 and dc2.8xlarge x3, Snowflake X-Large, BigQuery default. OBT gain excluding Redshift compile: Redshift 25-30 percent, Snowflake about 25 percent, BigQuery about 50 percent. Redshift disk from just over 30 GB to over 90 GB.",
+    "why_it_matters": "Multi-engine test with public scripts.",
+    "authority_level": 3,
+    "authority_rationale": "Scripts public; hosted by a data-pipeline vendor and only one author.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures come from a WebFetch model summary only; curl of this page failed, so they are NOT confirmed against raw text. Conflict: published by Fivetran, whose product is not directly the tested warehouses. Repository github.com/mikekaminsky/compare-warehouse-distributions not opened. Engine versions are from 2022 and unstated."
+  },
+  {
+    "id": "BENCH-10",
+    "title": "A Performance Analysis for Efficient Schema Design in Cloud-Based Distributed Data Warehouses",
+    "url": "https://scitepress.org/Papers/2024/125462/125462.pdf",
+    "organization_author": "Fred E. R. Rabelo Ferreira and Robson do Nascimento Fidalgo, UFPE (ICEIS 2024)",
+    "category": "Benchmark evidence",
+    "subcategory": "One Big Table vs star schema",
+    "resource_type": "research_paper",
+    "publication_date": "2024",
+    "core_concepts": [
+      "SSB",
+      "fully denormalized schema",
+      "memory pressure"
+    ],
+    "engineering_principles": "Denormalization is not a guaranteed gain; the winner depends on the engine.",
+    "practical_examples": "SSB SF10 (60M rows) and SF50 (300M rows), 3 nodes with 16 GB RAM each on AWS. Star faster than flat by 74 percent on Redshift and 63 percent on MariaDB Columnstore; flat 42 percent faster on Singlestore. SF50 volume: Redshift 12.7 GB fact vs 62.7 GB flat.",
+    "why_it_matters": "Strongest independent, peer-reviewed evidence on this question and contradicts vendor-hosted results.",
+    "authority_level": 4,
+    "authority_rationale": "Peer-reviewed conference, university authors, states a public script; engine versions not found.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures confirmed against raw downloaded text. Funding and conflict statement not located. Small clusters. The script location was not followed."
+  },
+  {
+    "id": "BENCH-11",
+    "title": "Varianten zur Speicherung multidimensionaler Daten: Star- und Snowflake-Schema, Column Stores und Data Vault",
+    "url": "https://www.itmz.uni-rostock.de/storages/uni-rostock/Alle_IEF/Informatik/Homepages/Meike_Klettke/Students/MA_Robert_Schiller.pdf",
+    "organization_author": "Robert Schiller, University of Rostock (master's thesis)",
+    "category": "Benchmark evidence",
+    "subcategory": "Data Vault vs star schema",
+    "resource_type": "other",
+    "publication_date": "2016-04-05",
+    "core_concepts": [
+      "Data Vault",
+      "SSB",
+      "TPC-H",
+      "column store"
+    ],
+    "engineering_principles": "Star schema held the runtime and CPU advantage over Data Vault in this test.",
+    "practical_examples": "SQL Server, Intel i5-3210M, 4 GB RAM, Windows 10 Pro laptop; SSB scale factor 1 (about 4.5 GB, LineOrder 6,001,215 rows). Per-query times appear in charts; the thesis notes only minimally worse Data Vault runtimes on the very small dataset and expects a worse result at larger size.",
+    "why_it_matters": "Only direct Data Vault versus star measurement found.",
+    "authority_level": 2,
+    "authority_rationale": "Supervised thesis, not peer reviewed; laptop and tiny data.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures confirmed against raw downloaded text. SQL Server 2014 is named in the thesis's method section. Chart values were not transcribed. No conflict apparent."
+  },
+  {
+    "id": "BENCH-12",
+    "title": "The Performance of Anchor Model in Data Warehousing",
+    "url": "https://www.scitepress.org/PublishedPapers/2018/90101/90101.pdf",
+    "organization_author": "Rorimpandey et al., Universitas Negeri Manado (EIC 2018; published 2020)",
+    "category": "Benchmark evidence",
+    "subcategory": "Data Vault vs star schema",
+    "resource_type": "research_paper",
+    "publication_date": "2020",
+    "core_concepts": [
+      "Anchor Model",
+      "Data Vault",
+      "Sidak post-hoc test"
+    ],
+    "engineering_principles": "Reports no significant difference among Anchor, Data Vault and ONF, and a significant difference from star schema.",
+    "practical_examples": "SQL Server, 13 information needs, Sidak test in GraphPad Prism 6. Timing values exist only in figures; version, hardware and data size not found in extracted text.",
+    "why_it_matters": "Only published statistical comparison touching Data Vault; weak but must be recorded.",
+    "authority_level": 1,
+    "authority_rationale": "Conference proceedings, setup not reproducible, and its conclusion that more joins run faster is implausible without controls.",
+    "applies_to": [
+      "data_warehouse",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures confirmed against raw downloaded text. Treat as low-confidence. The conclusion favours more joins, which needs replication."
+  },
+  {
+    "id": "BENCH-13",
+    "title": "TiDB: A Raft-based HTAP Database",
+    "url": "https://www.vldb.org/pvldb/vol13/p3072-huang.pdf",
+    "organization_author": "Huang et al., PingCAP (PVLDB vol. 13)",
+    "category": "Benchmark evidence",
+    "subcategory": "HTAP isolation",
+    "resource_type": "research_paper",
+    "publication_date": "2020",
+    "core_concepts": [
+      "CH-benCHmark",
+      "Raft learner",
+      "TiFlash",
+      "freshness"
+    ],
+    "engineering_principles": "Separate row and column replicas limit interference, at the cost of some replication lag.",
+    "practical_examples": "Six servers, 188 GB, two E5-2630 v4 each. AP clients degraded TP at most 10 percent; TP degraded AP at most 5 percent. At 100 warehouses, under 1000 ms lag: 98.64-99.58 percent with 2 AP clients, 84.82-87.17 percent with 32. MemSQL 7.0 TP throughput fell by more than 5x with more AP clients.",
+    "why_it_matters": "Rigorous design, but a vendor reporting on its own system.",
+    "authority_level": 3,
+    "authority_rationale": "Peer-reviewed in PVLDB; full vendor conflict.",
+    "applies_to": [
+      "OLTP",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures confirmed against raw downloaded text. NOT independent: all authors from PingCAP, and the competitor comparison is authored by the vendor."
+  },
+  {
+    "id": "BENCH-14",
+    "title": "HyBench: A New Benchmark for HTAP Databases",
+    "url": "https://www.vldb.org/pvldb/vol17/p939-zhang.pdf",
+    "organization_author": "Chao Zhang, Guoliang Li, Tao Lv (Tsinghua University, China Software Testing Center)",
+    "category": "Benchmark evidence",
+    "subcategory": "HTAP isolation",
+    "resource_type": "research_paper",
+    "publication_date": "PVLDB vol. 17",
+    "core_concepts": [
+      "HyBench",
+      "H-Score",
+      "F-Score",
+      "workload isolation"
+    ],
+    "engineering_principles": "Isolated architectures hold throughput and freshness better under concurrency; no architecture wins everywhere.",
+    "practical_examples": "Four-node cluster, 40-core E5-2630, 128 GB, 1 TB SSD; SF1/10/100 (518 MB, 5.3 GB, 56 GB); PostgreSQL 14 streaming replication plus four anonymized commercial systems. SF1: PostgreSQL-SR H-Score 320, F-Score 24 ms; A4 QPS 676.29, XPS 45.49, F-Score 78 ms, H-Score 200. A4 ATS fell 7.99 to 1.08 at T-max with an F-Score of 19.6 s at (100,20).",
+    "why_it_matters": "Best independent-leaning open benchmark for isolation and freshness, with public code.",
+    "authority_level": 4,
+    "authority_rationale": "Peer-reviewed in PVLDB with public code; commercial systems anonymized.",
+    "applies_to": [
+      "OLTP",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Figures confirmed against raw downloaded text. Conflict: supported partly by Huawei and CCF-Huawei fund; thanks GaussDB, OceanBase, Dameng, Alibaba Cloud and Tencent Cloud teams. Commercial systems unnamed due to DeWitt clauses, so results cannot be mapped to products. Repository github.com/Rucchao/HyBench-2023 not opened."
+  },
+  {
+    "id": "BENCH-15",
+    "title": "How Good is My HTAP System? (HATtrick; slides and code)",
+    "url": "https://pages.cs.wisc.edu/~yxy/slides/HATtrick.pdf",
+    "organization_author": "Milkai et al., University of Wisconsin (SIGMOD 2022, DOI 10.1145/3514221.3526148)",
+    "category": "Benchmark evidence",
+    "subcategory": "HTAP isolation",
+    "resource_type": "research_paper",
+    "publication_date": "2022",
+    "core_concepts": [
+      "HATtrick",
+      "throughput frontier",
+      "freshness metric"
+    ],
+    "engineering_principles": "Isolation should be reported as a frontier of concurrent OLTP and OLAP throughput.",
+    "practical_examples": "Combines an adapted TPC-C with SSB; code at github.com/UWHustle/HATtrick supports Postgres, TiDB and MySQL (Apache-2.0). No measured numbers recorded here.",
+    "why_it_matters": "Canonical academic method for measuring isolation.",
+    "authority_level": 4,
+    "authority_rationale": "SIGMOD academic method with open code; result numbers not verified here.",
+    "applies_to": [
+      "OLTP",
+      "OLAP"
+    ],
+    "url_verified": true,
+    "verified_on": "2026-11-08",
+    "notes": "Slides and repository were opened. The full paper at par.nsf.gov/servlets/purl/10390274 refused connections, so no results are recorded and none should be inferred. Funding or vendor ties not checked."
+  }
+]

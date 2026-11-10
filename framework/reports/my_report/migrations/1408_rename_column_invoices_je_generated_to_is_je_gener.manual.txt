@@ -1,0 +1,4 @@
+Step M1408: Rename column invoices.je_generated to is_je_generated
+MANUAL: this step has no generated SQL.
+Table invoices matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoices.je_generated to is_je_generated.
+Findings: SCH-060-b3ef380b

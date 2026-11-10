@@ -1,0 +1,4 @@
+Step M1829: Manual: Keep je_generated in costs only, or maintain the copy through one controlled mec
+MANUAL: this step has no generated SQL.
+Keep je_generated in costs only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-f9813306

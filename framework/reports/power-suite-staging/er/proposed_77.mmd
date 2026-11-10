@@ -1,0 +1,16 @@
+%% Proposed schema of power-suite-staging (77 of 80: around visa_types)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    visa_types {
+        int id PK
+        varchar_255 document_type
+        varchar_255 code
+        varchar_255 display_order
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }

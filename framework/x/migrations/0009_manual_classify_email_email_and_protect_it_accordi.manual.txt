@@ -1,0 +1,4 @@
+Step M009: Manual: Classify email (email) and protect it accordingly.
+MANUAL: this step has no generated SQL.
+Classify email (email) and protect it accordingly.
+Findings: SECA-005-1f1879fc

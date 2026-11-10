@@ -1,0 +1,4 @@
+Step M1429: Manual: Decide whether to adopt the standard name or record the existing uniform convent
+MANUAL: this step has no generated SQL.
+Decide whether to adopt the standard name or record the existing uniform convention as an exception.
+Findings: SCH-057-e09d9ef9

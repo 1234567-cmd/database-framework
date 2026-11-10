@@ -1,0 +1,19 @@
+%% Current schema of power-suite-staging (32 of 57: around email_templates)
+erDiagram
+    email_templates {
+        int id PK
+        varchar_255 company_code FK
+        varchar_255 name
+        varchar_255 slug
+        varchar_255 subject
+        longtext body
+        text variables
+        varchar_255 description
+        tinyint_1 is_active
+        datetime created_at
+        datetime updated_at
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ email_templates : "company_code"

@@ -1,0 +1,2689 @@
+{
+  "format": "dbintel-report",
+  "version": 1,
+  "generated_at": "2026-11-08T14:29:02+00:00",
+  "source": {
+    "name": "clean_demo",
+    "dialect": "postgres",
+    "kind": "sql_dump",
+    "label": "samples/clean_postgres.sql"
+  },
+  "profile": {
+    "workload": "OLTP",
+    "tenancy": "none",
+    "multi_company": false
+  },
+  "summary": {
+    "text": [
+      "Database clean_demo (postgres, imported from sql_dump) has 7 table(s) and 0 view(s).",
+      "Overall health is 99.5 (A) with 79% confidence.",
+      "11 finding(s): 0 confirmed defect(s), 7 optional improvement(s) and 4 context-dependent item(s). 0 are critical and 0 are high severity.",
+      "91 rule(s) ran; 40 were skipped and 0 failed. See coverage.",
+      "The migration plan has 9 step(s): 0 with SQL and 9 manual. Nothing has been applied."
+    ],
+    "database": "clean_demo",
+    "dialect": "postgres",
+    "tables": 7,
+    "views": 0,
+    "findings_total": 11,
+    "critical": 0,
+    "high": 0,
+    "confirmed_defects": 0,
+    "optional_improvements": 7,
+    "context_dependent": 4,
+    "overall_score": 99.5,
+    "grade": "A",
+    "confidence": 0.79,
+    "capped": false,
+    "plan_hash": "0680016076ca06852333807d11be11b5ec4a93a2dd526eb51470c5af4c7a0085",
+    "plan_steps": 9,
+    "top_risks": []
+  },
+  "health": {
+    "overall": 99.5,
+    "grade": "A",
+    "confidence": 0.79,
+    "capped": false,
+    "categories": [
+      {
+        "category": "schema_quality",
+        "score": 100.0,
+        "grade": "A",
+        "confidence": 1.0,
+        "rules_executed": 13,
+        "rules_skipped": 0,
+        "deductions": [],
+        "skipped_reasons": []
+      },
+      {
+        "category": "data_integrity",
+        "score": 100.0,
+        "grade": "A",
+        "confidence": 1.0,
+        "rules_executed": 18,
+        "rules_skipped": 0,
+        "deductions": [],
+        "skipped_reasons": []
+      },
+      {
+        "category": "performance",
+        "score": 100.0,
+        "grade": "A",
+        "confidence": 0.33,
+        "rules_executed": 5,
+        "rules_skipped": 10,
+        "deductions": [],
+        "skipped_reasons": [
+          "input not available: query_stats"
+        ]
+      },
+      {
+        "category": "security",
+        "score": 97.3,
+        "grade": "A",
+        "confidence": 0.69,
+        "rules_executed": 9,
+        "rules_skipped": 4,
+        "deductions": [
+          {
+            "rule_id": "SECA-005",
+            "title": "Sampled values in public.customers.email look like email",
+            "count": 1,
+            "points": 2.25
+          },
+          {
+            "rule_id": "SECA-004",
+            "title": "Possible email data in public.customers.email",
+            "count": 1,
+            "points": 0.45
+          }
+        ],
+        "skipped_reasons": [
+          "input not available: security_metadata"
+        ]
+      },
+      {
+        "category": "data_quality",
+        "score": 100.0,
+        "grade": "A",
+        "confidence": 1.0,
+        "rules_executed": 11,
+        "rules_skipped": 0,
+        "deductions": [],
+        "skipped_reasons": []
+      },
+      {
+        "category": "scalability",
+        "score": 100.0,
+        "grade": "A",
+        "confidence": 1.0,
+        "rules_executed": 5,
+        "rules_skipped": 0,
+        "deductions": [],
+        "skipped_reasons": []
+      },
+      {
+        "category": "maintainability",
+        "score": 100.0,
+        "grade": "A",
+        "confidence": 1.0,
+        "rules_executed": 17,
+        "rules_skipped": 0,
+        "deductions": [],
+        "skipped_reasons": []
+      },
+      {
+        "category": "data_engineering_readiness",
+        "score": 100.0,
+        "grade": "A",
+        "confidence": 0.29,
+        "rules_executed": 4,
+        "rules_skipped": 10,
+        "deductions": [],
+        "skipped_reasons": [
+          "input not available: pipelines"
+        ]
+      },
+      {
+        "category": "governance",
+        "score": 98.2,
+        "grade": "A",
+        "confidence": 1.0,
+        "rules_executed": 8,
+        "rules_skipped": 0,
+        "deductions": [
+          {
+            "rule_id": "GVN-006",
+            "title": "No retention schedule structures found",
+            "count": 1,
+            "points": 1.0
+          },
+          {
+            "rule_id": "GVN-002",
+            "title": "Columns of public.audit_log have no descriptions (6)",
+            "count": 6,
+            "points": 0.83
+          }
+        ],
+        "skipped_reasons": []
+      },
+      {
+        "category": "reliability_recovery",
+        "score": 100.0,
+        "grade": "A",
+        "confidence": 0.33,
+        "rules_executed": 1,
+        "rules_skipped": 2,
+        "deductions": [],
+        "skipped_reasons": [
+          "input not available: live"
+        ]
+      }
+    ],
+    "severity_distribution": {
+      "medium": 2,
+      "low": 7,
+      "informational": 2
+    },
+    "kind_distribution": {
+      "context_dependent": 4,
+      "optional_improvement": 7
+    },
+    "method": "Each category starts at 100. A rule deducts its worst finding's severity points (critical 25, high 12, medium 5, low 1.5, informational 0), multiplied by kind (defect 1, context-dependent 0.5, optional 0.25), finding confidence, and the square root of the number of findings. Overall is a weighted average of assessed categories, capped at 59 if a confirmed critical defect exists. Confidence is the share of applicable rules that could actually run. These weights are a framework judgment, not a published standard.",
+    "weights": {
+      "schema_quality": 14,
+      "data_integrity": 16,
+      "performance": 10,
+      "security": 16,
+      "data_quality": 12,
+      "scalability": 6,
+      "maintainability": 6,
+      "data_engineering_readiness": 6,
+      "governance": 6,
+      "reliability_recovery": 8
+    }
+  },
+  "distribution": {
+    "severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 2,
+      "low": 7,
+      "informational": 2
+    },
+    "kind": {
+      "confirmed_defect": 0,
+      "optional_improvement": 7,
+      "context_dependent": 4
+    },
+    "category": {
+      "schema_quality": 0,
+      "data_integrity": 0,
+      "performance": 0,
+      "security": 2,
+      "data_quality": 1,
+      "scalability": 0,
+      "maintainability": 0,
+      "data_engineering_readiness": 0,
+      "governance": 7,
+      "reliability_recovery": 1
+    }
+  },
+  "findings": {
+    "confirmed_defect": [],
+    "optional_improvement": [
+      {
+        "id": "GVN-002-2cb36f94",
+        "rule_id": "GVN-002",
+        "title": "Columns of public.audit_log have no descriptions (6)",
+        "severity": "low",
+        "kind": "optional_improvement",
+        "category": "governance",
+        "database": "clean_demo",
+        "table": "public.audit_log",
+        "column": null,
+        "evidence": "6 of 6 columns have no description.",
+        "root_cause": "Columns were created without descriptions.",
+        "business_impact": "Users misread columns whose meaning is not recorded.",
+        "technical_impact": "6 columns of public.audit_log have no description.",
+        "standards": [
+          "GOV-003"
+        ],
+        "standard_statements": {
+          "GOV-003": "Tables and columns SHOULD have descriptions held with the schema artefact and containing no sensitive values."
+        },
+        "recommended_solution": "Describe the columns in the schema, with no sensitive values.",
+        "complexity": "low",
+        "migration_requirements": "Metadata only.",
+        "risks": "None significant.",
+        "validation_strategy": "Re-run the check.",
+        "confidence": 0.9,
+        "provisional_standard": true,
+        "fix": {
+          "op": "manual",
+          "table": "public.audit_log",
+          "column": null,
+          "params": {
+            "description": "Describe the columns, with no sensitive values."
+          }
+        },
+        "data": {}
+      },
+      {
+        "id": "GVN-002-33b66f7b",
+        "rule_id": "GVN-002",
+        "title": "Columns of public.customers have no descriptions (8)",
+        "severity": "low",
+        "kind": "optional_improvement",
+        "category": "governance",
+        "database": "clean_demo",
+        "table": "public.customers",
+        "column": null,
+        "evidence": "8 of 8 columns have no description.",
+        "root_cause": "Columns were created without descriptions.",
+        "business_impact": "Users misread columns whose meaning is not recorded.",
+        "technical_impact": "8 columns of public.customers have no description.",
+        "standards": [
+          "GOV-003"
+        ],
+        "standard_statements": {
+          "GOV-003": "Tables and columns SHOULD have descriptions held with the schema artefact and containing no sensitive values."
+        },
+        "recommended_solution": "Describe the columns in the schema, with no sensitive values.",
+        "complexity": "low",
+        "migration_requirements": "Metadata only.",
+        "risks": "None significant.",
+        "validation_strategy": "Re-run the check.",
+        "confidence": 0.9,
+        "provisional_standard": true,
+        "fix": {
+          "op": "manual",
+          "table": "public.customers",
+          "column": null,
+          "params": {
+            "description": "Describe the columns, with no sensitive values."
+          }
+        },
+        "data": {}
+      },
+      {
+        "id": "GVN-002-5774a2cc",
+        "rule_id": "GVN-002",
+        "title": "Columns of public.order_items have no descriptions (10)",
+        "severity": "low",
+        "kind": "optional_improvement",
+        "category": "governance",
+        "database": "clean_demo",
+        "table": "public.order_items",
+        "column": null,
+        "evidence": "10 of 10 columns have no description.",
+        "root_cause": "Columns were created without descriptions.",
+        "business_impact": "Users misread columns whose meaning is not recorded.",
+        "technical_impact": "10 columns of public.order_items have no description.",
+        "standards": [
+          "GOV-003"
+        ],
+        "standard_statements": {
+          "GOV-003": "Tables and columns SHOULD have descriptions held with the schema artefact and containing no sensitive values."
+        },
+        "recommended_solution": "Describe the columns in the schema, with no sensitive values.",
+        "complexity": "low",
+        "migration_requirements": "Metadata only.",
+        "risks": "None significant.",
+        "validation_strategy": "Re-run the check.",
+        "confidence": 0.9,
+        "provisional_standard": true,
+        "fix": {
+          "op": "manual",
+          "table": "public.order_items",
+          "column": null,
+          "params": {
+            "description": "Describe the columns, with no sensitive values."
+          }
+        },
+        "data": {}
+      },
+      {
+        "id": "GVN-002-6b7f1d5c",
+        "rule_id": "GVN-002",
+        "title": "Columns of public.orders have no descriptions (10)",
+        "severity": "low",
+        "kind": "optional_improvement",
+        "category": "governance",
+        "database": "clean_demo",
+        "table": "public.orders",
+        "column": null,
+        "evidence": "10 of 10 columns have no description.",
+        "root_cause": "Columns were created without descriptions.",
+        "business_impact": "Users misread columns whose meaning is not recorded.",
+        "technical_impact": "10 columns of public.orders have no description.",
+        "standards": [
+          "GOV-003"
+        ],
+        "standard_statements": {
+          "GOV-003": "Tables and columns SHOULD have descriptions held with the schema artefact and containing no sensitive values."
+        },
+        "recommended_solution": "Describe the columns in the schema, with no sensitive values.",
+        "complexity": "low",
+        "migration_requirements": "Metadata only.",
+        "risks": "None significant.",
+        "validation_strategy": "Re-run the check.",
+        "confidence": 0.9,
+        "provisional_standard": true,
+        "fix": {
+          "op": "manual",
+          "table": "public.orders",
+          "column": null,
+          "params": {
+            "description": "Describe the columns, with no sensitive values."
+          }
+        },
+        "data": {}
+      },
+      {
+        "id": "GVN-002-53190a2b",
+        "rule_id": "GVN-002",
+        "title": "Columns of public.products have no descriptions (10)",
+        "severity": "low",
+        "kind": "optional_improvement",
+        "category": "governance",
+        "database": "clean_demo",
+        "table": "public.products",
+        "column": null,
+        "evidence": "10 of 10 columns have no description.",
+        "root_cause": "Columns were created without descriptions.",
+        "business_impact": "Users misread columns whose meaning is not recorded.",
+        "technical_impact": "10 columns of public.products have no description.",
+        "standards": [
+          "GOV-003"
+        ],
+        "standard_statements": {
+          "GOV-003": "Tables and columns SHOULD have descriptions held with the schema artefact and containing no sensitive values."
+        },
+        "recommended_solution": "Describe the columns in the schema, with no sensitive values.",
+        "complexity": "low",
+        "migration_requirements": "Metadata only.",
+        "risks": "None significant.",
+        "validation_strategy": "Re-run the check.",
+        "confidence": 0.9,
+        "provisional_standard": true,
+        "fix": {
+          "op": "manual",
+          "table": "public.products",
+          "column": null,
+          "params": {
+            "description": "Describe the columns, with no sensitive values."
+          }
+        },
+        "data": {}
+      },
+      {
+        "id": "GVN-002-90ed8fc3",
+        "rule_id": "GVN-002",
+        "title": "Columns of public.schema_migrations have no descriptions (2)",
+        "severity": "low",
+        "kind": "optional_improvement",
+        "category": "governance",
+        "database": "clean_demo",
+        "table": "public.schema_migrations",
+        "column": null,
+        "evidence": "2 of 2 columns have no description.",
+        "root_cause": "Columns were created without descriptions.",
+        "business_impact": "Users misread columns whose meaning is not recorded.",
+        "technical_impact": "2 columns of public.schema_migrations have no description.",
+        "standards": [
+          "GOV-003"
+        ],
+        "standard_statements": {
+          "GOV-003": "Tables and columns SHOULD have descriptions held with the schema artefact and containing no sensitive values."
+        },
+        "recommended_solution": "Describe the columns in the schema, with no sensitive values.",
+        "complexity": "low",
+        "migration_requirements": "Metadata only.",
+        "risks": "None significant.",
+        "validation_strategy": "Re-run the check.",
+        "confidence": 0.9,
+        "provisional_standard": true,
+        "fix": {
+          "op": "manual",
+          "table": "public.schema_migrations",
+          "column": null,
+          "params": {
+            "description": "Describe the columns, with no sensitive values."
+          }
+        },
+        "data": {}
+      },
+      {
+        "id": "DQ-001-ec65864f",
+        "rule_id": "DQ-001",
+        "title": "Table public.audit_log is empty",
+        "severity": "informational",
+        "kind": "optional_improvement",
+        "category": "data_quality",
+        "database": "clean_demo",
+        "table": "public.audit_log",
+        "column": null,
+        "evidence": "Table public.audit_log has no rows.",
+        "root_cause": "The table has no rows; it may be unused or not yet populated.",
+        "business_impact": "Unused structures add maintenance cost and confusion.",
+        "technical_impact": "No data can be profiled in public.audit_log.",
+        "standards": [
+          "DQA-012"
+        ],
+        "standard_statements": {
+          "DQA-012": "Quality rules SHOULD use one dimension vocabulary, the DAMA UK six plus currency, mapped to ISO/IEC 25012."
+        },
+        "recommended_solution": "Confirm whether the table is in use, and remove it through normal change control if it is not.",
+        "complexity": "low",
+        "migration_requirements": "None until the table's purpose is confirmed.",
+        "risks": "A table can be empty by design in this environment.",
+        "validation_strategy": "Confirm usage with the owning team.",
+        "confidence": 0.9,
+        "provisional_standard": false,
+        "fix": null,
+        "data": {}
+      }
+    ],
+    "context_dependent": [
+      {
+        "id": "GVN-006-9dbc549e",
+        "rule_id": "GVN-006",
+        "title": "No retention schedule structures found",
+        "severity": "medium",
+        "kind": "context_dependent",
+        "category": "governance",
+        "database": "clean_demo",
+        "table": null,
+        "column": null,
+        "evidence": "No retention schedule or legal hold table was found; this may be held outside the database.",
+        "root_cause": "No retention schedule or legal hold structure is visible in this database.",
+        "business_impact": "Requires legal review: retention obligations differ by record class and jurisdiction, and cannot be assessed from the schema.",
+        "technical_impact": "No table matches the configured retention patterns.",
+        "standards": [
+          "RET-021"
+        ],
+        "standard_statements": {
+          "RET-021": "A retention schedule SHOULD be keyed by record class, jurisdiction, start event and legal hold."
+        },
+        "recommended_solution": "Requires legal review. Define a schedule keyed by record class, jurisdiction, start event and legal hold.",
+        "complexity": "high",
+        "migration_requirements": "No automatic change. Nothing is deleted on the basis of this finding.",
+        "risks": "The schedule may be held outside the database.",
+        "validation_strategy": "Confirm the schedule with counsel for each legal entity.",
+        "confidence": 0.4,
+        "provisional_standard": true,
+        "fix": {
+          "op": "manual",
+          "table": null,
+          "column": null,
+          "params": {
+            "description": "Requires legal review: define retention by record class, jurisdiction, start event and hold."
+          }
+        },
+        "data": {}
+      },
+      {
+        "id": "SECA-005-29bd2d4c",
+        "rule_id": "SECA-005",
+        "title": "Sampled values in public.customers.email look like email",
+        "severity": "medium",
+        "kind": "context_dependent",
+        "category": "security",
+        "database": "clean_demo",
+        "table": "public.customers",
+        "column": "email",
+        "evidence": "3 of 3 sampled values look like email; masked examples: a***@***.com, b***@***.org.",
+        "root_cause": "The column holds values with a recognizable sensitive format.",
+        "business_impact": "Sensitive data outside the inventory cannot be protected or included in erasure.",
+        "technical_impact": "Masked sampling matched email in email.",
+        "standards": [
+          "SEC-009"
+        ],
+        "standard_statements": {
+          "SEC-009": "Sensitive data SHOULD be inventoried and classified at attribute level, in context, with required protections per level."
+        },
+        "recommended_solution": "Confirm the content, classify the column, and apply the protections for that level.",
+        "complexity": "low",
+        "migration_requirements": "Metadata only, unless the classification calls for encryption or tokenization.",
+        "risks": "Format matches can be coincidental.",
+        "validation_strategy": "Review the sample with the data owner; evidence is masked.",
+        "confidence": 0.9,
+        "provisional_standard": false,
+        "fix": {
+          "op": "manual",
+          "table": "public.customers",
+          "column": "email",
+          "params": {
+            "description": "Classify email (email) and protect it accordingly."
+          }
+        },
+        "data": {
+          "sampled": 3,
+          "matched": 3
+        }
+      },
+      {
+        "id": "SECA-004-89ff9e01",
+        "rule_id": "SECA-004",
+        "title": "Possible email data in public.customers.email",
+        "severity": "low",
+        "kind": "context_dependent",
+        "category": "security",
+        "database": "clean_demo",
+        "table": "public.customers",
+        "column": "email",
+        "evidence": "Column name suggests email data.",
+        "root_cause": "The column name matches a sensitive data pattern, and the database holds no classification for it.",
+        "business_impact": "Unknown sensitive data cannot be protected or included in a data inventory.",
+        "technical_impact": "Column email may hold email data.",
+        "standards": [
+          "SEC-009"
+        ],
+        "standard_statements": {
+          "SEC-009": "Sensitive data SHOULD be inventoried and classified at attribute level, in context, with required protections per level."
+        },
+        "recommended_solution": "Confirm the content and classify the column at attribute level.",
+        "complexity": "low",
+        "migration_requirements": "Metadata only.",
+        "risks": "Name matching can be wrong in both directions.",
+        "validation_strategy": "Review the classification inventory against this list.",
+        "confidence": 0.6,
+        "provisional_standard": false,
+        "fix": {
+          "op": "manual",
+          "table": "public.customers",
+          "column": "email",
+          "params": {
+            "description": "Classify email (email) and record its required protections."
+          }
+        },
+        "data": {}
+      },
+      {
+        "id": "REL-003-37add961",
+        "rule_id": "REL-003",
+        "title": "Replicas or history are not a substitute for backup",
+        "severity": "informational",
+        "kind": "context_dependent",
+        "category": "reliability_recovery",
+        "database": "clean_demo",
+        "table": null,
+        "column": null,
+        "evidence": "history tables: audit_log.",
+        "root_cause": "Replication or history structures exist, and can be mistaken for backups.",
+        "business_impact": "A deletion or corruption propagates to replicas and may not be recoverable.",
+        "technical_impact": "Replicas and history tables do not protect against loss of the primary store's contents.",
+        "standards": [
+          "BDR-005"
+        ],
+        "standard_statements": {
+          "BDR-005": "Replicas and standbys MUST NOT be counted as a substitute for separate backups."
+        },
+        "recommended_solution": "Keep separate backups in addition to any replicas or history.",
+        "complexity": "low",
+        "migration_requirements": "None.",
+        "risks": "None significant.",
+        "validation_strategy": "Confirm a separate backup exists and is restore-tested.",
+        "confidence": 0.4,
+        "provisional_standard": false,
+        "fix": null,
+        "data": {}
+      }
+    ]
+  },
+  "findings_total": 11,
+  "root_cause_groups": [
+    {
+      "id": "RC-5c03772c34",
+      "cause": "Columns were created without descriptions.",
+      "rule_ids": [
+        "GVN-002"
+      ],
+      "finding_ids": [
+        "GVN-002-2cb36f94",
+        "GVN-002-33b66f7b",
+        "GVN-002-53190a2b",
+        "GVN-002-5774a2cc",
+        "GVN-002-6b7f1d5c",
+        "GVN-002-90ed8fc3"
+      ],
+      "tables": [
+        "public.audit_log",
+        "public.customers",
+        "public.order_items",
+        "public.orders",
+        "public.products",
+        "public.schema_migrations"
+      ],
+      "count": 6,
+      "systemic": true,
+      "shared_fix_ops": [
+        "manual"
+      ],
+      "note": "The same gap appears on 6 tables, which points to a missing convention rather than isolated defects. Fix the convention and apply it across the group."
+    },
+    {
+      "id": "RC-48ef82f5b3",
+      "cause": "Replication or history structures exist, and can be mistaken for backups.",
+      "rule_ids": [
+        "REL-003"
+      ],
+      "finding_ids": [
+        "REL-003-37add961"
+      ],
+      "tables": [],
+      "count": 1,
+      "systemic": false,
+      "shared_fix_ops": [],
+      "note": "Limited to one object."
+    },
+    {
+      "id": "RC-5e3187a995",
+      "cause": "The table has no rows; it may be unused or not yet populated.",
+      "rule_ids": [
+        "DQ-001"
+      ],
+      "finding_ids": [
+        "DQ-001-ec65864f"
+      ],
+      "tables": [
+        "public.audit_log"
+      ],
+      "count": 1,
+      "systemic": false,
+      "shared_fix_ops": [],
+      "note": "Limited to one object."
+    },
+    {
+      "id": "RC-9c33155c20",
+      "cause": "The column holds values with a recognizable sensitive format.",
+      "rule_ids": [
+        "SECA-005"
+      ],
+      "finding_ids": [
+        "SECA-005-29bd2d4c"
+      ],
+      "tables": [
+        "public.customers"
+      ],
+      "count": 1,
+      "systemic": false,
+      "shared_fix_ops": [
+        "manual"
+      ],
+      "note": "Limited to one object."
+    },
+    {
+      "id": "RC-fbaa2b6103",
+      "cause": "The column name matches a sensitive data pattern, and the database holds no classification for it.",
+      "rule_ids": [
+        "SECA-004"
+      ],
+      "finding_ids": [
+        "SECA-004-89ff9e01"
+      ],
+      "tables": [
+        "public.customers"
+      ],
+      "count": 1,
+      "systemic": false,
+      "shared_fix_ops": [
+        "manual"
+      ],
+      "note": "Limited to one object."
+    },
+    {
+      "id": "RC-fdedabe968",
+      "cause": "No retention schedule or legal hold structure is visible in this database.",
+      "rule_ids": [
+        "GVN-006"
+      ],
+      "finding_ids": [
+        "GVN-006-9dbc549e"
+      ],
+      "tables": [],
+      "count": 1,
+      "systemic": false,
+      "shared_fix_ops": [
+        "manual"
+      ],
+      "note": "Limited to one object."
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "REC-d2483a653a",
+      "finding_ids": [
+        "GVN-002-33b66f7b",
+        "SECA-004-89ff9e01",
+        "SECA-005-29bd2d4c"
+      ],
+      "title": "Address 3 finding(s) on public.customers",
+      "priority": "P3",
+      "existing_structure": "TABLE public.customers (\n  customer_id bigint NOT NULL IDENTITY,\n  email character varying(254) NOT NULL,\n  display_name character varying(120) NOT NULL,\n  is_active boolean NOT NULL DEFAULT true,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (customer_id)\n)\nUNIQUE INDEX unique_customers_email ON customers (email)",
+      "weakness": "- [medium] Sampled values in public.customers.email look like email: 3 of 3 sampled values look like email; masked examples: a***@***.com, b***@***.org.\n- [low] Columns of public.customers have no descriptions (8): 8 of 8 columns have no description.\n- [low] Possible email data in public.customers.email: Column name suggests email data.",
+      "recommended_structure": "TABLE public.customers (\n  customer_id bigint NOT NULL IDENTITY,\n  email character varying(254) NOT NULL,\n  display_name character varying(120) NOT NULL,\n  is_active boolean NOT NULL DEFAULT true,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (customer_id)\n)\nUNIQUE INDEX unique_customers_email ON customers (email)\n\nDeferred:\n- SECA-005-29bd2d4c (manual) is left as a manual decision and is not shown.\n- GVN-002-33b66f7b (manual) is left as a manual decision and is not shown.\n- SECA-004-89ff9e01 (manual) is left as a manual decision and is not shown.",
+      "before_after": {
+        "before": "TABLE public.customers (\n  customer_id bigint NOT NULL IDENTITY,\n  email character varying(254) NOT NULL,\n  display_name character varying(120) NOT NULL,\n  is_active boolean NOT NULL DEFAULT true,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (customer_id)\n)\nUNIQUE INDEX unique_customers_email ON customers (email)",
+        "after": "TABLE public.customers (\n  customer_id bigint NOT NULL IDENTITY,\n  email character varying(254) NOT NULL,\n  display_name character varying(120) NOT NULL,\n  is_active boolean NOT NULL DEFAULT true,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (customer_id)\n)\nUNIQUE INDEX unique_customers_email ON customers (email)"
+      },
+      "proposed_sql": "-- M003 MANUAL: Describe the columns, with no sensitive values.\n\n-- M004 MANUAL: Classify email (email) and record its required protections.\n\n-- M005 MANUAL: Classify email (email) and protect it accordingly.",
+      "application_dependencies": [
+        {
+          "status": "not_evaluated",
+          "message": "Application impact was not evaluated: no application source directory was supplied."
+        }
+      ],
+      "data_dependencies": [
+        {
+          "kind": "foreign_key_in",
+          "object": "public.orders.fk_orders_customer",
+          "method": "metadata",
+          "columns": [
+            "customer_id"
+          ],
+          "detail": "public.orders (customer_id) references this table."
+        }
+      ],
+      "data_migration": "The proposed SQL does not change existing data. Confirm that against your own requirements.",
+      "rollback": "M003: manual step; define the rollback during its review.\nM004: manual step; define the rollback during its review.\nM005: manual step; define the rollback during its review.",
+      "validation_tests": [
+        "Review the sample with the data owner; evidence is masked.",
+        "Re-run the check.",
+        "Review the classification inventory against this list."
+      ],
+      "business_logic_notes": [
+        "No business rule was inferred. Confirm each change against how the business uses this data.",
+        "SECA-005-29bd2d4c: context dependent; a data owner must decide whether it applies.",
+        "SECA-004-89ff9e01: context dependent; a data owner must decide whether it applies."
+      ],
+      "requires_review": true,
+      "priority_score": 21.0,
+      "priority_rationale": [
+        "Worst severity is medium (20 points).",
+        "Strongest finding kind is context_dependent (+0).",
+        "Confidence 0.90 scales the score by 0.95.",
+        "Complexity low (+5).",
+        "1 database objects depend on this structure (+0).",
+        "Manual work or data repair is needed (-3)."
+      ],
+      "application_impact_evaluated": false,
+      "application_scan": {
+        "evaluated": false,
+        "message": "Application impact was not evaluated: no application source directory was supplied."
+      },
+      "table": "public.customers"
+    },
+    {
+      "id": "REC-9495c4a7e7",
+      "finding_ids": [
+        "REL-003-37add961"
+      ],
+      "title": "Address 1 finding(s) on reliability_recovery",
+      "priority": "P4",
+      "existing_structure": "Concern: reliability_recovery. Not specific to one table.",
+      "weakness": "- [informational] Replicas or history are not a substitute for backup: history tables: audit_log.",
+      "recommended_structure": "Concern: reliability_recovery. Not specific to one table.",
+      "before_after": {
+        "before": "Concern: reliability_recovery. Not specific to one table.",
+        "after": "Concern: reliability_recovery. Not specific to one table."
+      },
+      "proposed_sql": "-- No SQL proposed for these findings.",
+      "application_dependencies": [
+        {
+          "status": "not_evaluated",
+          "message": "Application impact was not evaluated: no application source directory was supplied."
+        }
+      ],
+      "data_dependencies": [],
+      "data_migration": "The proposed SQL does not change existing data. Confirm that against your own requirements.",
+      "rollback": "No SQL is proposed, so no rollback is needed.",
+      "validation_tests": [
+        "Confirm a separate backup exists and is restore-tested."
+      ],
+      "business_logic_notes": [
+        "No business rule was inferred. Confirm each change against how the business uses this data.",
+        "REL-003-37add961: context dependent; a data owner must decide whether it applies."
+      ],
+      "requires_review": true,
+      "priority_score": 10.1,
+      "priority_rationale": [
+        "Worst severity is informational (3 points).",
+        "Strongest finding kind is context_dependent (+0).",
+        "Confidence 0.40 scales the score by 0.70.",
+        "Complexity low (+5).",
+        "0 database objects depend on this structure (+3)."
+      ],
+      "application_impact_evaluated": false,
+      "application_scan": {
+        "evaluated": false,
+        "message": "Application impact was not evaluated: no application source directory was supplied."
+      },
+      "table": null
+    },
+    {
+      "id": "REC-13a1b79f85",
+      "finding_ids": [
+        "GVN-002-90ed8fc3"
+      ],
+      "title": "Address 1 finding(s) on public.schema_migrations",
+      "priority": "P4",
+      "existing_structure": "TABLE public.schema_migrations (\n  version character varying(40) NOT NULL,\n  applied_at timestamp with time zone NOT NULL DEFAULT now(),\n  PRIMARY KEY (version)\n)",
+      "weakness": "- [low] Columns of public.schema_migrations have no descriptions (2): 2 of 2 columns have no description.",
+      "recommended_structure": "TABLE public.schema_migrations (\n  version character varying(40) NOT NULL,\n  applied_at timestamp with time zone NOT NULL DEFAULT now(),\n  PRIMARY KEY (version)\n)\n\nDeferred:\n- GVN-002-90ed8fc3 (manual) is left as a manual decision and is not shown.",
+      "before_after": {
+        "before": "TABLE public.schema_migrations (\n  version character varying(40) NOT NULL,\n  applied_at timestamp with time zone NOT NULL DEFAULT now(),\n  PRIMARY KEY (version)\n)",
+        "after": "TABLE public.schema_migrations (\n  version character varying(40) NOT NULL,\n  applied_at timestamp with time zone NOT NULL DEFAULT now(),\n  PRIMARY KEY (version)\n)"
+      },
+      "proposed_sql": "-- M009 MANUAL: Describe the columns, with no sensitive values.",
+      "application_dependencies": [
+        {
+          "status": "not_evaluated",
+          "message": "Application impact was not evaluated: no application source directory was supplied."
+        }
+      ],
+      "data_dependencies": [],
+      "data_migration": "The proposed SQL does not change existing data. Confirm that against your own requirements.",
+      "rollback": "M009: manual step; define the rollback during its review.",
+      "validation_tests": [
+        "Re-run the check."
+      ],
+      "business_logic_notes": [
+        "No business rule was inferred. Confirm each change against how the business uses this data."
+      ],
+      "requires_review": true,
+      "priority_score": 9.8,
+      "priority_rationale": [
+        "Worst severity is low (10 points).",
+        "Strongest finding kind is optional_improvement (-5).",
+        "Confidence 0.90 scales the score by 0.95.",
+        "Complexity low (+5).",
+        "0 database objects depend on this structure (+3).",
+        "Manual work or data repair is needed (-3)."
+      ],
+      "application_impact_evaluated": false,
+      "application_scan": {
+        "evaluated": false,
+        "message": "Application impact was not evaluated: no application source directory was supplied."
+      },
+      "table": "public.schema_migrations"
+    },
+    {
+      "id": "REC-53319b0a04",
+      "finding_ids": [
+        "DQ-001-ec65864f",
+        "GVN-002-2cb36f94"
+      ],
+      "title": "Address 2 finding(s) on public.audit_log",
+      "priority": "P4",
+      "existing_structure": "TABLE public.audit_log (\n  audit_log_id bigint NOT NULL IDENTITY,\n  table_name character varying(63) NOT NULL,\n  record_key character varying(100) NOT NULL,\n  action character varying(10) NOT NULL,\n  changed_at timestamp with time zone NOT NULL DEFAULT now(),\n  changed_by character varying(60) NOT NULL,\n  PRIMARY KEY (audit_log_id),\n  CHECK (action IN ('insert', 'update', 'delete')) -- check_audit_log_action\n)",
+      "weakness": "- [low] Columns of public.audit_log have no descriptions (6): 6 of 6 columns have no description.\n- [informational] Table public.audit_log is empty: Table public.audit_log has no rows.",
+      "recommended_structure": "TABLE public.audit_log (\n  audit_log_id bigint NOT NULL IDENTITY,\n  table_name character varying(63) NOT NULL,\n  record_key character varying(100) NOT NULL,\n  action character varying(10) NOT NULL,\n  changed_at timestamp with time zone NOT NULL DEFAULT now(),\n  changed_by character varying(60) NOT NULL,\n  PRIMARY KEY (audit_log_id),\n  CHECK (action IN ('insert', 'update', 'delete')) -- check_audit_log_action\n)\n\nDeferred:\n- GVN-002-2cb36f94 (manual) is left as a manual decision and is not shown.",
+      "before_after": {
+        "before": "TABLE public.audit_log (\n  audit_log_id bigint NOT NULL IDENTITY,\n  table_name character varying(63) NOT NULL,\n  record_key character varying(100) NOT NULL,\n  action character varying(10) NOT NULL,\n  changed_at timestamp with time zone NOT NULL DEFAULT now(),\n  changed_by character varying(60) NOT NULL,\n  PRIMARY KEY (audit_log_id),\n  CHECK (action IN ('insert', 'update', 'delete')) -- check_audit_log_action\n)",
+        "after": "TABLE public.audit_log (\n  audit_log_id bigint NOT NULL IDENTITY,\n  table_name character varying(63) NOT NULL,\n  record_key character varying(100) NOT NULL,\n  action character varying(10) NOT NULL,\n  changed_at timestamp with time zone NOT NULL DEFAULT now(),\n  changed_by character varying(60) NOT NULL,\n  PRIMARY KEY (audit_log_id),\n  CHECK (action IN ('insert', 'update', 'delete')) -- check_audit_log_action\n)"
+      },
+      "proposed_sql": "-- M002 MANUAL: Describe the columns, with no sensitive values.",
+      "application_dependencies": [
+        {
+          "status": "not_evaluated",
+          "message": "Application impact was not evaluated: no application source directory was supplied."
+        }
+      ],
+      "data_dependencies": [],
+      "data_migration": "The proposed SQL does not change existing data. Confirm that against your own requirements.",
+      "rollback": "M002: manual step; define the rollback during its review.",
+      "validation_tests": [
+        "Re-run the check.",
+        "Confirm usage with the owning team."
+      ],
+      "business_logic_notes": [
+        "No business rule was inferred. Confirm each change against how the business uses this data."
+      ],
+      "requires_review": true,
+      "priority_score": 9.8,
+      "priority_rationale": [
+        "Worst severity is low (10 points).",
+        "Strongest finding kind is optional_improvement (-5).",
+        "Confidence 0.90 scales the score by 0.95.",
+        "Complexity low (+5).",
+        "0 database objects depend on this structure (+3).",
+        "Manual work or data repair is needed (-3)."
+      ],
+      "application_impact_evaluated": false,
+      "application_scan": {
+        "evaluated": false,
+        "message": "Application impact was not evaluated: no application source directory was supplied."
+      },
+      "table": "public.audit_log"
+    },
+    {
+      "id": "REC-61c3207d8c",
+      "finding_ids": [
+        "GVN-006-9dbc549e"
+      ],
+      "title": "Address 1 finding(s) on governance",
+      "priority": "P4",
+      "existing_structure": "Concern: governance. Not specific to one table.",
+      "weakness": "- [medium] No retention schedule structures found: No retention schedule or legal hold table was found; this may be held outside the database.",
+      "recommended_structure": "Concern: governance. Not specific to one table.",
+      "before_after": {
+        "before": "Concern: governance. Not specific to one table.",
+        "after": "Concern: governance. Not specific to one table."
+      },
+      "proposed_sql": "-- M001 MANUAL: Requires legal review: define retention by record class, jurisdiction, start event and hold.",
+      "application_dependencies": [
+        {
+          "status": "not_evaluated",
+          "message": "Application impact was not evaluated: no application source directory was supplied."
+        }
+      ],
+      "data_dependencies": [],
+      "data_migration": "The proposed SQL does not change existing data. Confirm that against your own requirements.",
+      "rollback": "M001: manual step; define the rollback during its review.",
+      "validation_tests": [
+        "Confirm the schedule with counsel for each legal entity."
+      ],
+      "business_logic_notes": [
+        "No business rule was inferred. Confirm each change against how the business uses this data.",
+        "GVN-006-9dbc549e: context dependent; a data owner must decide whether it applies."
+      ],
+      "requires_review": true,
+      "priority_score": 9.0,
+      "priority_rationale": [
+        "Worst severity is medium (20 points).",
+        "Strongest finding kind is context_dependent (+0).",
+        "Confidence 0.40 scales the score by 0.70.",
+        "Complexity high (-5).",
+        "0 database objects depend on this structure (+3).",
+        "Manual work or data repair is needed (-3)."
+      ],
+      "application_impact_evaluated": false,
+      "application_scan": {
+        "evaluated": false,
+        "message": "Application impact was not evaluated: no application source directory was supplied."
+      },
+      "table": null
+    },
+    {
+      "id": "REC-290c0d0669",
+      "finding_ids": [
+        "GVN-002-5774a2cc"
+      ],
+      "title": "Address 1 finding(s) on public.order_items",
+      "priority": "P4",
+      "existing_structure": "TABLE public.order_items (\n  order_item_id bigint NOT NULL IDENTITY,\n  order_id bigint NOT NULL,\n  product_id bigint NOT NULL,\n  quantity integer NOT NULL,\n  unit_price numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (order_item_id),\n  FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE,\n  FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE RESTRICT,\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (quantity > 0) -- check_order_items_quantity,\n  CHECK (unit_price >= 0) -- check_order_items_price\n)\nUNIQUE INDEX unique_order_items_line ON order_items (order_id, product_id)\nINDEX index_order_items_product_id ON order_items (product_id)\nINDEX index_order_items_currency_code ON order_items (currency_code)",
+      "weakness": "- [low] Columns of public.order_items have no descriptions (10): 10 of 10 columns have no description.",
+      "recommended_structure": "TABLE public.order_items (\n  order_item_id bigint NOT NULL IDENTITY,\n  order_id bigint NOT NULL,\n  product_id bigint NOT NULL,\n  quantity integer NOT NULL,\n  unit_price numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (order_item_id),\n  FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE,\n  FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE RESTRICT,\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (quantity > 0) -- check_order_items_quantity,\n  CHECK (unit_price >= 0) -- check_order_items_price\n)\nUNIQUE INDEX unique_order_items_line ON order_items (order_id, product_id)\nINDEX index_order_items_product_id ON order_items (product_id)\nINDEX index_order_items_currency_code ON order_items (currency_code)\n\nDeferred:\n- GVN-002-5774a2cc (manual) is left as a manual decision and is not shown.",
+      "before_after": {
+        "before": "TABLE public.order_items (\n  order_item_id bigint NOT NULL IDENTITY,\n  order_id bigint NOT NULL,\n  product_id bigint NOT NULL,\n  quantity integer NOT NULL,\n  unit_price numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (order_item_id),\n  FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE,\n  FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE RESTRICT,\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (quantity > 0) -- check_order_items_quantity,\n  CHECK (unit_price >= 0) -- check_order_items_price\n)\nUNIQUE INDEX unique_order_items_line ON order_items (order_id, product_id)\nINDEX index_order_items_product_id ON order_items (product_id)\nINDEX index_order_items_currency_code ON order_items (currency_code)",
+        "after": "TABLE public.order_items (\n  order_item_id bigint NOT NULL IDENTITY,\n  order_id bigint NOT NULL,\n  product_id bigint NOT NULL,\n  quantity integer NOT NULL,\n  unit_price numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (order_item_id),\n  FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE,\n  FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE RESTRICT,\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (quantity > 0) -- check_order_items_quantity,\n  CHECK (unit_price >= 0) -- check_order_items_price\n)\nUNIQUE INDEX unique_order_items_line ON order_items (order_id, product_id)\nINDEX index_order_items_product_id ON order_items (product_id)\nINDEX index_order_items_currency_code ON order_items (currency_code)"
+      },
+      "proposed_sql": "-- M006 MANUAL: Describe the columns, with no sensitive values.",
+      "application_dependencies": [
+        {
+          "status": "not_evaluated",
+          "message": "Application impact was not evaluated: no application source directory was supplied."
+        }
+      ],
+      "data_dependencies": [
+        {
+          "kind": "foreign_key_out",
+          "object": "fk_order_items_order",
+          "method": "metadata",
+          "columns": [
+            "order_id"
+          ],
+          "detail": "This table references orders."
+        },
+        {
+          "kind": "foreign_key_out",
+          "object": "fk_order_items_product",
+          "method": "metadata",
+          "columns": [
+            "product_id"
+          ],
+          "detail": "This table references products."
+        },
+        {
+          "kind": "foreign_key_out",
+          "object": "fk_order_items_currency",
+          "method": "metadata",
+          "columns": [
+            "currency_code"
+          ],
+          "detail": "This table references currencies."
+        }
+      ],
+      "data_migration": "The proposed SQL does not change existing data. Confirm that against your own requirements.",
+      "rollback": "M006: manual step; define the rollback during its review.",
+      "validation_tests": [
+        "Re-run the check."
+      ],
+      "business_logic_notes": [
+        "No business rule was inferred. Confirm each change against how the business uses this data."
+      ],
+      "requires_review": true,
+      "priority_score": 4.8,
+      "priority_rationale": [
+        "Worst severity is low (10 points).",
+        "Strongest finding kind is optional_improvement (-5).",
+        "Confidence 0.90 scales the score by 0.95.",
+        "Complexity low (+5).",
+        "3 database objects depend on this structure (-2).",
+        "Manual work or data repair is needed (-3)."
+      ],
+      "application_impact_evaluated": false,
+      "application_scan": {
+        "evaluated": false,
+        "message": "Application impact was not evaluated: no application source directory was supplied."
+      },
+      "table": "public.order_items"
+    },
+    {
+      "id": "REC-5397aa3d79",
+      "finding_ids": [
+        "GVN-002-6b7f1d5c"
+      ],
+      "title": "Address 1 finding(s) on public.orders",
+      "priority": "P4",
+      "existing_structure": "TABLE public.orders (\n  order_id bigint NOT NULL IDENTITY,\n  customer_id bigint NOT NULL,\n  status character varying(20) NOT NULL,\n  total_amount numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  ordered_at timestamp with time zone NOT NULL,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (order_id),\n  FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE RESTRICT,\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (status IN ('open', 'shipped', 'cancelled')) -- check_orders_status,\n  CHECK (total_amount >= 0) -- check_orders_total\n)\nINDEX index_orders_customer_id ON orders (customer_id)\nINDEX index_orders_currency_code ON orders (currency_code)",
+      "weakness": "- [low] Columns of public.orders have no descriptions (10): 10 of 10 columns have no description.",
+      "recommended_structure": "TABLE public.orders (\n  order_id bigint NOT NULL IDENTITY,\n  customer_id bigint NOT NULL,\n  status character varying(20) NOT NULL,\n  total_amount numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  ordered_at timestamp with time zone NOT NULL,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (order_id),\n  FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE RESTRICT,\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (status IN ('open', 'shipped', 'cancelled')) -- check_orders_status,\n  CHECK (total_amount >= 0) -- check_orders_total\n)\nINDEX index_orders_customer_id ON orders (customer_id)\nINDEX index_orders_currency_code ON orders (currency_code)\n\nDeferred:\n- GVN-002-6b7f1d5c (manual) is left as a manual decision and is not shown.",
+      "before_after": {
+        "before": "TABLE public.orders (\n  order_id bigint NOT NULL IDENTITY,\n  customer_id bigint NOT NULL,\n  status character varying(20) NOT NULL,\n  total_amount numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  ordered_at timestamp with time zone NOT NULL,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (order_id),\n  FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE RESTRICT,\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (status IN ('open', 'shipped', 'cancelled')) -- check_orders_status,\n  CHECK (total_amount >= 0) -- check_orders_total\n)\nINDEX index_orders_customer_id ON orders (customer_id)\nINDEX index_orders_currency_code ON orders (currency_code)",
+        "after": "TABLE public.orders (\n  order_id bigint NOT NULL IDENTITY,\n  customer_id bigint NOT NULL,\n  status character varying(20) NOT NULL,\n  total_amount numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  ordered_at timestamp with time zone NOT NULL,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (order_id),\n  FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE RESTRICT,\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (status IN ('open', 'shipped', 'cancelled')) -- check_orders_status,\n  CHECK (total_amount >= 0) -- check_orders_total\n)\nINDEX index_orders_customer_id ON orders (customer_id)\nINDEX index_orders_currency_code ON orders (currency_code)"
+      },
+      "proposed_sql": "-- M007 MANUAL: Describe the columns, with no sensitive values.",
+      "application_dependencies": [
+        {
+          "status": "not_evaluated",
+          "message": "Application impact was not evaluated: no application source directory was supplied."
+        }
+      ],
+      "data_dependencies": [
+        {
+          "kind": "foreign_key_in",
+          "object": "public.order_items.fk_order_items_order",
+          "method": "metadata",
+          "columns": [
+            "order_id"
+          ],
+          "detail": "public.order_items (order_id) references this table."
+        },
+        {
+          "kind": "foreign_key_out",
+          "object": "fk_orders_customer",
+          "method": "metadata",
+          "columns": [
+            "customer_id"
+          ],
+          "detail": "This table references customers."
+        },
+        {
+          "kind": "foreign_key_out",
+          "object": "fk_orders_currency",
+          "method": "metadata",
+          "columns": [
+            "currency_code"
+          ],
+          "detail": "This table references currencies."
+        }
+      ],
+      "data_migration": "The proposed SQL does not change existing data. Confirm that against your own requirements.",
+      "rollback": "M007: manual step; define the rollback during its review.",
+      "validation_tests": [
+        "Re-run the check."
+      ],
+      "business_logic_notes": [
+        "No business rule was inferred. Confirm each change against how the business uses this data."
+      ],
+      "requires_review": true,
+      "priority_score": 4.8,
+      "priority_rationale": [
+        "Worst severity is low (10 points).",
+        "Strongest finding kind is optional_improvement (-5).",
+        "Confidence 0.90 scales the score by 0.95.",
+        "Complexity low (+5).",
+        "3 database objects depend on this structure (-2).",
+        "Manual work or data repair is needed (-3)."
+      ],
+      "application_impact_evaluated": false,
+      "application_scan": {
+        "evaluated": false,
+        "message": "Application impact was not evaluated: no application source directory was supplied."
+      },
+      "table": "public.orders"
+    },
+    {
+      "id": "REC-c920087780",
+      "finding_ids": [
+        "GVN-002-53190a2b"
+      ],
+      "title": "Address 1 finding(s) on public.products",
+      "priority": "P4",
+      "existing_structure": "TABLE public.products (\n  product_id bigint NOT NULL IDENTITY,\n  sku character varying(40) NOT NULL,\n  name character varying(160) NOT NULL,\n  unit_price numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  is_active boolean NOT NULL DEFAULT true,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (product_id),\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (unit_price >= 0) -- check_products_price\n)\nUNIQUE INDEX unique_products_sku ON products (sku)\nINDEX index_products_currency_code ON products (currency_code)",
+      "weakness": "- [low] Columns of public.products have no descriptions (10): 10 of 10 columns have no description.",
+      "recommended_structure": "TABLE public.products (\n  product_id bigint NOT NULL IDENTITY,\n  sku character varying(40) NOT NULL,\n  name character varying(160) NOT NULL,\n  unit_price numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  is_active boolean NOT NULL DEFAULT true,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (product_id),\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (unit_price >= 0) -- check_products_price\n)\nUNIQUE INDEX unique_products_sku ON products (sku)\nINDEX index_products_currency_code ON products (currency_code)\n\nDeferred:\n- GVN-002-53190a2b (manual) is left as a manual decision and is not shown.",
+      "before_after": {
+        "before": "TABLE public.products (\n  product_id bigint NOT NULL IDENTITY,\n  sku character varying(40) NOT NULL,\n  name character varying(160) NOT NULL,\n  unit_price numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  is_active boolean NOT NULL DEFAULT true,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (product_id),\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (unit_price >= 0) -- check_products_price\n)\nUNIQUE INDEX unique_products_sku ON products (sku)\nINDEX index_products_currency_code ON products (currency_code)",
+        "after": "TABLE public.products (\n  product_id bigint NOT NULL IDENTITY,\n  sku character varying(40) NOT NULL,\n  name character varying(160) NOT NULL,\n  unit_price numeric(14,4) NOT NULL,\n  currency_code character(3) NOT NULL,\n  is_active boolean NOT NULL DEFAULT true,\n  created_at timestamp with time zone NOT NULL DEFAULT now(),\n  updated_at timestamp with time zone NOT NULL DEFAULT now(),\n  created_by character varying(60) NOT NULL,\n  updated_by character varying(60) NOT NULL,\n  PRIMARY KEY (product_id),\n  FOREIGN KEY (currency_code) REFERENCES currencies (currency_code) ON DELETE RESTRICT,\n  CHECK (unit_price >= 0) -- check_products_price\n)\nUNIQUE INDEX unique_products_sku ON products (sku)\nINDEX index_products_currency_code ON products (currency_code)"
+      },
+      "proposed_sql": "-- M008 MANUAL: Describe the columns, with no sensitive values.",
+      "application_dependencies": [
+        {
+          "status": "not_evaluated",
+          "message": "Application impact was not evaluated: no application source directory was supplied."
+        }
+      ],
+      "data_dependencies": [
+        {
+          "kind": "foreign_key_in",
+          "object": "public.order_items.fk_order_items_product",
+          "method": "metadata",
+          "columns": [
+            "product_id"
+          ],
+          "detail": "public.order_items (product_id) references this table."
+        },
+        {
+          "kind": "foreign_key_out",
+          "object": "fk_products_currency",
+          "method": "metadata",
+          "columns": [
+            "currency_code"
+          ],
+          "detail": "This table references currencies."
+        }
+      ],
+      "data_migration": "The proposed SQL does not change existing data. Confirm that against your own requirements.",
+      "rollback": "M008: manual step; define the rollback during its review.",
+      "validation_tests": [
+        "Re-run the check."
+      ],
+      "business_logic_notes": [
+        "No business rule was inferred. Confirm each change against how the business uses this data."
+      ],
+      "requires_review": true,
+      "priority_score": 4.8,
+      "priority_rationale": [
+        "Worst severity is low (10 points).",
+        "Strongest finding kind is optional_improvement (-5).",
+        "Confidence 0.90 scales the score by 0.95.",
+        "Complexity low (+5).",
+        "2 database objects depend on this structure (-2).",
+        "Manual work or data repair is needed (-3)."
+      ],
+      "application_impact_evaluated": false,
+      "application_scan": {
+        "evaluated": false,
+        "message": "Application impact was not evaluated: no application source directory was supplied."
+      },
+      "table": "public.products"
+    }
+  ],
+  "migration": {
+    "plan_hash": "0680016076ca06852333807d11be11b5ec4a93a2dd526eb51470c5af4c7a0085",
+    "dialect": "postgres",
+    "source_dialect": "postgres",
+    "total_steps": 9,
+    "executable_steps": 0,
+    "manual_steps": 9,
+    "destructive_steps": 0,
+    "refused_steps": 0,
+    "irreversible_steps": 0,
+    "backup_recommendation": "Take a verified physical base backup with continuous WAL archiving (pg_basebackup or your backup platform), or confirm the latest one is usable. pg_dump is a supplement only, useful for portable or partial restore. A replica or standby is not a backup. Restore the backup to a separate instance and verify it before relying on it, and record the time so the recovery point is known.",
+    "destructive": [],
+    "refused": [],
+    "unaddressed_findings": [
+      "DQ-001-ec65864f",
+      "REL-003-37add961"
+    ],
+    "satisfied_findings": [],
+    "notes": [],
+    "steps": [
+      {
+        "id": "M001",
+        "order": 1,
+        "title": "Manual: Requires legal review: define retention by record class, jurisdiction, start eve",
+        "op": "manual",
+        "table": null,
+        "column": null,
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Requires legal review: define retention by record class, jurisdiction, start event and hold.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "GVN-006-9dbc549e"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      },
+      {
+        "id": "M002",
+        "order": 2,
+        "title": "Manual: Describe the columns, with no sensitive values.",
+        "op": "manual",
+        "table": "public.audit_log",
+        "column": null,
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Describe the columns, with no sensitive values.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "GVN-002-2cb36f94"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      },
+      {
+        "id": "M003",
+        "order": 3,
+        "title": "Manual: Describe the columns, with no sensitive values.",
+        "op": "manual",
+        "table": "public.customers",
+        "column": null,
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Describe the columns, with no sensitive values.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "GVN-002-33b66f7b"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      },
+      {
+        "id": "M004",
+        "order": 4,
+        "title": "Manual: Classify email (email) and record its required protections.",
+        "op": "manual",
+        "table": "public.customers",
+        "column": "email",
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Classify email (email) and record its required protections.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "SECA-004-89ff9e01"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      },
+      {
+        "id": "M005",
+        "order": 5,
+        "title": "Manual: Classify email (email) and protect it accordingly.",
+        "op": "manual",
+        "table": "public.customers",
+        "column": "email",
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Classify email (email) and protect it accordingly.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "SECA-005-29bd2d4c"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      },
+      {
+        "id": "M006",
+        "order": 6,
+        "title": "Manual: Describe the columns, with no sensitive values.",
+        "op": "manual",
+        "table": "public.order_items",
+        "column": null,
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Describe the columns, with no sensitive values.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "GVN-002-5774a2cc"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      },
+      {
+        "id": "M007",
+        "order": 7,
+        "title": "Manual: Describe the columns, with no sensitive values.",
+        "op": "manual",
+        "table": "public.orders",
+        "column": null,
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Describe the columns, with no sensitive values.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "GVN-002-6b7f1d5c"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      },
+      {
+        "id": "M008",
+        "order": 8,
+        "title": "Manual: Describe the columns, with no sensitive values.",
+        "op": "manual",
+        "table": "public.products",
+        "column": null,
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Describe the columns, with no sensitive values.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "GVN-002-53190a2b"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      },
+      {
+        "id": "M009",
+        "order": 9,
+        "title": "Manual: Describe the columns, with no sensitive values.",
+        "op": "manual",
+        "table": "public.schema_migrations",
+        "column": null,
+        "manual": true,
+        "destructive": false,
+        "reversible": false,
+        "data_loss_risk": "none",
+        "lock_risk": "low",
+        "requires_backup": false,
+        "requires_data_repair": false,
+        "data_repair_notes": [],
+        "refused_reason": "",
+        "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+        "manual_description": "Describe the columns, with no sensitive values.",
+        "breaking": false,
+        "depends_on": [],
+        "finding_ids": [
+          "GVN-002-90ed8fc3"
+        ],
+        "phase_label": "",
+        "up_script": "",
+        "down_script": "",
+        "prechecks": [],
+        "postchecks": []
+      }
+    ]
+  },
+  "lineage": {
+    "edges": [],
+    "nodes": [],
+    "gaps": [],
+    "notes": [
+      "Lineage is at object level. Column-level lineage is not derived.",
+      "No pipeline manifest was supplied, so pipeline lineage is absent."
+    ]
+  },
+  "architecture": {
+    "tables": [
+      {
+        "name": "public.schema_migrations",
+        "columns": 2,
+        "primary_key": [
+          "version"
+        ],
+        "foreign_keys": 0,
+        "indexes": 0,
+        "referenced_by": 0,
+        "row_count": 1,
+        "rls_enabled": false,
+        "comment": "Applied schema changes. Owner: platform.",
+        "financial": false,
+        "column_list": [
+          {
+            "name": "version",
+            "type": "character varying(40)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "applied_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          }
+        ]
+      },
+      {
+        "name": "public.currencies",
+        "columns": 3,
+        "primary_key": [
+          "currency_code"
+        ],
+        "foreign_keys": 0,
+        "indexes": 0,
+        "referenced_by": 3,
+        "row_count": 3,
+        "rls_enabled": false,
+        "comment": "ISO 4217 currencies used by the shop.",
+        "financial": false,
+        "column_list": [
+          {
+            "name": "currency_code",
+            "type": "character(3)",
+            "nullable": false,
+            "default": null,
+            "comment": "ISO 4217 alphabetic code."
+          },
+          {
+            "name": "name",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": "English currency name."
+          },
+          {
+            "name": "minor_units",
+            "type": "smallint",
+            "nullable": false,
+            "default": null,
+            "comment": "Digits after the decimal point."
+          }
+        ]
+      },
+      {
+        "name": "public.customers",
+        "columns": 8,
+        "primary_key": [
+          "customer_id"
+        ],
+        "foreign_keys": 0,
+        "indexes": 1,
+        "referenced_by": 1,
+        "row_count": 3,
+        "rls_enabled": false,
+        "comment": "People who buy from the shop. Owner: sales. Classification: confidential.",
+        "financial": false,
+        "column_list": [
+          {
+            "name": "customer_id",
+            "type": "bigint",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "email",
+            "type": "character varying(254)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "display_name",
+            "type": "character varying(120)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "is_active",
+            "type": "boolean",
+            "nullable": false,
+            "default": "true",
+            "comment": null
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "updated_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "created_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "updated_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          }
+        ]
+      },
+      {
+        "name": "public.products",
+        "columns": 10,
+        "primary_key": [
+          "product_id"
+        ],
+        "foreign_keys": 1,
+        "indexes": 2,
+        "referenced_by": 1,
+        "row_count": 3,
+        "rls_enabled": false,
+        "comment": "Items for sale. Owner: catalog.",
+        "financial": false,
+        "column_list": [
+          {
+            "name": "product_id",
+            "type": "bigint",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "sku",
+            "type": "character varying(40)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "name",
+            "type": "character varying(160)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "unit_price",
+            "type": "numeric(14,4)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "currency_code",
+            "type": "character(3)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "is_active",
+            "type": "boolean",
+            "nullable": false,
+            "default": "true",
+            "comment": null
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "updated_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "created_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "updated_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          }
+        ]
+      },
+      {
+        "name": "public.orders",
+        "columns": 10,
+        "primary_key": [
+          "order_id"
+        ],
+        "foreign_keys": 2,
+        "indexes": 2,
+        "referenced_by": 1,
+        "row_count": 2,
+        "rls_enabled": false,
+        "comment": "Customer orders. Owner: sales.",
+        "financial": false,
+        "column_list": [
+          {
+            "name": "order_id",
+            "type": "bigint",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "customer_id",
+            "type": "bigint",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "status",
+            "type": "character varying(20)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "total_amount",
+            "type": "numeric(14,4)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "currency_code",
+            "type": "character(3)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "ordered_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "updated_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "created_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "updated_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          }
+        ]
+      },
+      {
+        "name": "public.order_items",
+        "columns": 10,
+        "primary_key": [
+          "order_item_id"
+        ],
+        "foreign_keys": 3,
+        "indexes": 3,
+        "referenced_by": 0,
+        "row_count": 3,
+        "rls_enabled": false,
+        "comment": "Lines of an order. Owner: sales.",
+        "financial": false,
+        "column_list": [
+          {
+            "name": "order_item_id",
+            "type": "bigint",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "order_id",
+            "type": "bigint",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "product_id",
+            "type": "bigint",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "quantity",
+            "type": "integer",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "unit_price",
+            "type": "numeric(14,4)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "currency_code",
+            "type": "character(3)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "updated_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "created_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "updated_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          }
+        ]
+      },
+      {
+        "name": "public.audit_log",
+        "columns": 6,
+        "primary_key": [
+          "audit_log_id"
+        ],
+        "foreign_keys": 0,
+        "indexes": 0,
+        "referenced_by": 0,
+        "row_count": 0,
+        "rls_enabled": false,
+        "comment": "Append-only record of data changes. Owner: platform.",
+        "financial": false,
+        "column_list": [
+          {
+            "name": "audit_log_id",
+            "type": "bigint",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "table_name",
+            "type": "character varying(63)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "record_key",
+            "type": "character varying(100)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "action",
+            "type": "character varying(10)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          },
+          {
+            "name": "changed_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()",
+            "comment": null
+          },
+          {
+            "name": "changed_by",
+            "type": "character varying(60)",
+            "nullable": false,
+            "default": null,
+            "comment": null
+          }
+        ]
+      }
+    ],
+    "relations": [
+      {
+        "from": "public.products",
+        "columns": [
+          "currency_code"
+        ],
+        "to": "currencies",
+        "ref_columns": [
+          "currency_code"
+        ],
+        "on_delete": "RESTRICT",
+        "on_update": "RESTRICT",
+        "name": "fk_products_currency"
+      },
+      {
+        "from": "public.orders",
+        "columns": [
+          "customer_id"
+        ],
+        "to": "customers",
+        "ref_columns": [
+          "customer_id"
+        ],
+        "on_delete": "RESTRICT",
+        "on_update": "RESTRICT",
+        "name": "fk_orders_customer"
+      },
+      {
+        "from": "public.orders",
+        "columns": [
+          "currency_code"
+        ],
+        "to": "currencies",
+        "ref_columns": [
+          "currency_code"
+        ],
+        "on_delete": "RESTRICT",
+        "on_update": "RESTRICT",
+        "name": "fk_orders_currency"
+      },
+      {
+        "from": "public.order_items",
+        "columns": [
+          "order_id"
+        ],
+        "to": "orders",
+        "ref_columns": [
+          "order_id"
+        ],
+        "on_delete": "CASCADE",
+        "on_update": "RESTRICT",
+        "name": "fk_order_items_order"
+      },
+      {
+        "from": "public.order_items",
+        "columns": [
+          "product_id"
+        ],
+        "to": "products",
+        "ref_columns": [
+          "product_id"
+        ],
+        "on_delete": "RESTRICT",
+        "on_update": "RESTRICT",
+        "name": "fk_order_items_product"
+      },
+      {
+        "from": "public.order_items",
+        "columns": [
+          "currency_code"
+        ],
+        "to": "currencies",
+        "ref_columns": [
+          "currency_code"
+        ],
+        "on_delete": "RESTRICT",
+        "on_update": "RESTRICT",
+        "name": "fk_order_items_currency"
+      }
+    ],
+    "domains": [
+      {
+        "name": "currencies domain",
+        "hub": "public.currencies",
+        "tables": [
+          "public.currencies",
+          "public.customers",
+          "public.order_items",
+          "public.orders",
+          "public.products"
+        ],
+        "size": 5
+      },
+      {
+        "name": "Unconnected tables",
+        "hub": null,
+        "tables": [
+          "public.audit_log",
+          "public.schema_migrations"
+        ],
+        "size": 2
+      }
+    ],
+    "views": [],
+    "routines": []
+  },
+  "roadmap": {
+    "prerequisites": [
+      "Confirm a verified backup exists and has been restored in a test.",
+      "Review every proposal with the people who own the data.",
+      "Decide the 9 manual step(s); they carry no SQL."
+    ],
+    "phases": [
+      {
+        "phase": 3,
+        "name": "Improve: design and maintainability",
+        "items": [
+          {
+            "recommendation": "REC-d2483a653a",
+            "title": "Address 3 finding(s) on public.customers",
+            "priority": "P3",
+            "priority_score": 21.0,
+            "table": "public.customers",
+            "findings": 3,
+            "steps": [
+              "M003",
+              "M004",
+              "M005"
+            ],
+            "depends_on": [],
+            "moved_forward_for": null
+          }
+        ]
+      },
+      {
+        "phase": 4,
+        "name": "Refine: conventions and polish",
+        "items": [
+          {
+            "recommendation": "REC-9495c4a7e7",
+            "title": "Address 1 finding(s) on reliability_recovery",
+            "priority": "P4",
+            "priority_score": 10.1,
+            "table": null,
+            "findings": 1,
+            "steps": [],
+            "depends_on": [],
+            "moved_forward_for": null
+          },
+          {
+            "recommendation": "REC-13a1b79f85",
+            "title": "Address 1 finding(s) on public.schema_migrations",
+            "priority": "P4",
+            "priority_score": 9.8,
+            "table": "public.schema_migrations",
+            "findings": 1,
+            "steps": [
+              "M009"
+            ],
+            "depends_on": [],
+            "moved_forward_for": null
+          },
+          {
+            "recommendation": "REC-53319b0a04",
+            "title": "Address 2 finding(s) on public.audit_log",
+            "priority": "P4",
+            "priority_score": 9.8,
+            "table": "public.audit_log",
+            "findings": 2,
+            "steps": [
+              "M002"
+            ],
+            "depends_on": [],
+            "moved_forward_for": null
+          },
+          {
+            "recommendation": "REC-61c3207d8c",
+            "title": "Address 1 finding(s) on governance",
+            "priority": "P4",
+            "priority_score": 9.0,
+            "table": null,
+            "findings": 1,
+            "steps": [
+              "M001"
+            ],
+            "depends_on": [],
+            "moved_forward_for": null
+          },
+          {
+            "recommendation": "REC-290c0d0669",
+            "title": "Address 1 finding(s) on public.order_items",
+            "priority": "P4",
+            "priority_score": 4.8,
+            "table": "public.order_items",
+            "findings": 1,
+            "steps": [
+              "M006"
+            ],
+            "depends_on": [],
+            "moved_forward_for": null
+          },
+          {
+            "recommendation": "REC-5397aa3d79",
+            "title": "Address 1 finding(s) on public.orders",
+            "priority": "P4",
+            "priority_score": 4.8,
+            "table": "public.orders",
+            "findings": 1,
+            "steps": [
+              "M007"
+            ],
+            "depends_on": [],
+            "moved_forward_for": null
+          },
+          {
+            "recommendation": "REC-c920087780",
+            "title": "Address 1 finding(s) on public.products",
+            "priority": "P4",
+            "priority_score": 4.8,
+            "table": "public.products",
+            "findings": 1,
+            "steps": [
+              "M008"
+            ],
+            "depends_on": [],
+            "moved_forward_for": null
+          }
+        ]
+      }
+    ],
+    "recommendation_count": 8,
+    "basis": "Phases follow recommendation priority (P1 to P4). A recommendation that another depends on is moved up to the phase of its dependent."
+  },
+  "coverage": {
+    "rules_executed": [
+      "DE-005",
+      "DE-006",
+      "DE-014",
+      "DE-015",
+      "DQ-001",
+      "DQ-002",
+      "DQ-003",
+      "DQ-005",
+      "DQ-006",
+      "DQ-007",
+      "DQ-009",
+      "DQ-011",
+      "DQ-012",
+      "DQ-013",
+      "DQ-014",
+      "DQ-015",
+      "DQ-016",
+      "FINA-001",
+      "FINA-002",
+      "FINA-003",
+      "GVN-001",
+      "GVN-002",
+      "GVN-003",
+      "GVN-004",
+      "GVN-005",
+      "GVN-006",
+      "GVN-007",
+      "PERF-001",
+      "PERF-002",
+      "PERF-003",
+      "PERF-005",
+      "PERF-006",
+      "PERF-030",
+      "PERF-031",
+      "PERF-032",
+      "PERF-033",
+      "REL-003",
+      "SCH-001",
+      "SCH-002",
+      "SCH-003",
+      "SCH-004",
+      "SCH-005",
+      "SCH-006",
+      "SCH-007",
+      "SCH-010",
+      "SCH-011",
+      "SCH-012",
+      "SCH-013",
+      "SCH-020",
+      "SCH-021",
+      "SCH-022",
+      "SCH-023",
+      "SCH-024",
+      "SCH-030",
+      "SCH-031",
+      "SCH-032",
+      "SCH-033",
+      "SCH-034",
+      "SCH-035",
+      "SCH-036",
+      "SCH-037",
+      "SCH-038",
+      "SCH-039",
+      "SCH-040",
+      "SCH-041",
+      "SCH-042",
+      "SCH-043",
+      "SCH-044",
+      "SCH-045",
+      "SCH-046",
+      "SCH-050",
+      "SCH-051",
+      "SCH-052",
+      "SCH-053",
+      "SCH-054",
+      "SCH-055",
+      "SCH-056",
+      "SCH-057",
+      "SCH-058",
+      "SCH-059",
+      "SCH-060",
+      "SCH-061",
+      "SECA-004",
+      "SECA-005",
+      "SECA-006",
+      "SECA-007",
+      "SECA-008",
+      "SECA-009",
+      "SECA-011",
+      "SECA-012",
+      "TENA-010"
+    ],
+    "rules_executed_count": 91,
+    "skipped": [
+      {
+        "rule": "DE-001",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-002",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-003",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-004",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-007",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-008",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-009",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-010",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-011",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DE-012",
+        "reason": "not applicable to workload OLTP"
+      },
+      {
+        "rule": "DE-013",
+        "reason": "input not available: pipelines"
+      },
+      {
+        "rule": "DQ-004",
+        "reason": "not applicable to workload OLTP"
+      },
+      {
+        "rule": "DQ-008",
+        "reason": "not applicable to workload OLTP"
+      },
+      {
+        "rule": "DQ-010",
+        "reason": "not applicable to workload OLTP"
+      },
+      {
+        "rule": "PERF-004",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-010",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-011",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-012",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-013",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-014",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-015",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-016",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-020",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "PERF-021",
+        "reason": "input not available: query_stats"
+      },
+      {
+        "rule": "REL-001",
+        "reason": "input not available: live"
+      },
+      {
+        "rule": "REL-002",
+        "reason": "input not available: live"
+      },
+      {
+        "rule": "SCH-047",
+        "reason": "disabled by configuration"
+      },
+      {
+        "rule": "SECA-001",
+        "reason": "input not available: security_metadata"
+      },
+      {
+        "rule": "SECA-002",
+        "reason": "input not available: security_metadata"
+      },
+      {
+        "rule": "SECA-003",
+        "reason": "input not available: security_metadata"
+      },
+      {
+        "rule": "SECA-010",
+        "reason": "input not available: security_metadata"
+      },
+      {
+        "rule": "TENA-001",
+        "reason": "not applicable to tenancy none"
+      },
+      {
+        "rule": "TENA-002",
+        "reason": "not applicable to tenancy none"
+      },
+      {
+        "rule": "TENA-003",
+        "reason": "not applicable to tenancy none"
+      },
+      {
+        "rule": "TENA-004",
+        "reason": "not applicable to tenancy none"
+      },
+      {
+        "rule": "TENA-005",
+        "reason": "not applicable to tenancy none"
+      },
+      {
+        "rule": "TENA-006",
+        "reason": "not applicable to tenancy none"
+      },
+      {
+        "rule": "TENA-007",
+        "reason": "not applicable to tenancy none"
+      },
+      {
+        "rule": "TENA-008",
+        "reason": "not applicable to tenancy none"
+      },
+      {
+        "rule": "TENA-009",
+        "reason": "not applicable to tenancy none"
+      }
+    ],
+    "skipped_count": 40,
+    "errors": [],
+    "errors_count": 0,
+    "capabilities": [
+      "data",
+      "declared_schema"
+    ]
+  },
+  "import_warnings": [],
+  "limitations": [
+    "Roles and grants were not available, so privilege rules were skipped.",
+    "No query workload was available, so query-level performance rules were skipped.",
+    "No pipeline manifest was supplied, so pipeline rules were skipped.",
+    "The source is an import, not a live server: runtime settings, recovery configuration and real row counts may be absent or different from production.",
+    "No application source was supplied, so application impact was not evaluated.",
+    "Findings are heuristic. Severity and scores are guidance for review, not certification.",
+    "Proposed SQL is untested against your data and must be reviewed before use."
+  ],
+  "er": {
+    "current": [
+      {
+        "title": "Current schema of clean_demo (1 of 2: around currencies)",
+        "tables": [
+          "currencies",
+          "customers",
+          "products",
+          "orders",
+          "order_items"
+        ],
+        "external": [],
+        "notes": [],
+        "relations": [
+          {
+            "source": "products",
+            "target": "currencies",
+            "columns": [
+              "currency_code"
+            ],
+            "ref_columns": [
+              "currency_code"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "orders",
+            "target": "customers",
+            "columns": [
+              "customer_id"
+            ],
+            "ref_columns": [
+              "customer_id"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "orders",
+            "target": "currencies",
+            "columns": [
+              "currency_code"
+            ],
+            "ref_columns": [
+              "currency_code"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "order_items",
+            "target": "orders",
+            "columns": [
+              "order_id"
+            ],
+            "ref_columns": [
+              "order_id"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "order_items",
+            "target": "products",
+            "columns": [
+              "product_id"
+            ],
+            "ref_columns": [
+              "product_id"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "order_items",
+            "target": "currencies",
+            "columns": [
+              "currency_code"
+            ],
+            "ref_columns": [
+              "currency_code"
+            ],
+            "proposed": false
+          }
+        ],
+        "mermaid": "%% Current schema of clean_demo (1 of 2: around currencies)\nerDiagram\n    currencies {\n        character_3 currency_code PK\n        character_varying_60 name\n        smallint minor_units\n    }\n    customers {\n        bigint customer_id PK\n        character_varying_254 email\n        character_varying_120 display_name\n        boolean is_active\n        timestamp_with_time_zone created_at\n        timestamp_with_time_zone updated_at\n        character_varying_60 created_by\n        character_varying_60 updated_by\n    }\n    products {\n        bigint product_id PK\n        character_varying_40 sku\n        character_varying_160 name\n        numeric_14_4 unit_price\n        character_3 currency_code FK\n        boolean is_active\n        timestamp_with_time_zone created_at\n        timestamp_with_time_zone updated_at\n        character_varying_60 created_by\n        character_varying_60 updated_by\n    }\n    orders {\n        bigint order_id PK\n        bigint customer_id FK\n        character_varying_20 status\n        numeric_14_4 total_amount\n        character_3 currency_code FK\n        timestamp_with_time_zone ordered_at\n        timestamp_with_time_zone created_at\n        timestamp_with_time_zone updated_at\n        character_varying_60 created_by\n        character_varying_60 updated_by\n    }\n    order_items {\n        bigint order_item_id PK\n        bigint order_id FK\n        bigint product_id FK\n        integer quantity\n        numeric_14_4 unit_price\n        character_3 currency_code FK\n        timestamp_with_time_zone created_at\n        timestamp_with_time_zone updated_at\n        character_varying_60 created_by\n        character_varying_60 updated_by\n    }\n    currencies ||--o{ products : \"currency_code\"\n    customers ||--o{ orders : \"customer_id\"\n    currencies ||--o{ orders : \"currency_code\"\n    orders ||--o{ order_items : \"order_id\"\n    products ||--o{ order_items : \"product_id\"\n    currencies ||--o{ order_items : \"currency_code\"\n"
+      },
+      {
+        "title": "Current schema of clean_demo (2 of 2: around audit_log)",
+        "tables": [
+          "audit_log",
+          "schema_migrations"
+        ],
+        "external": [],
+        "notes": [],
+        "relations": [],
+        "mermaid": "%% Current schema of clean_demo (2 of 2: around audit_log)\nerDiagram\n    audit_log {\n        bigint audit_log_id PK\n        character_varying_63 table_name\n        character_varying_100 record_key\n        character_varying_10 action\n        timestamp_with_time_zone changed_at\n        character_varying_60 changed_by\n    }\n    schema_migrations {\n        character_varying_40 version PK\n        timestamp_with_time_zone applied_at\n    }\n"
+      }
+    ],
+    "proposed": [
+      {
+        "title": "Proposed schema of clean_demo (1 of 2: around currencies)",
+        "tables": [
+          "currencies",
+          "customers",
+          "products",
+          "orders",
+          "order_items"
+        ],
+        "external": [],
+        "notes": [
+          "9 manual or refused plan step(s) are not shown as applied."
+        ],
+        "relations": [
+          {
+            "source": "products",
+            "target": "currencies",
+            "columns": [
+              "currency_code"
+            ],
+            "ref_columns": [
+              "currency_code"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "orders",
+            "target": "customers",
+            "columns": [
+              "customer_id"
+            ],
+            "ref_columns": [
+              "customer_id"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "orders",
+            "target": "currencies",
+            "columns": [
+              "currency_code"
+            ],
+            "ref_columns": [
+              "currency_code"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "order_items",
+            "target": "orders",
+            "columns": [
+              "order_id"
+            ],
+            "ref_columns": [
+              "order_id"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "order_items",
+            "target": "products",
+            "columns": [
+              "product_id"
+            ],
+            "ref_columns": [
+              "product_id"
+            ],
+            "proposed": false
+          },
+          {
+            "source": "order_items",
+            "target": "currencies",
+            "columns": [
+              "currency_code"
+            ],
+            "ref_columns": [
+              "currency_code"
+            ],
+            "proposed": false
+          }
+        ],
+        "mermaid": "%% Proposed schema of clean_demo (1 of 2: around currencies)\n%% 9 manual or refused plan step(s) are not shown as applied.\nerDiagram\n    currencies {\n        character_3 currency_code PK\n        character_varying_60 name\n        smallint minor_units\n    }\n    customers {\n        bigint customer_id PK\n        character_varying_254 email\n        character_varying_120 display_name\n        boolean is_active\n        timestamp_with_time_zone created_at\n        timestamp_with_time_zone updated_at\n        character_varying_60 created_by\n        character_varying_60 updated_by\n    }\n    products {\n        bigint product_id PK\n        character_varying_40 sku\n        character_varying_160 name\n        numeric_14_4 unit_price\n        character_3 currency_code FK\n        boolean is_active\n        timestamp_with_time_zone created_at\n        timestamp_with_time_zone updated_at\n        character_varying_60 created_by\n        character_varying_60 updated_by\n    }\n    orders {\n        bigint order_id PK\n        bigint customer_id FK\n        character_varying_20 status\n        numeric_14_4 total_amount\n        character_3 currency_code FK\n        timestamp_with_time_zone ordered_at\n        timestamp_with_time_zone created_at\n        timestamp_with_time_zone updated_at\n        character_varying_60 created_by\n        character_varying_60 updated_by\n    }\n    order_items {\n        bigint order_item_id PK\n        bigint order_id FK\n        bigint product_id FK\n        integer quantity\n        numeric_14_4 unit_price\n        character_3 currency_code FK\n        timestamp_with_time_zone created_at\n        timestamp_with_time_zone updated_at\n        character_varying_60 created_by\n        character_varying_60 updated_by\n    }\n    currencies ||--o{ products : \"currency_code\"\n    customers ||--o{ orders : \"customer_id\"\n    currencies ||--o{ orders : \"currency_code\"\n    orders ||--o{ order_items : \"order_id\"\n    products ||--o{ order_items : \"product_id\"\n    currencies ||--o{ order_items : \"currency_code\"\n"
+      },
+      {
+        "title": "Proposed schema of clean_demo (2 of 2: around audit_log)",
+        "tables": [
+          "audit_log",
+          "schema_migrations"
+        ],
+        "external": [],
+        "notes": [
+          "9 manual or refused plan step(s) are not shown as applied."
+        ],
+        "relations": [],
+        "mermaid": "%% Proposed schema of clean_demo (2 of 2: around audit_log)\n%% 9 manual or refused plan step(s) are not shown as applied.\nerDiagram\n    audit_log {\n        bigint audit_log_id PK\n        character_varying_63 table_name\n        character_varying_100 record_key\n        character_varying_10 action\n        timestamp_with_time_zone changed_at\n        character_varying_60 changed_by\n    }\n    schema_migrations {\n        character_varying_40 version PK\n        timestamp_with_time_zone applied_at\n    }\n"
+      }
+    ]
+  },
+  "timing": {
+    "import_and_extract": 0.0603,
+    "analyze_inputs": 0.0,
+    "run_rules": 0.912,
+    "classify_and_score": 0.0008,
+    "explain_root_causes": 0.0011,
+    "generate_proposed_sql": 0.0032,
+    "recommend_before_and_after": 0.0041,
+    "lineage_and_limitations": 0.0,
+    "total": 0.9815
+  }
+}

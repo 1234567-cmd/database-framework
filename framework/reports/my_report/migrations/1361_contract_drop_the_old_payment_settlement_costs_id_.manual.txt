@@ -1,0 +1,4 @@
+Step M1361: Contract: drop the old payment_settlement_costs.id__dbintel_old
+MANUAL: this step has no generated SQL.
+Table payment_settlement_costs matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change. Intended change: Contract: drop the old payment_settlement_costs.id__dbintel_old.
+Findings: SCH-037-a3149fbc

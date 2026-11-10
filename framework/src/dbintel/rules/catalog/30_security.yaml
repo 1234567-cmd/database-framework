@@ -1,0 +1,462 @@
+# Security and tenant isolation rules. Thresholds and name patterns are params and can be overridden per profile.
+- id: SECA-001
+  check: security.runtime_role_privileges
+  title: "Runtime role {role} holds {privilege}"
+  category: security
+  severity: high
+  kind: confirmed_defect
+  standards: [SEC-001]
+  requires: [security_metadata]
+  root_cause: "The application role was granted administrative or schema-changing rights."
+  business_impact: "A compromised application could alter or destroy the whole database."
+  technical_impact: "{role} can run {privilege} instead of only reading and writing rows."
+  solution: "Revoke {privilege} from {role} and run schema changes under a separate migration role."
+  complexity: low
+  migration: "Confirm no application path issues DDL, then revoke in a maintenance window."
+  risks: "Application features that silently depend on the privilege will fail."
+  validation: "Connect as {role} and confirm DDL is refused while normal reads and writes succeed."
+  params: &role_params
+    runtime_roles: []
+    runtime_role_patterns: ['(^|_)app($|_|\d)', 'runtime', 'service', '(^|_)svc($|_)', '(^|_)api($|_)', '(^|_)web', 'webapp']
+    admin_role_patterns: ['admin', 'dba', '^root$', '^postgres$', 'migrat', 'owner', '^rds', '^sys', '^mysql\.', 'replica']
+    ddl_privileges: [CREATE, ALTER, DROP, TRUNCATE, OWNER, OWNERSHIP, SUPER, GRANT OPTION, CREATE USER, FILE]
+
+- id: SECA-002
+  check: security.broad_grants
+  title: "Broad grant to {grantee}: {privilege} ({reason})"
+  category: security
+  severity: high
+  kind: confirmed_defect
+  standards: [SEC-001, SEC-003]
+  requires: [security_metadata]
+  root_cause: "A grant was made more widely than the role's task requires."
+  business_impact: "Excess access increases the damage from a leaked credential or insider misuse."
+  technical_impact: "{grantee} holds {privilege}: {reason}."
+  solution: "Replace the grant with table-level privileges limited to what {grantee} needs."
+  complexity: medium
+  migration: "Inventory what {grantee} uses, grant that explicitly, then revoke the broad grant."
+  risks: "Removing a broad grant can break consumers that were not inventoried."
+  validation: "Review effective privileges of {grantee} after the change and exercise its workloads."
+  params:
+    <<: *role_params
+    ignored_privileges: [USAGE, CONNECT, TEMPORARY, TEMP, EXECUTE]
+
+- id: SECA-003
+  check: security.weak_logins
+  title: "Weak login configuration for {role}: {issue}"
+  category: security
+  severity: high
+  kind: confirmed_defect
+  standards: [SEC-004, SEC-023]
+  requires: [security_metadata]
+  root_cause: "The account was created without a credential or without a network restriction."
+  business_impact: "An account that is easy to reach or use without a secret invites unauthorized access."
+  technical_impact: "Login role {role} has issue: {issue}."
+  solution: "Set a managed credential and restrict the account to the hosts that need it."
+  complexity: low
+  migration: "Rotate credentials through the secrets manager and update clients."
+  risks: "Clients connecting from an unexpected host will lose access."
+  validation: "Attempt a connection without a credential and from a disallowed host; both must fail."
+
+- id: TENA-001
+  check: security.tenant_column_missing
+  title: "Tenant-scoped table {table} has no tenant identifier"
+  category: security
+  severity: critical
+  kind: confirmed_defect
+  standards: [TEN-006]
+  workloads: [OLTP]
+  tenancy: [pool]
+  root_cause: "The table was designed without a tenant identifier in a pooled database."
+  business_impact: "Data from one customer cannot be separated from another's, which risks disclosure."
+  technical_impact: "No predicate or policy on {table} can restrict rows to a tenant."
+  solution: "Add {column}, backfill it from the owning parent, then set it NOT NULL and add it to keys."
+  complexity: high
+  migration: "Additive column, backfill in batches, then constraints and application changes."
+  risks: "A wrong backfill assigns rows to the wrong tenant; review the mapping before applying it."
+  validation: "Confirm no row has a NULL {column} and test isolation with a non-privileged role."
+  params: &tenant_type
+    tenant_column_type: bigint
+
+- id: TENA-002
+  check: security.tenant_column_missing
+  title: "Table {table} in a bridge deployment has no tenant identifier"
+  category: security
+  severity: medium
+  kind: optional_improvement
+  standards: [TEN-007]
+  workloads: [OLTP]
+  tenancy: [bridge]
+  root_cause: "Dedicated databases were designed without a tenant identifier on tenant-scoped tables."
+  business_impact: "Moving a tenant between a dedicated and a pooled tier becomes a data redesign."
+  technical_impact: "{table} cannot be merged into a pooled database without rework."
+  solution: "Add {column} on tenant-scoped tables in dedicated databases as well."
+  complexity: medium
+  migration: "Additive column, backfilled with the single tenant of that database."
+  risks: "Application writes must populate the new column."
+  validation: "Confirm the column is populated and consistent with the placement catalog."
+  params: *tenant_type
+
+- id: TENA-003
+  check: security.tenant_column_nullable
+  title: "Tenant identifier {table}.{column} allows NULL"
+  category: security
+  severity: critical
+  kind: confirmed_defect
+  standards: [TEN-006]
+  workloads: [OLTP]
+  tenancy: [pool, bridge]
+  root_cause: "The tenant column was added without NOT NULL."
+  business_impact: "Rows without a tenant belong to no customer and can escape isolation."
+  technical_impact: "Tenant predicates do not match NULL rows, and policies can behave unexpectedly."
+  solution: "Backfill NULL values and set {column} NOT NULL."
+  complexity: medium
+  migration: "Backfill first; the constraint fails while NULL rows exist."
+  risks: "Rows that cannot be attributed to a tenant need a manual decision."
+  validation: "Confirm the count of NULL {column} is zero and the constraint is in place."
+
+- id: TENA-004
+  check: security.tenant_not_in_primary_key
+  title: "Primary key of {table} excludes the tenant identifier"
+  category: security
+  severity: medium
+  kind: optional_improvement
+  standards: [TEN-014]
+  workloads: [OLTP]
+  tenancy: [pool, bridge]
+  root_cause: "The primary key was designed for a single-tenant table."
+  business_impact: "Sharding and tenant moves become harder and costlier later."
+  technical_impact: "Rows of a tenant are not clustered, and the key cannot support a shard boundary."
+  solution: "Include {column} in the primary key, leading where the table is sharded."
+  complexity: high
+  migration: "Primary key rebuild; every referencing foreign key changes with it."
+  risks: "Long rebuild on large tables, and a coordinated change to referencing tables."
+  validation: "Confirm the key definition and query plans for tenant-filtered access."
+
+- id: TENA-005
+  check: security.tenant_not_in_unique_key
+  title: "Unique key ({key_columns}) on {table} excludes the tenant identifier"
+  category: security
+  severity: medium
+  kind: optional_improvement
+  standards: [TEN-013]
+  workloads: [OLTP]
+  tenancy: [pool, bridge]
+  root_cause: "Uniqueness was declared globally rather than per tenant."
+  business_impact: "One tenant's value blocks another's, and conflict errors reveal that the value exists."
+  technical_impact: "A global unique index spans tenants on ({key_columns})."
+  solution: "Create the tenant-scoped unique index, then retire the global one after review."
+  complexity: medium
+  migration: "Build the new index online; remove the old one only once the new key is proven."
+  risks: "Some values are meant to be globally unique, so confirm the intent first."
+  validation: "Insert the same value under two tenants in a test environment."
+  params:
+    global_unique_patterns: ['uuid', 'guid', 'public_id']
+
+- id: TENA-006
+  check: security.fk_can_cross_tenants
+  title: "Foreign key {table}({fk_columns}) to {ref_table} can cross tenants"
+  category: security
+  severity: high
+  kind: context_dependent
+  standards: [TEN-001, TEN-002]
+  workloads: [OLTP]
+  tenancy: [pool, bridge]
+  root_cause: "The foreign key references only the parent's key, not the tenant identifier."
+  business_impact: "A row can reference another tenant's record, which can expose or corrupt data."
+  technical_impact: "The engine accepts ({fk_columns}) values belonging to a different tenant in {ref_table}."
+  solution: "Use a composite foreign key that includes the tenant identifier, unless the application enforces this and the design records it."
+  complexity: high
+  migration: "Add a composite unique key on the parent, verify existing rows, then replace the foreign key."
+  risks: "Existing cross-tenant references must be repaired manually first."
+  validation: "Try to insert a cross-tenant reference with a test role; the engine must refuse it."
+
+- id: TENA-007
+  check: security.rls_missing
+  title: "Row-level security on {table}: {issue}"
+  category: security
+  severity: high
+  kind: context_dependent
+  standards: [TEN-001, TEN-009]
+  workloads: [OLTP]
+  tenancy: [pool]
+  root_cause: "Tenant isolation is left to application predicates alone."
+  business_impact: "A single missing filter in application code can expose another tenant's data."
+  technical_impact: "PostgreSQL does not restrict rows of {table} by tenant ({issue})."
+  solution: "Enable row-level security with a tenant policy, unless the recorded isolation design uses another mechanism."
+  complexity: medium
+  migration: "Set the tenant context on each connection first, then enable the policy table by table."
+  risks: "Connections without a tenant context will see no rows once policies are active."
+  validation: "Query as a non-privileged role under two tenant contexts and compare the results."
+
+- id: TENA-008
+  check: security.rls_bypass_principals
+  title: "Principal {role} can bypass row-level security ({reason})"
+  category: security
+  severity: high
+  kind: context_dependent
+  standards: [TEN-010, TEN-011]
+  requires: [security_metadata]
+  workloads: [OLTP]
+  tenancy: [pool, bridge]
+  root_cause: "The role holds superuser or BYPASSRLS while row-level security is an isolation control."
+  business_impact: "Sessions under this role see every tenant's data."
+  technical_impact: "Policies do not apply to {role} ({reason})."
+  solution: "Keep the application runtime role free of bypass rights, and list every other bypassing principal in the design."
+  complexity: low
+  migration: "Remove the attribute from the runtime role and test."
+  risks: "Tooling that relied on the bypass will see restricted rows."
+  validation: "Confirm the runtime role is not superuser and not BYPASSRLS."
+  params: *role_params
+
+- id: TENA-009
+  check: security.per_tenant_objects
+  title: "Per-tenant {object_kind} in shared database: {table}"
+  category: security
+  severity: medium
+  kind: context_dependent
+  standards: [TEN-015]
+  workloads: [OLTP]
+  tenancy: [pool, bridge]
+  root_cause: "Tenant-specific needs were met by adding structures for individual tenants."
+  business_impact: "Schema changes multiply with each customer, and onboarding needs engineering work."
+  technical_impact: "The schema grows with the tenant count and cannot be managed uniformly."
+  solution: "Move tenant-specific data to shared tables or a dedicated custom-data structure."
+  complexity: high
+  migration: "Copy to the shared structure, cut over, then retire the object after review."
+  risks: "The name match can be wrong; confirm the object is tenant-specific."
+  validation: "Confirm no application path still reads the old object."
+  confidence: 0.6
+  params:
+    per_tenant_patterns: ['tenant_?\d+', '^t\d+_', '_t\d+$', '^(client|customer)_\d+', '_(client|customer)_?\d+$']
+
+- id: TENA-010
+  check: security.company_column_missing
+  title: "Table {table} has no company identifier in a multi-company system"
+  category: security
+  severity: medium
+  kind: optional_improvement
+  standards: [TEN-019, TEN-018]
+  workloads: [OLTP]
+  root_cause: "The table was not scoped to a company when multi-company support was introduced."
+  business_impact: "Records cannot be attributed to the legal and posting boundary."
+  technical_impact: "Company-level filtering and reporting on {table} is not possible."
+  solution: "Add {column} and backfill it, or record the table as tenant-shared master data."
+  complexity: medium
+  migration: "Additive column, then a backfill decided with the data owner."
+  risks: "Master data may be correctly shared across companies, so confirm first."
+  validation: "Confirm company-level reports reconcile after the backfill."
+  confidence: 0.6
+  params:
+    company_column_type: bigint
+    shared_master_patterns: ['compan', 'customer', 'vendor', 'supplier', 'product', 'item', 'user', 'role', 'permission', 'setting', 'lookup']
+
+- id: SECA-004
+  check: security.sensitive_by_name
+  title: "Possible {data_category} data in {table}.{column}"
+  category: security
+  severity: low
+  kind: context_dependent
+  standards: [SEC-009]
+  root_cause: "The column name matches a sensitive data pattern, and the database holds no classification for it."
+  business_impact: "Unknown sensitive data cannot be protected or included in a data inventory."
+  technical_impact: "Column {column} may hold {data_category} data."
+  solution: "Confirm the content and classify the column at attribute level."
+  complexity: low
+  migration: "Metadata only."
+  risks: "Name matching can be wrong in both directions."
+  validation: "Review the classification inventory against this list."
+  confidence: 0.6
+  params: &sensitive_params
+    exclude_name_patterns: ['_at$', '_on$', '_flag$', '^is_', '^has_', 'verified', '_count$', '_enabled$', '_status$', 'opt_in', '_type$', '_length$', 'expires', 'hint', 'reset', 'changed', 'policy']
+    sensitive_name_patterns:
+      email: ['(^|_)e?mail($|_)']
+      phone: ['(^|_)(phone|mobile|msisdn)($|_)']
+      national_id: ['ssn', 'national_id', 'nationalid', 'cnic', '(^|_)nin($|_)', 'tax_id', 'taxpayer', 'passport', 'driver_licen']
+      date_of_birth: ['(^|_)(dob|birth_?date|date_of_birth)($|_)']
+      bank_account: ['iban', 'bank_account', 'routing_number', 'sort_code']
+      card: ['card_?number', 'card_?no($|_)', 'credit_?card', '(^|_)pan($|_)', 'ccnum']
+      password: ['passw', '(^|_)pwd($|_)']
+      secret: ['api_?key', 'secret', 'access_token', 'refresh_token', 'private_key']
+      health: ['diagnosis', 'medical', 'blood_type']
+      salary: ['salary', 'compensation']
+
+- id: SECA-005
+  check: security.sensitive_by_sampling
+  title: "Sampled values in {table}.{column} look like {data_category}"
+  category: security
+  severity: medium
+  kind: context_dependent
+  standards: [SEC-009]
+  requires: [data]
+  root_cause: "The column holds values with a recognizable sensitive format."
+  business_impact: "Sensitive data outside the inventory cannot be protected or included in erasure."
+  technical_impact: "Masked sampling matched {data_category} in {column}."
+  solution: "Confirm the content, classify the column, and apply the protections for that level."
+  complexity: low
+  migration: "Metadata only, unless the classification calls for encryption or tokenization."
+  risks: "Format matches can be coincidental."
+  validation: "Review the sample with the data owner; evidence is masked."
+  params:
+    sample_limit: 1000
+    min_match_ratio: 0.5
+    min_matches: 1
+    detectors:
+      - {category: email, regex: '[^@\s]+@[^@\s]+\.[A-Za-z]{2,}'}
+      - {category: national_id, regex: '\d{3}-\d{2}-\d{4}'}
+      - {category: national_id, regex: '\d{5}-\d{7}-\d'}
+
+- id: SECA-006
+  check: security.forbidden_card_columns
+  title: "Possible card authentication data in {table}.{column}"
+  category: security
+  severity: critical
+  kind: context_dependent
+  standards: [RET-020]
+  workloads: [OLTP, data_warehouse, lakehouse]
+  root_cause: "A column appears to retain card security or track data after authorization."
+  business_impact: "Requires legal review: retaining sensitive authentication data can breach card scheme obligations."
+  technical_impact: "Column {column} matches CVV, PIN or track data patterns."
+  solution: "Requires legal review. Confirm the content, stop storing it, and plan its controlled removal with the compliance owner."
+  complexity: high
+  migration: "No automatic change. Removal of records needs an approved plan."
+  risks: "Removing data subject to legal hold or dispute needs a compliance decision."
+  validation: "Confirm with the PCI assessor that no sensitive authentication data remains."
+  confidence: 0.7
+  params:
+    forbidden_patterns: ['(^|_)cvv2?($|_)', '(^|_)cvc2?($|_)', 'card_?pin', 'pin_?block', 'full_?track', 'track_?[12]($|_)', 'magstripe', 'track_?data']
+    payment_table_patterns: ['payment', 'card', 'transaction']
+    bare_pin_patterns: ['^pin$', '^pin_hash$']
+
+- id: SECA-007
+  check: security.card_numbers
+  title: "Possible stored card number in {table}.{column} ({basis})"
+  category: security
+  severity: critical
+  kind: context_dependent
+  standards: [SEC-015]
+  root_cause: "Card numbers are stored in readable form, or appear to be."
+  business_impact: "Requires legal review: readable card numbers can bring PCI DSS obligations and breach exposure."
+  technical_impact: "Column {column} holds or appears to hold PANs ({basis})."
+  solution: "Requires legal review. Confirm PCI scope, then tokenize or render the stored values unreadable."
+  complexity: high
+  migration: "Migrate through tokenization with a verified mapping; do not rely on disk encryption alone."
+  risks: "Tokenization changes the format seen by every consumer."
+  validation: "Re-sample after migration and confirm no value passes the Luhn check. Evidence is masked."
+  params:
+    sample_limit: 1000
+    min_match_ratio: 0.5
+    card_name_patterns: ['card_?number', 'card_?no($|_)', 'credit_?card', '(^|_)pan($|_)', 'ccnum']
+    exclude_name_patterns: ['_at$', 'last_?4', 'masked', 'token', 'bin$', 'expir', 'brand', '_type$']
+
+- id: SECA-008
+  check: security.password_storage
+  title: "Password column {table}.{column} stores {shape} values"
+  category: security
+  severity: high
+  kind: context_dependent
+  standards: [SEC-027]
+  requires: [data]
+  root_cause: "Values are stored without a password-hashing algorithm."
+  business_impact: "A database leak would directly expose user credentials."
+  technical_impact: "Sampled values of {column} match the shape: {shape}."
+  solution: "Store only an Argon2id, scrypt, bcrypt or PBKDF2 hash, and migrate at next login or by forced reset."
+  complexity: medium
+  migration: "Rehash on login, or force a reset for accounts that do not return."
+  risks: "A forced reset affects users; a shape match cannot prove the algorithm."
+  validation: "Re-sample and confirm that every value matches a password-hash shape. Values are not shown."
+  params:
+    sample_limit: 1000
+    min_plaintext_ratio: 0.01
+    password_name_patterns: ['passw', '(^|_)pwd($|_)', 'pass_?hash']
+    exclude_name_patterns: ['_at$', 'hint', 'reset', 'expires', 'changed', 'policy', 'salt', 'algo']
+    hash_shapes: ['^\$2[aby]\$\d\d\$.{53}$', '^\$argon2(id|i|d)\$', '^\$scrypt\$', '^\$pbkdf2', '^pbkdf2[_$:]', '^\$[56]\$', '^\$y\$', '^[!*x]$']
+    fast_digest_shapes: ['^[a-fA-F0-9]{32,128}$']
+
+- id: SECA-009
+  check: security.sensitive_unencrypted
+  title: "Sensitive column {table}.{column} ({data_category}) has no encryption signal"
+  category: security
+  severity: medium
+  kind: context_dependent
+  standards: [SEC-012, SEC-009]
+  root_cause: "The column stores sensitive values in a readable type, with no sign of column-level protection."
+  business_impact: "Anyone with read access, or a backup, can read these values directly."
+  technical_impact: "{column} is a plain column; volume encryption does not limit database readers."
+  solution: "Decide on column or application encryption from the threat model, and record that decision."
+  complexity: medium
+  migration: "Encrypt in place with a key held apart from the data."
+  risks: "Encryption prevents indexing and search unless planned for."
+  validation: "Confirm the sampled values are ciphertext, and that keys are held separately."
+  confidence: 0.6
+  params:
+    <<: *sensitive_params
+    categories: [national_id, bank_account, health, salary]
+    sample_limit: 1000
+    min_opaque_ratio: 0.9
+    opaque_value_regex: '^[A-Za-z0-9+/=_:.-]{24,}$'
+    encrypted_name_patterns: ['encrypted', '_enc$', '_cipher', '_hash$', 'token']
+
+- id: SECA-010
+  check: security.audit_tables_writable
+  title: "Runtime role {grantee} can modify audit table {table}"
+  category: security
+  severity: critical
+  kind: confirmed_defect
+  standards: [AUD-005]
+  requires: [security_metadata]
+  workloads: [OLTP]
+  root_cause: "The application role holds rights that exceed appending to the audit log."
+  business_impact: "Activity records can be altered, which undermines their value as evidence."
+  technical_impact: "{grantee} holds {privilege} on {table}."
+  solution: "Revoke {privilege}; write audit records through a trigger or a dedicated role with insert only."
+  complexity: low
+  migration: "Revoke, then confirm that the audit write path still works."
+  risks: "Application maintenance jobs that clean audit data will fail and must move to another role."
+  validation: "Attempt UPDATE and DELETE on {table} as {grantee}; both must be refused."
+  params:
+    <<: *role_params
+    audit_table_patterns: ['audit', 'activity_log', 'change_log']
+    write_privileges: [UPDATE, DELETE, TRUNCATE, ALL, ALL PRIVILEGES, ALTER, DROP]
+
+- id: SECA-011
+  check: security.settings
+  title: "Connections are not protected by TLS: {setting}"
+  category: security
+  severity: high
+  kind: confirmed_defect
+  standards: [SEC-014]
+  root_cause: "The server is configured without encrypted connections."
+  business_impact: "Credentials and data can be read on the network."
+  technical_impact: "{setting} reports: {issue}."
+  solution: "Enable TLS and require certificate verification on clients."
+  complexity: medium
+  migration: "Install certificates, enable TLS, then require it."
+  risks: "Clients that are not configured for TLS will fail once it is required."
+  validation: "Confirm active sessions report encrypted connections."
+  params:
+    settings:
+      - {setting: ssl, bad_values: ['off', 'false', '0'], dialects: [postgres], issue: "ssl is off", remedy: "Enable ssl and require it with host-based rules."}
+      - {setting: have_ssl, bad_values: [disabled, 'no'], dialects: [mysql], issue: "TLS is not available", remedy: "Configure server certificates."}
+      - {setting: require_secure_transport, bad_values: ['off', '0'], dialects: [mysql], issue: "unencrypted connections are allowed", remedy: "Set require_secure_transport to ON after clients support TLS.", severity: medium}
+
+- id: SECA-012
+  check: security.settings
+  title: "Server hardening setting: {setting} ({issue})"
+  category: security
+  severity: medium
+  kind: context_dependent
+  standards: [SEC-023]
+  root_cause: "A server option is set to a value that hardening baselines advise against."
+  business_impact: "The attack surface is larger than necessary."
+  technical_impact: "{setting}: {issue}."
+  solution: "Review the setting against the engine's hardening baseline."
+  complexity: low
+  migration: "Change the server configuration; a restart may be needed."
+  risks: "Bulk loads or legacy clients can depend on the setting."
+  validation: "Confirm the running value after the change."
+  params:
+    settings:
+      - {setting: local_infile, bad_values: ['on', '1'], dialects: [mysql], issue: "client file loading is enabled", remedy: "Set local_infile to OFF unless bulk loads need it."}
+      - {setting: password_encryption, bad_values: [md5], dialects: [postgres], issue: "MD5 password storage", remedy: "Use scram-sha-256 and reset stored passwords."}
+      - {setting: log_connections, bad_values: ['off'], dialects: [postgres], issue: "connections are not logged", remedy: "Enable connection logging.", severity: low}

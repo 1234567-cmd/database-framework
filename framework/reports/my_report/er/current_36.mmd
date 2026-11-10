@@ -1,0 +1,15 @@
+%% Current schema of power-suite-staging (36 of 57: around invoice_discounts)
+erDiagram
+    invoice_discounts {
+        int id PK
+        int invoice_id FK
+        varchar_255 discount_code
+        decimal_10_2 discount_amount
+        text remarks
+        datetime created_at
+        datetime updated_at
+    }
+    invoices {
+        external stub "see the diagram that holds this table"
+    }
+    invoices ||--o{ invoice_discounts : "invoice_id"

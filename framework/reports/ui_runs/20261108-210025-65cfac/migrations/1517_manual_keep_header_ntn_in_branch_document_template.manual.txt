@@ -1,0 +1,4 @@
+Step M1517: Manual: Keep header_ntn in branch_document_template only, or maintain the copy through o
+MANUAL: this step has no generated SQL.
+Keep header_ntn in branch_document_template only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-3d03a8bd

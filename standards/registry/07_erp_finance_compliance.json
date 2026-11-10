@@ -1,0 +1,2818 @@
+[
+  {
+    "id": "FIN-001",
+    "title": "Period status finer than company",
+    "statement": "A general ledger SHOULD hold period status at a grain finer than the company.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "General ledger and subledger posting with period control",
+    "rationale": "A single company-wide flag cannot close one ledger, module or book while another stays open, so close control is either too coarse or bypassed.",
+    "exceptions": "A single-ledger, single-module entity may use company grain; the finance owner approves.",
+    "engine_notes": "SAP keys by posting period variant and account type; Oracle by application, ledger and period; D365 by per-entity ledger calendar and module access; NetSuite by period with subsidiary locks and per-book close; ERPNext by date range, company and document type. Odoo uses per-company lock dates.",
+    "evidence": [
+      "ERP-01",
+      "ERP-05",
+      "ERP-09",
+      "ERP-10",
+      "ERP-14",
+      "ERP-15",
+      "ERP-19",
+      "research/design_decision_matrix.md#FN-1"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "A17",
+    "check_method": "manual_review",
+    "check_description": "Confirm that period status can differ below company level, at the grain chosen under FIN-002.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-002",
+    "title": "Period status grain",
+    "statement": "Period status SHOULD be held per ledger and per application or module.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "General ledger and subledger posting with period control",
+    "rationale": "The sources converge on finer than company but not on one grain, so an unapproved grain produces inconsistent close control across modules.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "Grain differs by vendor: ledger and application (Oracle), module or account type (SAP, D365), book or document type (NetSuite, ERPNext). This is a judgment; no independent benchmark exists.",
+    "evidence": [
+      "ERP-01",
+      "ERP-05",
+      "ERP-09",
+      "ERP-14",
+      "ERP-15",
+      "ERP-19",
+      "research/design_decision_matrix.md#FN-1"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "A17",
+    "check_method": "manual_review",
+    "check_description": "Confirm the approved grain is recorded and every period status record uses it.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-003",
+    "title": "Calendar separate from status",
+    "statement": "The fiscal calendar definition SHOULD be held separately from period status.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Several ledgers or legal entities share a fiscal calendar",
+    "rationale": "Combining them forces calendar duplication or forces entities to open and close together.",
+    "exceptions": "A single-entity deployment may combine them; the finance owner approves.",
+    "engine_notes": "D365 copies a shared calendar to a ledger calendar per legal entity; Oracle keys status by ledger; SAP assigns a variant to company codes.",
+    "evidence": [
+      "ERP-01",
+      "ERP-05",
+      "ERP-09",
+      "research/design_decision_matrix.md#FN-2"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check that calendar periods and per-entity period status are distinct records.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-004",
+    "title": "Period status checked at posting",
+    "statement": "Posting SHOULD be refused when the period status for the entry's date and control grain does not permit it.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Any posting to a general ledger or subledger",
+    "rationale": "A status not checked at posting is decorative, and entries reach closed periods.",
+    "exceptions": "Controlled posting to an adjustment period or reopened period under FIN-006; the finance controller approves.",
+    "engine_notes": "Vendors enforce this in application logic in the pages read: Odoo and ERPNext through dates, NetSuite through locks, Oracle and D365 through status.",
+    "evidence": [
+      "ERP-01",
+      "ERP-05",
+      "ERP-09",
+      "ERP-15",
+      "ERP-19",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Attempt a posting to a closed period and confirm it is refused.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "FIN-005",
+    "title": "Close is an ordered gated process",
+    "statement": "Period close SHOULD run as an ordered process with gating checks rather than as a single status change.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "General ledger and subledger close",
+    "rationale": "A bare status write can close a period with open subledgers or pending intercompany work, leaving balances incomplete.",
+    "exceptions": "A small entity may use a manual checklist; the finance controller approves.",
+    "engine_notes": "NetSuite publishes an ordered dependency list. Oracle can block GL close on open subledgers and always blocks on pending intercompany transactions. Oracle Fusion and NetSuite share one owner, so this counts as one vendor.",
+    "evidence": [
+      "ERP-05",
+      "ERP-06",
+      "ERP-14",
+      "research/design_decision_matrix.md#FN-4"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the close procedure has ordered steps and that a failed gate stops the close.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-006",
+    "title": "Reopening invalidates later close work",
+    "statement": "Reopening a closed period SHOULD be treated as invalidating close work in later periods and SHOULD record who reopened it and why.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A closed period can be reopened",
+    "rationale": "Later balances carried from a reopened period become stale without anyone being told.",
+    "exceptions": "none",
+    "engine_notes": "Mechanisms differ: NetSuite reopens later closed periods automatically and stores a justification; D365 reopens on-hold periods and needs a close rerun to carry balances. The stored justification is NetSuite only.",
+    "evidence": [
+      "ERP-10",
+      "ERP-12",
+      "ERP-15",
+      "research/design_decision_matrix.md#FN-5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Reopen a period and confirm later close results are flagged or rerun and a justification exists.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-007",
+    "title": "Adjustment periods",
+    "statement": "A ledger MAY represent adjustment periods as separate periods that share dates with a regular period.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP",
+      "data_warehouse"
+    ],
+    "applies_when": "Year-end or audit adjustments need separation from regular activity",
+    "rationale": "Without separation, adjustments mix with regular activity; with it, extra periods must be maintained.",
+    "exceptions": "none",
+    "engine_notes": "SAP special periods 13 to 16; D365 closing periods; Oracle adjusting periods share the period-end date. NetSuite has no statement; Odoo and ERPNext show none in pages read. Oracle does not copy journals to adjusting periods on secondary ledgers with a different calendar.",
+    "evidence": [
+      "ERP-01",
+      "ERP-05",
+      "ERP-06",
+      "ERP-09",
+      "ERP-10",
+      "research/design_decision_matrix.md#FN-3"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the decision to use or not use adjustment periods is recorded.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "FIN-008",
+    "title": "Period identifier in analytical copies",
+    "statement": "Where adjustment periods exist, analytical copies of ledger data SHOULD carry the period identifier and SHOULD NOT derive the period from the entry date alone.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "data_warehouse",
+      "lakehouse",
+      "OLAP"
+    ],
+    "applies_when": "Adjustment periods are used in the source ledger",
+    "rationale": "Adjustment periods overlap in dates with regular periods, so a date-derived period misstates period totals.",
+    "exceptions": "none",
+    "engine_notes": "Inference from vendor date overlap; no source states this rule. Analytical systems only; it does not apply to OLTP posting.",
+    "evidence": [
+      "ERP-01",
+      "ERP-06",
+      "ERP-09",
+      "research/design_decision_matrix.md#FN-3"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Check that warehouse period totals reconcile to source period totals including adjustment periods.",
+    "lifecycle_stage": "Reporting"
+  },
+  {
+    "id": "FIN-009",
+    "title": "Irreversible close",
+    "statement": "Irreversible period close MAY be offered only under an approved exception, and the accepted default is reopenable close with restricted reopening.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "A general ledger offers period close",
+    "rationale": "An irreversible close gives assurance but makes a late correction impossible in that period.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "Oracle offers a permanent close and Odoo a Hard Lock that cannot be overridden. D365 offers Permanently closed and advises against it because the period cannot reopen.",
+    "evidence": [
+      "ERP-05",
+      "ERP-10",
+      "ERP-18",
+      "research/design_decision_matrix.md#FN-6"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "B13",
+    "check_method": "manual_review",
+    "check_description": "Confirm the decision is recorded and the system behaves accordingly.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-010",
+    "title": "Fiscal-year status",
+    "statement": "A ledger MAY hold fiscal-year status separately from period status.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Year-end close has effects that differ from period close",
+    "rationale": "Without separation, a year-end block cannot be expressed while a period is open.",
+    "exceptions": "none",
+    "engine_notes": "D365 blocks reversal after year-end close even with a period open. No other vendor was confirmed.",
+    "evidence": [
+      "ERP-12",
+      "research/design_decision_matrix.md#FN-7"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm whether fiscal-year status exists and how it affects reversal.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "FIN-011",
+    "title": "P&L closing as a separate object",
+    "statement": "Profit and loss closing MAY be represented as a separate entry or voucher from period close.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Year-end transfer of profit or loss to equity",
+    "rationale": "Treating closing as a status can suggest history was erased or backdating stopped, which ERPNext says its voucher does not do.",
+    "exceptions": "none",
+    "engine_notes": "ERPNext uses a Period Closing Voucher; D365 generates year-end entries; Odoo posts a manual entry to equity.",
+    "evidence": [
+      "ERP-10",
+      "ERP-18",
+      "ERP-19",
+      "research/design_decision_matrix.md#FN-8"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm how year-end profit or loss transfer is represented.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "FIN-012",
+    "title": "Transaction-date rate (US GAAP)",
+    "statement": "A foreign-currency transaction of a US GAAP issuer MUST be initially measured using the exchange rate at the transaction date.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: United States. US GAAP issuers, foreign-currency transactions, measurement only",
+    "rationale": "The SEC described a mid-prior-month convention as not in accordance with GAAP. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "FAS 52, superseded by the Codification, allows an appropriately weighted average where appropriate; whether and when this remains available needs counsel. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The source sets measurement, not storage. A stored per-line rate is an inference. IAS 21 rate rules were not read, so this rule does not extend to IFRS reporters.",
+    "evidence": [
+      "ERP-22",
+      "research/design_decision_matrix.md#FN-9"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Review that foreign-currency measurement uses a rate attributable to the transaction date.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "FIN-013",
+    "title": "Several rate roles",
+    "statement": "A ledger SHOULD support more than one rate role per period, such as closing, average and historical.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "OLAP"
+    ],
+    "applies_when": "Revaluation, translation or consolidation is performed",
+    "rationale": "A single rate cannot serve balance-sheet and income-statement translation, which FAS 52 and vendors distinguish.",
+    "exceptions": "A single-currency entity is exempt; the finance owner approves.",
+    "engine_notes": "NetSuite stores three per period and subsidiary pair; D365 and SAP use rate types.",
+    "evidence": [
+      "ERP-03",
+      "ERP-11",
+      "ERP-16",
+      "ERP-22",
+      "research/design_decision_matrix.md#FN-10"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check that rate type or role is part of the rate data.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-014",
+    "title": "Rates keyed by pair, date and type",
+    "statement": "Exchange rates SHOULD be identified by source currency, target currency, date and rate type.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "data_warehouse"
+    ],
+    "applies_when": "Multi-currency general ledger or warehouse rate tables",
+    "rationale": "A rate without pair, date and type cannot be attributed to a transaction and cannot be reconciled.",
+    "exceptions": "none",
+    "engine_notes": "Oracle key: from currency, to currency, date and type. ERPNext is latest eligible record. SAP valid-from logic was not established.",
+    "evidence": [
+      "ERP-08",
+      "ERP-20",
+      "research/design_decision_matrix.md#FN-11"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check that rates are unique on pair, date and rate type.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-015",
+    "title": "Rate effective-dating",
+    "statement": "Rate lookup SHOULD use an exact-day row for the pair and rate type.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "data_warehouse"
+    ],
+    "applies_when": "Multi-currency posting",
+    "rationale": "Exact-day rows fail on gaps and most-recent lookup can silently use stale rates, so the choice changes results.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "Oracle key is exact-day; ERPNext picks the latest eligible record; SAP valid-from logic was not established. A staleness limit is the documented option for most-recent lookup. This is a judgment; no independent benchmark exists.",
+    "evidence": [
+      "ERP-08",
+      "ERP-20",
+      "research/design_decision_matrix.md#FN-11"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "B14",
+    "check_method": "manual_review",
+    "check_description": "Confirm the approved lookup pattern and any staleness limit are documented and tested.",
+    "lifecycle_stage": "Data Validation"
+  },
+  {
+    "id": "FIN-016",
+    "title": "Inverse rates",
+    "statement": "Each currency direction MAY be stored as its own rate, which is the accepted default.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP",
+      "data_warehouse"
+    ],
+    "applies_when": "Conversion in both directions of a pair",
+    "rationale": "A rate and its reciprocal may not agree after rounding, so two directions can give different results.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "Conflicting: ERPNext says the inverse is not automatically equal and needs its own record; Oracle stores a generally reciprocal row; SAP presents direct and indirect quotation. [WF] Re-check the Oracle statement against raw page text.",
+    "evidence": [
+      "ERP-03",
+      "ERP-08",
+      "ERP-20",
+      "research/design_decision_matrix.md#FN-12"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "B15",
+    "check_method": "manual_review",
+    "check_description": "Confirm the approved approach and test round-trip differences.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-017",
+    "title": "Amounts held per line",
+    "statement": "A posted line SHOULD hold the transaction currency amount and the entity currency amount together, with a reporting currency amount where one is used.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Multi-currency general ledger or subledger",
+    "rationale": "Recomputing entity or reporting amounts later cannot reproduce the amounts as posted.",
+    "exceptions": "A single-currency entity is exempt; the finance owner approves.",
+    "engine_notes": "D365 records accounting and optional reporting currency; ERPNext distinguishes three currencies; SAP allows up to eight additional currency types per ledger. ERPNext advises against changing an account currency after entries exist.",
+    "evidence": [
+      "ERP-03",
+      "ERP-09",
+      "ERP-20",
+      "research/design_decision_matrix.md#FN-13"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check that lines hold both transaction and entity amounts with their currencies.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-018",
+    "title": "Revaluation is a recorded run",
+    "statement": "Foreign-currency revaluation SHOULD be recorded as a run with its own rate date rather than as ad hoc journals.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Period-end revaluation of foreign-currency balances",
+    "rationale": "Ad hoc journals cannot show which rate date, scope and method produced a revaluation.",
+    "exceptions": "none",
+    "engine_notes": "D365 keeps run history with a separate rate date. NetSuite uses a period-end rate and advises locking first.",
+    "evidence": [
+      "ERP-11",
+      "ERP-17",
+      "research/design_decision_matrix.md#FN-14"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm each revaluation can be traced to a run with a rate date.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-019",
+    "title": "Realized and unrealized differences",
+    "statement": "Realized and unrealized exchange differences SHOULD be posted to separate accounts.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Foreign-currency settlement and revaluation",
+    "rationale": "Combined accounts hide how much of a gain or loss has actually been realized.",
+    "exceptions": "none",
+    "engine_notes": "D365, ERPNext, Odoo and NetSuite separate them. Presentation is unresolved: D365's ledger page places unrealized gains and losses on the balance sheet, while its revaluation example posts to accounts named Unrealized loss and gain against cash.",
+    "evidence": [
+      "ERP-09",
+      "ERP-11",
+      "ERP-17",
+      "ERP-18",
+      "ERP-20",
+      "research/design_decision_matrix.md#FN-15"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the chart of accounts distinguishes the two.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "FIN-020",
+    "title": "Reversal of revaluation",
+    "statement": "Earlier revaluation MAY be reversed in the next period for AR and AP subledgers only, which is the accepted default.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Revaluation is performed across periods",
+    "rationale": "Reversing and carrying forward give different period comparisons.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "D365 GL does not reverse earlier revaluation; D365 AR and AP do and cannot be reversed afterward, only rerun. An older Oracle statement is a search snippet and is not relied on.",
+    "evidence": [
+      "ERP-11",
+      "ERP-12",
+      "research/design_decision_matrix.md#FN-16"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": "B16",
+    "check_method": "manual_review",
+    "check_description": "Confirm the approved method is applied consistently.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-021",
+    "title": "Rounding differences",
+    "statement": "A ledger MAY post conversion rounding differences to a defined account or hold them within a stated per-line tolerance.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Currency conversion produces rounding differences",
+    "rationale": "Rounding differences with no defined home make balanced entries fail or leave unexplained residuals.",
+    "exceptions": "none",
+    "engine_notes": "ERPNext rounds per line, so totals can differ by small units. Oracle balances by legal entity including rounding imbalances.",
+    "evidence": [
+      "ERP-07",
+      "ERP-20",
+      "research/design_decision_matrix.md#FN-17"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the chosen treatment is documented.",
+    "lifecycle_stage": "Data Validation"
+  },
+  {
+    "id": "FIN-022",
+    "title": "Translation paths",
+    "statement": "Currency translation MAY use a direct path or an intermediate entity.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP",
+      "OLAP"
+    ],
+    "applies_when": "Consolidation across several currencies",
+    "rationale": "Assuming translation is transitive can produce results that the product does not compute.",
+    "exceptions": "none",
+    "engine_notes": "D365 translates directly from source currency and needs an intermediate company for a two-step path. NetSuite rates are per subsidiary pair.",
+    "evidence": [
+      "ERP-13",
+      "ERP-16",
+      "research/design_decision_matrix.md#FN-18"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the translation path for each consolidation chain.",
+    "lifecycle_stage": "Reporting"
+  },
+  {
+    "id": "FIN-023",
+    "title": "Rate precision (no source)",
+    "statement": "Stored exchange rates MAY use the precision each deployment records under TYP-011; no value set by this standard.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP",
+      "data_warehouse"
+    ],
+    "applies_when": "Exchange rates are stored",
+    "rationale": "No vendor page or standard-setter page read states a rate precision, so any number here would be invented.",
+    "exceptions": "none",
+    "engine_notes": "No engine or vendor figure is available. D365's example rates are a display example and do not establish a precision. Superseded by TYP-011 under OR-2.",
+    "evidence": [
+      "research/design_decision_matrix.md#FN-19",
+      "research/research_gaps.md#6a"
+    ],
+    "evidence_strength": "inference",
+    "status": "superseded",
+    "decision_ref": "A14",
+    "superseded_by": "TYP-011",
+    "check_method": "manual_review",
+    "check_description": "Confirm the deployment records its rate precision under TYP-011.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-024",
+    "title": "Triangulation (no source)",
+    "statement": "Currency triangulation MAY be used only under a method recorded for the deployment; no value set, because no source describes a method.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Conversions through a third currency are required",
+    "rationale": "No vendor page opened describes triangulation, so any method here would be invented.",
+    "exceptions": "none",
+    "engine_notes": "D365 mentions triangulation only in a training objective seen in a search snippet, which is not relied on.",
+    "evidence": [
+      "research/design_decision_matrix.md#FN-30",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": "B17",
+    "check_method": "manual_review",
+    "check_description": "Confirm the owner has recorded a decision and any method is documented.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "FIN-025",
+    "title": "Journals balance",
+    "statement": "Every posted journal in a double-entry ledger MUST have entries that sum to zero.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Ledgers built on double-entry bookkeeping",
+    "rationale": "An unbalanced journal means the books no longer reconcile and the error spreads into every balance.",
+    "exceptions": "none",
+    "engine_notes": "The basis on which balance is tested differs: Modern Treasury per currency, Oracle by legal entity including rounding, ERPNext per company entry. See FIN-026.",
+    "evidence": [
+      "TEN-40",
+      "TEN-41",
+      "TEN-42",
+      "TEN-43",
+      "TEN-44",
+      "ERP-07",
+      "ERP-20",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Sum entries per journal in the posting test and in a periodic reconciliation and confirm zero.",
+    "lifecycle_stage": "Data Validation"
+  },
+  {
+    "id": "FIN-026",
+    "title": "Balance per currency",
+    "statement": "Each journal SHOULD balance per currency and SHOULD enforce this in the posting transaction.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "The store is a financial ledger, whether it holds entries in one currency or several.",
+    "rationale": "Amounts in different currencies cannot be summed, so a journal can appear to balance while one currency is out.",
+    "exceptions": "none",
+    "engine_notes": "Modern Treasury is the only source explicitly requiring balance per currency. Stripe does not report how balances are modelled. Held provisional under OR-5: the evidence is case studies only. Canonical rule for TXN-016, with its wider ledger scope.",
+    "evidence": [
+      "TEN-41",
+      "TEN-42",
+      "CASE-31",
+      "research/design_decision_matrix.md#TX-11",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "case_study",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Sum entries per journal and currency and confirm zero.",
+    "lifecycle_stage": "Data Validation"
+  },
+  {
+    "id": "FIN-027",
+    "title": "Atomic multi-entry posting",
+    "statement": "All entries of a journal SHOULD be written atomically in one transaction.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Posting multi-entry journals",
+    "rationale": "A partial journal is visible as an unbalanced entry until repaired.",
+    "exceptions": "A distributed write with a compensating process may be approved by the system owner.",
+    "engine_notes": "Multi-document atomicity differs by engine; see the transactions standards.",
+    "evidence": [
+      "TEN-41",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Inject a failure during posting and confirm no partial journal remains.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "FIN-028",
+    "title": "Derive balances from entries",
+    "statement": "Balances SHOULD be derived from entries, and any stored balance SHOULD be reconcilable to those entries.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Ledger with materialized balances",
+    "rationale": "A balance that drifts from entries cannot be explained, and entries are the auditable record.",
+    "exceptions": "none",
+    "engine_notes": "Fowler and Modern Treasury derive the balance from entries; Square materializes it. These agree only if entries remain the source of truth.",
+    "evidence": [
+      "TEN-40",
+      "TEN-41",
+      "TEN-42",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "catalog_query",
+    "check_description": "Compare stored balances to the sum of entries and report differences.",
+    "lifecycle_stage": "Data Quality"
+  },
+  {
+    "id": "FIN-029",
+    "title": "Explicit posting lifecycle",
+    "statement": "Transactional financial documents SHOULD have an explicit lifecycle state, such as pending, posted and archived, with financial fields fixed once posted.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Documents that move from draft to posted",
+    "rationale": "Without an explicit state, drafts and posted entries cannot be distinguished or controlled.",
+    "exceptions": "none",
+    "engine_notes": "Modern Treasury uses pending, posted, archived, and keeps metadata updatable. Frappe docstatus has draft, submitted, cancelled. Amend semantics in Frappe were not read.",
+    "evidence": [
+      "TEN-41",
+      "CASE-31",
+      "CASE-32",
+      "CASE-47",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check that posted documents carry a state and that financial fields are protected after posting.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-030",
+    "title": "Clearing accounts monitored",
+    "statement": "Clearing accounts SHOULD be monitored for a net zero balance at steady state.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Fund flows or subledgers use clearing accounts",
+    "rationale": "A non-zero clearing balance at steady state signals a missing or wrong event.",
+    "exceptions": "Accounts with a documented, expected residual; the finance controller approves.",
+    "engine_notes": "Detailed evidence is Stripe's alone.",
+    "evidence": [
+      "TEN-43",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "case_study",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "runtime_monitor",
+    "check_description": "Alert when a clearing account stays non-zero past its expected settlement window.",
+    "lifecycle_stage": "Monitoring"
+  },
+  {
+    "id": "FIN-031",
+    "title": "Non-alteration of books (Germany)",
+    "statement": "German commercial and tax books MUST NOT be changed in a way that loses the original content or leaves the timing of the change uncertain.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Germany. Commercial and tax books, including entries held in GL and subledger systems",
+    "rationale": "HGB 239(3) and AO 146(4) forbid such changes. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The statutes bar loss of original content and do not prescribe append-only storage or any database mechanism.",
+    "evidence": [
+      "ERP-23",
+      "research/design_decision_matrix.md#FN-20",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": "B10",
+    "check_method": "manual_review",
+    "check_description": "Review that a posted entry's original content and the timing of any change remain ascertainable.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-032",
+    "title": "Accurate books (US issuers)",
+    "statement": "US issuers MUST keep books and records that accurately and fairly reflect transactions in reasonable detail and MUST maintain internal accounting controls.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: United States. Issuers under 15 USC 78m(b)(2) and 17 CFR 240.13b2-1",
+    "rationale": "Non-compliance is a violation of federal securities law. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "No mechanism is named. Row-level immutability is an inference and is not stated by these texts.",
+    "evidence": [
+      "ERP-24",
+      "research/design_decision_matrix.md#FN-29",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Review that controls exist and that records can show transactions accurately.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-033",
+    "title": "Journal-entry population support",
+    "statement": "US audited issuers SHOULD be able to demonstrate the completeness of the journal entry population to auditors.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: United States. Issuers audited under PCAOB standards",
+    "rationale": "PCAOB staff list untested journal entry completeness as a deficiency; the publication states it is not a Board rule. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Staff text is not a rule. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Row-level immutability is an inference. AS 2401 was known only through this staff publication.",
+    "evidence": [
+      "ERP-25",
+      "research/design_decision_matrix.md#FN-29",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm a complete journal population can be produced for a period.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-034",
+    "title": "Correct by new entry",
+    "statement": "Posted financial entries SHOULD be corrected by new reversing or correcting entries and SHOULD NOT be edited in place.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "General ledger and subledger entries after posting",
+    "rationale": "In-place edits lose the original and break audit tracing.",
+    "exceptions": "Year-end generated vouchers follow FIN-039, which stays provisional pending counsel. System owner and finance controller approve any other exception.",
+    "engine_notes": "Oracle, SAP document reversal, D365 and ERPNext correct by new entry. Stripe, Square and Modern Treasury permit only history-preserving correction. Vendor exceptions: D365 year-end reversal deletes vouchers and NetSuite Delete keeps only a record of deletion. Non-alteration is mandatory only in Germany (FIN-031), and no law read requires append-only storage or database immutability.",
+    "evidence": [
+      "ERP-02",
+      "ERP-06",
+      "ERP-12",
+      "ERP-19",
+      "TEN-41",
+      "TEN-42",
+      "TEN-43",
+      "research/design_decision_matrix.md#FN-21",
+      "research/design_decision_matrix.md#TX-10",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "B10",
+    "check_method": "schema_lint",
+    "check_description": "Check that posted financial entry tables do not permit ordinary updates or deletes of financial fields.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "FIN-035",
+    "title": "Reversal method",
+    "statement": "Reversal MAY use a posted inverse entry, which is the accepted default.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Reversal of posted entries",
+    "rationale": "Methods produce different debit and credit activity totals, so reports differ by method.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "SAP normal reversal raises figures and negative posting resets them. Oracle offers Change Sign and Switch Debit or Credit. Fowler catalogues reversal and difference strategies.",
+    "evidence": [
+      "ERP-02",
+      "ERP-06",
+      "TEN-40",
+      "research/design_decision_matrix.md#FN-22"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "B11",
+    "check_method": "manual_review",
+    "check_description": "Confirm the method and its effect on activity totals are documented.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "FIN-036",
+    "title": "Reversing a reversal",
+    "statement": "A system MAY forbid reversing a reversal, which is the accepted default, with correction made by a new entry.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Reversal entries exist",
+    "rationale": "Allowing it keeps correction simple but gives a longer chain to audit, and forbidding it requires a new entry.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "Conflicting: Oracle forbids reversing a reversal; D365 allows it.",
+    "evidence": [
+      "ERP-06",
+      "ERP-12",
+      "research/design_decision_matrix.md#FN-23"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": "B12",
+    "check_method": "manual_review",
+    "check_description": "Confirm the behaviour matches the approved decision.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "FIN-037",
+    "title": "Reversal attributes",
+    "statement": "A reversal SHOULD carry its own date, method and reason.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Reversal of posted entries",
+    "rationale": "Defaulting to the original date or an unstated reason makes corrections hard to review.",
+    "exceptions": "none",
+    "engine_notes": "D365 allows a different reversal date; SAP requires a reason; Oracle sets date and method.",
+    "evidence": [
+      "ERP-02",
+      "ERP-06",
+      "ERP-12",
+      "research/design_decision_matrix.md#FN-25"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check that reversal records carry date, method and reason.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-038",
+    "title": "Reversal eligibility",
+    "statement": "Reversal eligibility SHOULD be decided from settlement, transfer and fiscal status as well as from the entry itself.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Reversal of posted entries",
+    "rationale": "Reversing a settled or transferred item leaves the subledger and ledger inconsistent.",
+    "exceptions": "none",
+    "engine_notes": "D365 uses settlement, transfer and fiscal status; Oracle uses non-reversal journal and unfrozen source status. SAP blocks cleared items until reset.",
+    "evidence": [
+      "ERP-02",
+      "ERP-06",
+      "ERP-12",
+      "research/design_decision_matrix.md#FN-26"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Attempt to reverse a settled or transferred item and confirm the block.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "FIN-039",
+    "title": "Generated voucher deletion (Germany unresolved)",
+    "statement": "A system MAY offer year-end reversal only by posting a reversing voucher, and generated vouchers are not deleted unless counsel confirms otherwise.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Germany for the legal question; any system offering year-end reversal for the design default",
+    "rationale": "No source says whether generated opening balances count as books under HGB 239(3). Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Deletion only if counsel confirms it is permitted. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "D365 year-end reversal deletes vouchers with a history record. NetSuite Delete keeps only a record of deletion and is unavailable when reversing-journal voiding is on.",
+    "evidence": [
+      "ERP-10",
+      "ERP-12",
+      "ERP-15",
+      "ERP-23",
+      "research/design_decision_matrix.md#FN-24"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": "B10",
+    "check_method": "manual_review",
+    "check_description": "Confirm counsel's position is recorded and the behaviour matches it.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-040",
+    "title": "Subledger entries before GL transfer",
+    "statement": "Subledger entries not yet transferred to the general ledger SHOULD be tracked until transfer completes.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Subledger postings are transferred to the GL asynchronously",
+    "rationale": "Untracked entries are invisible to close and to reversal checks.",
+    "exceptions": "none",
+    "engine_notes": "D365 blocks some reversals until transfer. Oracle treats unprocessed and untransferred subledger transactions as period close exceptions.",
+    "evidence": [
+      "ERP-06",
+      "ERP-12",
+      "research/design_decision_matrix.md#FN-27"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "catalog_query",
+    "check_description": "List subledger entries not yet transferred and confirm close reports them.",
+    "lifecycle_stage": "Data Quality"
+  },
+  {
+    "id": "FIN-041",
+    "title": "Tamper evidence",
+    "statement": "A ledger MAY use a hash chain or tamper-evident storage for journal entries.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Added tamper evidence is wanted beyond application controls",
+    "rationale": "Without it, an authorised database change can go unnoticed; with it, complexity increases.",
+    "exceptions": "none",
+    "engine_notes": "Odoo's hash chain is the only cryptographic control seen, and no law or standard read requires hashing for general ledgers. KSA e-invoice hashing is a separate rule (NUM-013).",
+    "evidence": [
+      "ERP-18",
+      "GOV-06",
+      "research/design_decision_matrix.md#FN-28"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Record whether tamper evidence is used and how it is verified.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "FIN-042",
+    "title": "Legal entity, ledger and business unit distinct",
+    "statement": "Legal entity, ledger and business unit SHOULD be modelled as distinct concepts.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "OLAP"
+    ],
+    "applies_when": "ERP with more than one legal entity, ledger or business unit",
+    "rationale": "Combining them prevents one entity holding several ledgers or a business unit posting across structures.",
+    "exceptions": "A single-entity deployment may combine them; the finance owner approves.",
+    "engine_notes": "Oracle separates balancing segment, ledger and business unit; D365 configures a ledger per legal entity. No official SAP company-code definition was read.",
+    "evidence": [
+      "ERP-07",
+      "ERP-09",
+      "research/design_decision_matrix.md#MT-17"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the model distinguishes the three concepts.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "FIN-043",
+    "title": "One company per posting",
+    "statement": "A financial posting SHOULD belong to one legal entity, with intercompany activity handled under FIN-047.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Multi-entity ERP",
+    "rationale": "Mixed-entity postings cannot be balanced or closed by entity.",
+    "exceptions": "Intercompany transactions are handled under FIN-047, and decomposing them is a modeling choice. NetSuite-style intercompany postings to two or more subsidiaries need finance controller approval.",
+    "engine_notes": "NetSuite generally posts to one subsidiary with intercompany exceptions; D365 uses company ID as a data-security boundary. Topic 14 labelled this MANDATORY; the sources are vendor designs.",
+    "evidence": [
+      "TEN-08",
+      "TEN-09",
+      "TEN-10",
+      "ERP-07",
+      "research/design_decision_matrix.md#MT-12",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check that every posting carries exactly one legal entity.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-044",
+    "title": "Company identifier on ERP tables",
+    "statement": "Transactional and most setup tables in a multi-company ERP SHOULD carry a company identifier.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Multi-company ERP",
+    "rationale": "Without the identifier, posting, security and reporting cannot be scoped to a company.",
+    "exceptions": "Tenant-shared setup tables approved by the data owner.",
+    "engine_notes": "ERP products use a company or legal-entity boundary for posting and sometimes security. Odoo uses company_id; iDempiere's organization column is verified on one interface only. Superseded by TEN-019 under OR-9.",
+    "evidence": [
+      "TEN-08",
+      "TEN-09",
+      "TEN-10",
+      "ERP-07",
+      "ERP-09",
+      "research/design_decision_matrix.md#MT-11"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "superseded",
+    "decision_ref": "A5",
+    "superseded_by": "TEN-019",
+    "check_method": "schema_lint",
+    "check_description": "List ERP tables without a company identifier and confirm each is approved.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "FIN-045",
+    "title": "Tenant separate from legal entity",
+    "statement": "A multi-tenant ERP SHOULD treat the tenant and the legal entity as separate identifiers.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "SaaS ERP in which a customer can hold several legal entities",
+    "rationale": "A tenant is the customer boundary and a company is the posting and statutory boundary, so conflating them blocks multi-entity customers.",
+    "exceptions": "A single-entity product may combine them; the system owner approves.",
+    "engine_notes": "iDempiere's client and organization columns show two levels on the AD_Org interface only. The conclusion that both are always needed is an inference. Superseded by TEN-018 under OR-18.",
+    "evidence": [
+      "TEN-08",
+      "TEN-09",
+      "TEN-10",
+      "CASE-50",
+      "research/industry_best_practices.md#7"
+    ],
+    "evidence_strength": "inference",
+    "status": "superseded",
+    "decision_ref": null,
+    "superseded_by": "TEN-018",
+    "check_method": "manual_review",
+    "check_description": "Confirm tenant and legal entity are separate where the product is multi-tenant.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "FIN-046",
+    "title": "Master data scope",
+    "statement": "Master data MAY be shared across a tenant with per-company restriction available, which is the accepted default under TEN-022.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Multi-company ERP with shared master data",
+    "rationale": "Shared master data aids reuse, while per-company restriction aids control.",
+    "exceptions": "Deviation from the accepted default needs a recorded reason approved by the framework exception approver.",
+    "engine_notes": "Dynamics cannot override this; Odoo can restrict (recorded as C-18 in the matrix). Superseded by TEN-022 under OR-12.",
+    "evidence": [
+      "TEN-08",
+      "TEN-10",
+      "research/design_decision_matrix.md#MT-14"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "superseded",
+    "decision_ref": "A5",
+    "superseded_by": "TEN-022",
+    "check_method": "manual_review",
+    "check_description": "Confirm the approved master data scope is applied.",
+    "lifecycle_stage": "Data Modeling"
+  },
+  {
+    "id": "FIN-047",
+    "title": "Intercompany as linked entries",
+    "statement": "Intercompany activity SHOULD be recorded as linked entries, each balanced within its own legal entity.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "OLAP"
+    ],
+    "applies_when": "Transactions between legal entities",
+    "rationale": "Unlinked or cross-balanced entries cannot be matched, eliminated or closed entity by entity.",
+    "exceptions": "none",
+    "engine_notes": "ERPNext balances each company's entry independently; D365 uses directional legal-entity pairs with due-to and due-from accounts; Oracle balances by legal entity; NetSuite posts to two or more subsidiaries.",
+    "evidence": [
+      "TEN-09",
+      "ERP-07",
+      "ERP-13",
+      "ERP-20",
+      "research/design_decision_matrix.md#MT-13",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Confirm each intercompany entry balances per entity and is linked to its counterpart.",
+    "lifecycle_stage": "Data Validation"
+  },
+  {
+    "id": "FIN-048",
+    "title": "Elimination location",
+    "statement": "Intercompany elimination MAY live in an elimination entity, at report time, at a posting level or by line-level flag.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP",
+      "OLAP"
+    ],
+    "applies_when": "Consolidated reporting across entities",
+    "rationale": "Traceability and reporting complexity differ by location, and no source favours one.",
+    "exceptions": "none",
+    "engine_notes": "D365 uses a separate elimination entity or report-time consolidation; SAP uses posting level 20; NetSuite uses elimination journals with differences to CTA-E.",
+    "evidence": [
+      "ERP-04",
+      "ERP-13",
+      "ERP-17",
+      "research/design_decision_matrix.md#MT-19",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Record the chosen elimination location and how eliminations are traced.",
+    "lifecycle_stage": "Reporting"
+  },
+  {
+    "id": "FIN-049",
+    "title": "Intercompany currency differences",
+    "statement": "Currency differences on intercompany balances SHOULD be treated as expected amounts posted to a defined account rather than as errors.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "OLAP"
+    ],
+    "applies_when": "Intercompany balances across different currencies",
+    "rationale": "Treating them as errors creates false reconciliation breaks.",
+    "exceptions": "none",
+    "engine_notes": "NetSuite posts differences to CTA-E; D365 shows originating currency in elimination journals.",
+    "evidence": [
+      "ERP-13",
+      "ERP-17",
+      "research/design_decision_matrix.md#MT-20",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm a defined account exists and reconciliation handles differences.",
+    "lifecycle_stage": "Reporting"
+  },
+  {
+    "id": "FIN-050",
+    "title": "Consolidation hierarchy",
+    "statement": "A multi-entity group SHOULD maintain a consolidation hierarchy that includes elimination entities where they are used.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "OLAP",
+      "data_warehouse"
+    ],
+    "applies_when": "Statutory or consolidated reporting across entities. The rule applies to an analytical store only where consolidation is run there.",
+    "rationale": "Without a maintained hierarchy, consolidated reports depend on undocumented structure.",
+    "exceptions": "none",
+    "engine_notes": "D365, NetSuite and SAP each provide a hierarchy or elimination structure.",
+    "evidence": [
+      "TEN-08",
+      "TEN-09",
+      "ERP-04",
+      "ERP-13",
+      "ERP-17",
+      "research/design_decision_matrix.md#MT-15"
+    ],
+    "evidence_strength": "multi_vendor",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the hierarchy is maintained and used by consolidation.",
+    "lifecycle_stage": "Reporting"
+  },
+  {
+    "id": "FIN-051",
+    "title": "Consolidated statements (IFRS parents)",
+    "statement": "A parent presenting consolidated statements under IFRS 10 MUST be able to produce them from its group ledgers.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "OLAP"
+    ],
+    "applies_when": "Jurisdiction: IFRS adopters. Parents in scope of IFRS 10, at concept level only",
+    "rationale": "The IFRS 10 summary page says a parent presents consolidated statements. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Summary page only. Elimination paragraphs were not read, and this rule imposes no intragroup elimination method.",
+    "evidence": [
+      "ERP-21",
+      "research/design_decision_matrix.md#MT-18"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm consolidated statements can be produced for the parent.",
+    "lifecycle_stage": "Reporting"
+  },
+  {
+    "id": "RET-001",
+    "title": "Germany tax records",
+    "statement": "German tax records MUST be retained for 10 years for books, records and annual accounts, 8 years for booking vouchers and 6 years for other listed documents, and MUST NOT be disposed of while still relevant to an open assessment.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Germany. Records under AO 147",
+    "rationale": "Early disposal breaches the Abgabenordnung, and the period does not run out while documents matter for open assessments. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Periods run from the end of the calendar year of last entry or creation. The transitional provision for the 8-year voucher period was not read; a search snippet says it applies only to vouchers whose period had not ended before 1 January 2025.",
+    "evidence": [
+      "LEG-05",
+      "research/design_decision_matrix.md#LG-16",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the retention schedule against AO 147 and confirm disposal checks open assessments.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-002",
+    "title": "Germany VAT invoices",
+    "statement": "German invoice copies issued and invoices received MUST be retained for 8 years from the end of the calendar year of issue.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Germany. Invoices under UStG 14b",
+    "rationale": "Early disposal breaches UStG 14b. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "none",
+    "evidence": [
+      "LEG-04",
+      "research/design_decision_matrix.md#LG-16",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry for German VAT invoices.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-003",
+    "title": "Germany commercial records",
+    "statement": "German commercial records MUST be retained for 10 years for books, 8 years for booking vouchers and 6 years for other documents.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Germany. Records under HGB 257",
+    "rationale": "Early disposal breaches the Handelsgesetzbuch. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Institutions under KWG and listed categories keep booking vouchers for 10 years. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Periods run from the end of the calendar year.",
+    "evidence": [
+      "LEG-05",
+      "ERP-23",
+      "research/design_decision_matrix.md#LG-16",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry for German commercial records.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-004",
+    "title": "Germany post-migration carrier",
+    "statement": "After a system change, German tax data MUST NOT be held only on a machine-readable carrier until the fifth following calendar year has ended.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Germany. Data subject to AO 147 after a system change",
+    "rationale": "Moving to a carrier too early can breach data access duties. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Known through note 19's summary of section 147; check wording during legal review.",
+    "evidence": [
+      "LEG-05",
+      "research/design_decision_matrix.md#LG-16",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm archive plans for retired systems follow this timing.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-005",
+    "title": "France tax records",
+    "statement": "French tax books, records and documents MUST be retained for 6 years from the date of the last transaction or document.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: France. Records under LPF L102 B",
+    "rationale": "Early disposal breaches French tax procedure law. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The BOFiP version read was in force from 2013-10-18 to 2014-05-28 and may have been replaced.",
+    "evidence": [
+      "LEG-09",
+      "research/design_decision_matrix.md#LG-17",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": "B9",
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry for French tax records against the current BOFiP.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-006",
+    "title": "France commercial period (unverified)",
+    "statement": "The retention period for French commercial accounting documents MAY be configured only after counsel confirms it; no value set, and planning assumes the longer of the tax and commercial periods.",
+    "level": "OPTIONAL",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: France. Accounting documents under the Code de commerce",
+    "rationale": "The 10-year period rests on a search snippet and a CNIL billing reference, and Code de commerce L123-22 was not opened. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Counsel must confirm the period before configuration. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "A search snippet says BOFiP treats the tax provisions as independent of L123-22. The longer period applying where both apply is an inference.",
+    "evidence": [
+      "LEG-36",
+      "research/design_decision_matrix.md#LG-17",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": "B9",
+    "check_method": "manual_review",
+    "check_description": "Confirm counsel has confirmed the period before configuration.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-007",
+    "title": "UK VAT records",
+    "statement": "Business records for UK VAT MUST be retained for at least 6 years.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: United Kingdom. Records for VAT under Notice 700/21",
+    "rationale": "Early disposal breaches HMRC record-keeping requirements. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "HMRC may allow a shorter period for some records on request. Other taxes may need longer. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "none",
+    "evidence": [
+      "LEG-13",
+      "research/design_decision_matrix.md#LG-18",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry for UK VAT records.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-008",
+    "title": "UK Companies Act records",
+    "statement": "UK accounting records MUST be preserved for 3 years for private companies and 6 years for public companies from the date they are made.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: United Kingdom. Companies under Companies Act 2006 s388(4)",
+    "rationale": "Early disposal breaches the Companies Act. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "This period differs from the VAT period, and both can apply to one record set.",
+    "evidence": [
+      "LEG-15",
+      "research/design_decision_matrix.md#LG-18",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry for UK company accounting records.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-009",
+    "title": "US IRS records",
+    "statement": "US federal tax records SHOULD be retained on limitation-driven periods as described by the IRS rather than one flat period.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: United States. Federal income and employment tax records",
+    "rationale": "IRS periods are limitation-driven, and a flat period can be too short for some cases. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption. Note 19 labelled this MANDATORY; the matrix holds it RECOMMENDED because no statute was read.",
+    "engine_notes": "IRS page: 3 years generally; 3 from filing or 2 from payment for refund claims; 7 for worthless securities or bad debt; 6 if income is under-reported by more than 25 percent; indefinitely if no return or a fraudulent return; employment tax at least 4 years.",
+    "evidence": [
+      "LEG-16",
+      "research/design_decision_matrix.md#LG-19",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule includes the limitation cases and the employment-tax period.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-010",
+    "title": "US broker-dealer records",
+    "statement": "US broker-dealers MUST preserve the records listed in 17 CFR 240.17a-4 for the stated periods and in a system that keeps a complete time-stamped audit trail or a non-rewriteable, non-erasable format.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: United States. Broker-dealers only; it must not be applied to general SaaS",
+    "rationale": "This is a specific SEC requirement for broker-dealers. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "17a-4(a) records 6 years, first 2 easily accessible; 17a-4(b) records 3 years, first 2 easily accessible; 17a-4(c) account opening and terms records 6 years after account closing.",
+    "evidence": [
+      "LEG-17",
+      "research/design_decision_matrix.md#LG-24",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "For broker-dealers only, confirm the storage mode and schedule against the rule.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-011",
+    "title": "Pakistan sales tax records",
+    "statement": "Pakistani sales tax records and documents MUST be retained for 6 years after the end of the tax period or until any proceedings are finally decided.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Pakistan. Registered persons under Sales Tax Act 1990 s24",
+    "rationale": "Early disposal breaches the Sales Tax Act. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Consolidated text read; check the gazette for the legal citation.",
+    "evidence": [
+      "LEG-18",
+      "research/design_decision_matrix.md#LG-20",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry and that disposal checks open proceedings.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-012",
+    "title": "Pakistan e-invoice records",
+    "statement": "Real-time e-invoices and debit and credit notes of FBR-integrated persons MUST be retained on electronic media for 6 years.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Pakistan. Integrated persons notified by FBR under Sales Tax Rules 2006, Rule 150S",
+    "rationale": "Early disposal breaches the Sales Tax Rules. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Start dates for integration conflict in the sources: a reported SRO table and FBR's FAQ differ, and an extension notice was not opened.",
+    "evidence": [
+      "LEG-19",
+      "research/design_decision_matrix.md#LG-20",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry for integrated persons.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-013",
+    "title": "Pakistan income tax records",
+    "statement": "Pakistani income tax accounts and documents MUST be retained for 6 years after the end of the tax year or until proceedings end.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Pakistan. Persons under Income Tax Ordinance 2001 s174(3)",
+    "rationale": "Early disposal breaches the Ordinance. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "The final proviso removes the limit for records relating to matters under clause (ii) of s111(2). Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The proviso means some records have no end date; legal review needed.",
+    "evidence": [
+      "LEG-20",
+      "research/design_decision_matrix.md#LG-20",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry and the treatment of records under the proviso.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-014",
+    "title": "Pakistan company books",
+    "statement": "Pakistani company books of account with vouchers MUST be retained for not less than the ten financial years preceding a financial year.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Pakistan. Companies under Companies Act 2017 s220(5)",
+    "rationale": "Early disposal breaches the Companies Act. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Rules for resolutions were read without confirming section numbers and are not ruled here.",
+    "evidence": [
+      "LEG-21",
+      "research/design_decision_matrix.md#LG-20",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry for Pakistani company books.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-015",
+    "title": "UAE tax records",
+    "statement": "UAE tax records MUST be retained for 5 years, real estate records for 7 years, and the listed extensions for disputes, audits and voluntary disclosure MUST be applied.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: United Arab Emirates. Persons under Cabinet Decision 74 of 2023, Article 3",
+    "rationale": "Early disposal breaches UAE tax procedure rules. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Extensions: 4 more years for disputes (or until settled, whichever is later), audits or audit notice; 1 year for voluntary disclosure in the fifth year.",
+    "evidence": [
+      "LEG-23",
+      "research/design_decision_matrix.md#LG-21",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule includes the periods and extension triggers.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-016",
+    "title": "UAE e-invoice data",
+    "statement": "UAE e-invoice issue, transmission and receipt data MUST be retained for the same periods in a system that preserves its integrity.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: United Arab Emirates. E-invoicing under Guidelines V2.0 section 5.4",
+    "rationale": "E-invoicing guidance applies the tax retention periods to this data. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "none",
+    "evidence": [
+      "LEG-24",
+      "research/design_decision_matrix.md#LG-21",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check that e-invoice data is under the retention schedule and integrity control.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-017",
+    "title": "Saudi Arabia VAT records",
+    "statement": "Saudi VAT records MUST be retained for at least 6 years, movable capital assets for the adjustment period plus 5 years and real estate for at least 15 years.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Saudi Arabia. KSA VAT scope, ZATCA guide 8.3.3",
+    "rationale": "Early disposal breaches ZATCA requirements. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "none",
+    "evidence": [
+      "LEG-25",
+      "research/design_decision_matrix.md#LG-22",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check the schedule entry for KSA VAT records.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-018",
+    "title": "Saudi Arabia location and language",
+    "statement": "Saudi VAT records MUST be retained within the Kingdom and in the Arabic language.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: Saudi Arabia. KSA VAT scope",
+    "rationale": "ZATCA requires both, which affects where systems and archives may run. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Workstation exception for permanent establishments with centralised systems abroad. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "A SaaS deployment must check data location for this scope.",
+    "evidence": [
+      "LEG-25",
+      "research/design_decision_matrix.md#LG-22",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm data location and language for KSA VAT records.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-019",
+    "title": "EU invoice integrity",
+    "statement": "EU invoices MUST have ensured authenticity of origin, integrity of content and legibility from issue until the end of the storage period.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: European Union. VAT-registered suppliers under VAT Directive Article 233(1)",
+    "rationale": "The Directive makes this a storage duty, while Article 247 leaves the period to Member States. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Article 233 allows business controls or other means. No period is set at EU level; Italian and Spanish periods were not researched in depth.",
+    "evidence": [
+      "LEG-01",
+      "research/design_decision_matrix.md#LG-11",
+      "research/database_security_standards.md#12.6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm stored invoices have integrity and legibility controls for the whole storage period.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-020",
+    "title": "Card authentication data",
+    "statement": "Sensitive card authentication data MUST NOT be retained after authorization, even if encrypted.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Scope: PCI DSS cardholder data environments (contractual standard, not a statute)",
+    "rationale": "PCI DSS 3.3.1 forbids it. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Read through the v4.0 SAQ D; v4.0.1 text was not read. Coverage of logs and backups is an inference. LEG-31 was read only through a summarising fetch tool; [WF] re-check.",
+    "evidence": [
+      "SEC-17",
+      "LEG-30",
+      "LEG-31",
+      "research/design_decision_matrix.md#LG-25"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Scan schemas, logs and backups for stored authentication data.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-021",
+    "title": "Retention schedule keyed",
+    "statement": "A retention schedule SHOULD be keyed by record class, jurisdiction, start event and legal hold.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction-scoped retention obligations apply; the jurisdictions are those in RET-001 to RET-020",
+    "rationale": "A single flat period over- or under-retains, because periods differ by class, start event and jurisdiction. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Design inference. Where more than one period applies to a record, the longer applying is also an inference.",
+    "evidence": [
+      "LEG-05",
+      "LEG-18",
+      "LEG-20",
+      "LEG-23",
+      "research/design_decision_matrix.md#LG-23"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "catalog_query",
+    "check_description": "Check every governed record class has jurisdiction, period, start event and hold status.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-022",
+    "title": "Legal hold suspends disposal",
+    "statement": "A legal hold SHOULD suspend disposal and purge of the records it covers, and disposal SHOULD check open matters as well as the retention date.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction-scoped: mandatory in substance in Germany, UAE and Pakistan by RET-001, RET-011, RET-013 and RET-015; elsewhere a recommended control",
+    "rationale": "Date-only disposal can destroy records still needed for open assessments or proceedings. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Inference from the statutes on extensions, including AO 147(3). No source covers database legal-hold mechanics, so none are specified. SOX 18 USC 1519 is an intent-based offence and not a retention schedule; when a matter is pending, counsel decides.",
+    "evidence": [
+      "LEG-05",
+      "LEG-18",
+      "LEG-20",
+      "LEG-23",
+      "research/design_decision_matrix.md#LG-23",
+      "research/database_security_standards.md#12.6",
+      "research/database_security_standards.md#12.4"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Attempt disposal of a held record and confirm the block.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-023",
+    "title": "California deletion chain",
+    "statement": "A business in CCPA scope MUST delete personal information on a consumer deletion request and MUST notify service providers, contractors and third parties as the statute requires.",
+    "level": "MANDATORY",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: California. Businesses in CCPA scope, Civil Code 1798.105(c) and (d)",
+    "rationale": "Failure to delete or propagate breaches the statute. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Read from the CPPA copy; statute changes after 2025-01 were not checked.",
+    "evidence": [
+      "LEG-28",
+      "research/design_decision_matrix.md#LG-27",
+      "research/database_security_standards.md#12.7"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the deletion workflow reaches each downstream recipient.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-024",
+    "title": "California backups",
+    "statement": "A business in CCPA scope MUST apply deletion on archived or backup systems, at the latest on restore or next access or use, having delayed only as regulation section 7022 permits.",
+    "level": "MANDATORY",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: California. Businesses, service providers and contractors in CCPA scope, regulation section 7022",
+    "rationale": "Delay ends on restore or next access or use for sale, disclosure or commercial purpose. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The file name at the URL suggests a statute, but it held the Regulations when read.",
+    "evidence": [
+      "LEG-29",
+      "research/design_decision_matrix.md#LG-27",
+      "research/database_security_standards.md#12.7"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Restore a test backup and confirm deletion is re-applied before use.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-025",
+    "title": "Erasure register outside backups",
+    "statement": "Erasure requests SHOULD be recorded durably outside the backups and re-applied after any restore.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union and United Kingdom personal data, and CCPA scope as a supporting practice",
+    "rationale": "If backups cannot be edited, restored data would otherwise reappear with erased data intact. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Common element in EDPB, Dutch AP and California text. ICO and AP were read from Wayback captures because live sites refused access; confirm on the live site.",
+    "evidence": [
+      "LEG-29",
+      "LEG-32",
+      "LEG-33",
+      "LEG-35",
+      "research/design_decision_matrix.md#LG-28",
+      "research/database_security_standards.md#12.7"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": "B8",
+    "check_method": "pipeline_test",
+    "check_description": "Restore a test backup and confirm register entries are re-applied.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-026",
+    "title": "Backup erasure timing",
+    "statement": "Backups in EU or UK scope SHOULD put erased data beyond use, with a durable erasure register, erasure re-applied on restore and a defined backup expiry.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union and United Kingdom personal data in backups",
+    "rationale": "How long undue delay runs for backups is unsettled, and the EDPB itself lists it for possible guidance. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Counsel must confirm the position before reliance. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "ICO uses a beyond-use approach. California permits delay until restore or next use. The Dutch AP expects records and erasure on restore. One authority found incremental deletion over long periods made undue delay hard to establish. ICO and AP are Wayback captures; confirm on the live site.",
+    "evidence": [
+      "LEG-29",
+      "LEG-32",
+      "LEG-33",
+      "LEG-35",
+      "research/design_decision_matrix.md#LG-28",
+      "research/database_security_standards.md#12.7"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": "B8, B7",
+    "check_method": "manual_review",
+    "check_description": "Confirm counsel's position and that backup handling follows it.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-027",
+    "title": "Predictable backup retention",
+    "statement": "Backup retention SHOULD be defined so that data expiry is predictable.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union and United Kingdom personal data",
+    "rationale": "Unbounded backups keep personal data indefinitely. EDPB material shows retention alone is not always seen as adequate. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Based on EDPB and ICO material; ICO needs confirmation on the live site.",
+    "evidence": [
+      "LEG-32",
+      "LEG-33",
+      "research/database_security_standards.md#12.7"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": "B8",
+    "check_method": "manual_review",
+    "check_description": "Confirm backup retention periods exist and are documented.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-028",
+    "title": "Field-level treatment",
+    "statement": "Where erasure is limited by a legal obligation to retain a record, only the fields under that obligation SHOULD be retained.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP",
+      "data_warehouse",
+      "lakehouse"
+    ],
+    "applies_when": "Jurisdiction: European Union. GDPR Article 17(3) applies to the record",
+    "rationale": "Article 17(3) applies only to the extent necessary, so keeping the whole record can over-retain. Which fields is a legal judgment. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Design is an inference.",
+    "evidence": [
+      "LEG-03",
+      "research/design_decision_matrix.md#LG-29"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm a field-level retention basis is recorded for retained records.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-029",
+    "title": "Erasure verified and demonstrable",
+    "statement": "Erasure SHOULD be verified and the controller SHOULD be able to demonstrate it was carried out.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union personal data, from an EDPB report",
+    "rationale": "An unverified deletion cannot be evidenced to a regulator. The EDPB report is a regulator report and not a legal text. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The report also notes replacing personal data with random strings and tools that move data out of reach.",
+    "evidence": [
+      "LEG-32",
+      "research/design_decision_matrix.md#LG-30",
+      "research/database_security_standards.md#12.7"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm erasure evidence exists for a sampled request.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-030",
+    "title": "Key destruction",
+    "statement": "Key destruction MAY be used to reduce exposure in backups, event logs and immutable stores where the preconditions in the engine notes are met, and MAY be treated as erasure only if counsel accepts it.",
+    "level": "OPTIONAL",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: any regime where erasure is claimed; no regulator text read accepts it",
+    "rationale": "Encrypted personal data remains personal data, and key destruction is a limited technical effect. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Preconditions: data encrypted before first write everywhere it lands, governed key backups and escrow, destruction recorded, remaining plaintext assessed, and cryptographic strength over the retention horizon considered. SP 800-88 addresses media sanitization and not legal erasure. LEG-34 is a consultation version on blockchain and not a ruling. OWASP's advice to retain old keys for backups works against this.",
+    "evidence": [
+      "LEG-34",
+      "SEC-04",
+      "SEC-11",
+      "SEC-12",
+      "research/design_decision_matrix.md#LG-26",
+      "research/database_security_standards.md#12.5"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm preconditions and counsel's position before any claim of erasure by key destruction.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-031",
+    "title": "PCI audit log retention",
+    "statement": "Audit log history in PCI DSS scope MUST be retained for at least 12 months with at least the most recent three months immediately available for analysis.",
+    "level": "MANDATORY",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Scope: PCI DSS cardholder data environments (contractual standard, not a statute)",
+    "rationale": "PCI DSS 10.5.1 sets this period for audit logs. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Wording is from v4.0 SAQ D; v4.0.1 text was not read. This is not a retention basis for other cardholder data.",
+    "evidence": [
+      "SEC-17",
+      "LEG-30",
+      "research/design_decision_matrix.md#AH-5",
+      "research/database_security_standards.md#12.3"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm log retention and immediate availability for in-scope systems.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-032",
+    "title": "FDA Part 11 audit trail retention",
+    "statement": "Audit trail documentation for electronic records under 21 CFR Part 11 MUST be retained at least as long as the subject record.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: United States. FDA-regulated electronic records under 21 CFR 11.10(e) only",
+    "rationale": "Part 11 ties trail retention to the record. It does not apply to financial records as such. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "none",
+    "evidence": [
+      "TEN-17",
+      "research/design_decision_matrix.md#AH-4",
+      "research/database_security_standards.md#12.3"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "For FDA-regulated records only, confirm trail retention matches the subject record.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-033",
+    "title": "Audit log retention period defined",
+    "statement": "Each audit log class outside a scope with a stated period SHOULD have a retention period defined by the organization and recorded in the retention schedule.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Audit records not covered by RET-031 or RET-032",
+    "rationale": "With no stated period, logs are either destroyed early or kept indefinitely.",
+    "exceptions": "none",
+    "engine_notes": "NIST SP 800-53 AU-11 leaves the period organization-defined. This standard gives no number because no source supports a general period.",
+    "evidence": [
+      "SEC-08",
+      "research/database_security_standards.md#12.3"
+    ],
+    "evidence_strength": "standard",
+    "status": "active",
+    "decision_ref": null,
+    "check_method": "catalog_query",
+    "check_description": "Check every audit log class has a recorded retention period and basis.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-034",
+    "title": "Retention schedule with basis (GDPR, Part 11)",
+    "statement": "A retention schedule per record class with its legal basis documented MUST exist for personal data in GDPR scope and for records in 21 CFR Part 11 scope.",
+    "level": "MANDATORY",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union (GDPR Articles 5(1)(e), 5(2) and 30) and United States (FDA records under 21 CFR Part 11)",
+    "rationale": "Undocumented retention cannot be justified to a regulator. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Outside these scopes the schedule is RECOMMENDED under RET-021. GDPR sets no fixed period, so a fixed period is not automatically lawful.",
+    "evidence": [
+      "TEN-34",
+      "TEN-17",
+      "LEG-03",
+      "research/design_decision_matrix.md#AH-13",
+      "research/database_security_standards.md#12.4"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "catalog_query",
+    "check_description": "Check that in-scope record classes have a schedule entry with a basis.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-035",
+    "title": "Erasure without undue delay (GDPR)",
+    "statement": "Applicable GDPR erasure requests MUST be honoured without undue delay unless an Article 17(3) exception applies.",
+    "level": "MANDATORY",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union. Personal data under GDPR Article 17",
+    "rationale": "Article 17 makes this a duty of the controller. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "How long undue delay runs for backups is unsettled; see RET-026.",
+    "evidence": [
+      "LEG-03",
+      "SEC-15",
+      "research/database_security_standards.md#12.4"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Sample erasure requests and confirm timely completion or a recorded exception.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-036",
+    "title": "Retention exception limits (GDPR)",
+    "statement": "Personal data kept under a GDPR Article 17(3) exception MUST be kept only to the extent necessary and the basis MUST be recorded.",
+    "level": "MANDATORY",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union. GDPR Article 17(3)(b) and (e)",
+    "rationale": "Article 17(3)(b) refers to Union or Member State law, so SOX and PCI DSS retention do not obviously displace erasure for EU data subjects. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Whether legal claims or another basis applies is fact-specific and for counsel. CCPA has its own exceptions in 1798.105(d).",
+    "evidence": [
+      "LEG-03",
+      "SEC-15",
+      "TEN-34",
+      "research/design_decision_matrix.md#AH-15",
+      "research/database_security_standards.md#13"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm each retained class under an exception has a recorded basis and extent.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-037",
+    "title": "Deletion flag is not erasure",
+    "statement": "A deleted flag, or a move to an archive, SHOULD NOT be recorded as fulfilling an erasure duty until the data is purged or anonymized.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union personal data where an erasure duty applies, and other regimes on counsel's advice",
+    "rationale": "A flag leaves identifiable data in place. No regulator text read addresses soft deletion by name, so this is an inference. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Deletion-state design belongs to AUD-025; this rule covers only the erasure effect. A Recital 26 anonymization requires that the person is no longer identifiable, and overwriting a name alone may not achieve that.",
+    "evidence": [
+      "LEG-03",
+      "TEN-30",
+      "TEN-31",
+      "research/design_decision_matrix.md#AH-12",
+      "research/database_security_standards.md#12.1",
+      "research/database_security_standards.md#13"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": "A15",
+    "check_method": "manual_review",
+    "check_description": "Confirm erasure is only marked complete after purge or anonymization.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-038",
+    "title": "Erasure reach",
+    "statement": "Erasure SHOULD reach every store holding the personal data, including archives, history, audit logs as far as they hold identifiable values, indexes, caches, replicas, change streams, warehouses and non-production copies, with backups handled under RET-025 and RET-026.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: European Union personal data where Article 17 applies",
+    "rationale": "Article 17 applies to the personal data and not to one table, so erasure in only the primary store leaves copies. No source enumerates the stores. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Inference. A deleted-record archive holds whole rows and is in scope. SCD Type 2 dimensions with personal attributes extend the scope. CDC can carry deletes downstream, but applying them is the consumer's responsibility.",
+    "evidence": [
+      "LEG-03",
+      "TEN-26",
+      "research/database_security_standards.md#12.2",
+      "research/database_security_standards.md#12.1"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Trace a sampled erasure through each listed store.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "RET-039",
+    "title": "Identifiers out of immutable logs",
+    "statement": "Immutable logs SHOULD hold stable pseudonymous references rather than identifying values, with the identifying map in a separately controlled store that can be erased.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Audit logs, ledgers or history stores that cannot be altered and may hold personal data",
+    "rationale": "Identifying values written to an immutable store cannot be erased later. Requires legal review, since a log using pseudonyms remains personal data while re-identification is possible.",
+    "exceptions": "A retention duty or regulator requiring identified entries; the data owner and counsel approve.",
+    "engine_notes": "Inference. Removing the map moves toward anonymity but does not guarantee it, since quasi-identifiers may remain. Row-level redaction in ledger structures was not researched. Sensitive columns in change capture are covered by AUD-010.",
+    "evidence": [
+      "SEC-05",
+      "SEC-16",
+      "research/database_security_standards.md#13"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": "A16",
+    "check_method": "manual_review",
+    "check_description": "Sample immutable logs for direct identifiers.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "RET-040",
+    "title": "HIPAA activity log retention (no value set)",
+    "statement": "A system holding ePHI SHOULD record counsel's determination of whether its activity logs fall under the six-year documentation retention in 45 CFR 164.316(b)(2)(i); no value set for activity log retention.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "all"
+    ],
+    "applies_when": "Jurisdiction: United States. ePHI under HIPAA, for activity logs recorded under AUD-015",
+    "rationale": "45 CFR 164.316(b)(2)(i) sets six years for documentation required by (b)(1), and whether specific audit logs fall in that scope is unresolved. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The six-year period is a floor for required documentation and is not a retention period for ePHI itself. HIPAA final-rule status and application to system activity logs are open research gaps.",
+    "evidence": [
+      "TEN-37",
+      "SEC-18",
+      "research/database_security_standards.md#12.3",
+      "research/design_decision_matrix.md#AH-5"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the retention schedule records counsel's determination for ePHI activity logs.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-001",
+    "title": "EU sequential invoice number",
+    "statement": "EU invoices MUST carry a sequential number, based on one or more series, that uniquely identifies the invoice.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: European Union. VAT-registered suppliers under VAT Directive Article 226(2)",
+    "rationale": "An invoice without it is not valid under Article 226. The Article does not say whether sequential excludes gaps. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "No amendment seen rewrites Article 226(2). Gap treatment is governed by NUM-018.",
+    "evidence": [
+      "LEG-01",
+      "TEN-39",
+      "research/design_decision_matrix.md#LG-1"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm series exist per supplier and numbers are unique and sequential.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-002",
+    "title": "Germany invoice number",
+    "statement": "German invoices MUST carry a consecutive number, with one or more series, issued once by the issuer.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Germany. Invoice issuers under UStG 14(4) point 4",
+    "rationale": "The number is a required invoice item. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Gap treatment is not relied on: it rests on search snippets of BMF pages, and UStAE 14.5 could not be opened (LEG-06, not cited). See NUM-018.",
+    "evidence": [
+      "LEG-04",
+      "research/design_decision_matrix.md#LG-2"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm one-time issue within each series.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-003",
+    "title": "France invoice number",
+    "statement": "French invoices MUST carry a unique number from a chronological and continuous sequence per series, with no duplicates.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: France. Invoice issuers",
+    "rationale": "This is the strictest wording found, and no official tolerance for gaps or spoiled numbers was found. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Article 242 nonies A was not opened.",
+    "evidence": [
+      "LEG-07",
+      "LEG-08",
+      "research/design_decision_matrix.md#LG-3"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm continuity within each series and reasons for any break.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-004",
+    "title": "Italy invoice number",
+    "statement": "Italian invoices MUST carry a progressive number that uniquely identifies them, to which the date may contribute.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Italy. Invoice issuers under Article 21 DPR 633/1972, per Risoluzione 1/E of 2013",
+    "rationale": "The number is a required invoice item, and the source does not address gaps. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Gap treatment is governed by NUM-018.",
+    "evidence": [
+      "LEG-10",
+      "research/design_decision_matrix.md#LG-4"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm progressive numbering and uniqueness.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-005",
+    "title": "Spain invoice number",
+    "statement": "Spanish invoices MUST be numbered sequentially within each series, with a separate series for corrective invoices.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Spain. Invoice issuers under RD 1619/2012",
+    "rationale": "The number is a required invoice item, and corrective invoices use their own series. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "[WF] LEG-11 was read only through a summarising fetch tool; re-check against raw BOE text. Gap treatment is governed by NUM-018.",
+    "evidence": [
+      "LEG-11",
+      "research/design_decision_matrix.md#LG-5"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm series design, including a separate corrective series.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-006",
+    "title": "Spain VERI*FACTU chain",
+    "statement": "Billing software within RD 1007/2023 scope MUST produce chained billing records.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Spain. Billing software within RD 1007/2023 scope only",
+    "rationale": "The chain rule concerns billing records and is not a rule on invoice number gaps. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "[WF] LEG-12 was read only through a summarising fetch tool; re-check. RD 1007/2023 scope and dates were not researched.",
+    "evidence": [
+      "LEG-12",
+      "research/design_decision_matrix.md#LG-5"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm whether the software is in scope and, if so, that records are chained.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-007",
+    "title": "UK invoice number",
+    "statement": "UK VAT invoices MUST carry a sequential number based on one or more series that uniquely identifies the document.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: United Kingdom. VAT-registered suppliers under Notice 700/21",
+    "rationale": "The number is a required invoice item. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "HMRC tolerates a break if the spoiled invoice is kept or the break is explained; VATREC is an internal manual recording HMRC's view, not legislation. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Clearest gap statement found.",
+    "evidence": [
+      "LEG-13",
+      "LEG-14",
+      "research/design_decision_matrix.md#LG-6"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm sequential numbering and retained explanations for any break.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-008",
+    "title": "Pakistan serial invoice number",
+    "statement": "Pakistani registered persons MUST issue serially numbered tax invoices.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Pakistan. Registered persons under Sales Tax Act 1990 s23(1)",
+    "rationale": "The serial number is a statutory invoice item. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Gap treatment was not found in the sources. Consolidated text read; check the gazette for the legal citation.",
+    "evidence": [
+      "LEG-18",
+      "research/design_decision_matrix.md#LG-7"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm serial numbering per registered person.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-009",
+    "title": "Pakistan FBR integration",
+    "statement": "FBR-integrated persons MUST hold the unique FBR invoice number and QR code and MUST record every adjustment, modification or cancellation.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Pakistan. Integrated persons notified by FBR under Sales Tax Rules 2006, Rule 150Q onward",
+    "rationale": "These are required items for integrated persons. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Start dates conflict: a reported SRO 709(I)/2025 table lists 1 May 2025 for corporates (search snippet), FBR's FAQ says 1 June 2025 corporate and 1 July 2025 non-corporate, and an extension notice was not opened. Do not fix a start date without review. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "See NUM-020 for separating these items from the local number.",
+    "evidence": [
+      "LEG-19",
+      "research/design_decision_matrix.md#LG-7"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the FBR number, QR and adjustment records for integrated persons.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-010",
+    "title": "UAE invoice number",
+    "statement": "UAE tax invoices MUST carry a sequential number or a unique number that identifies the invoice and its order in a sequence of invoices.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: United Arab Emirates. VAT registrants under VAT Executive Regulation Article 59(1)(d)",
+    "rationale": "A random identifier alone would not show order, which is an inference from the text. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Citation conflict: the MoF compilation footnote cites Cabinet Decision 100 of 2024, while commentary cites 100 of 2025. Gap treatment was not found.",
+    "evidence": [
+      "LEG-22",
+      "research/design_decision_matrix.md#LG-8"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm the number shows order within a sequence.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-011",
+    "title": "UAE e-invoice UUID",
+    "statement": "UAE e-invoices MUST carry a UUID in addition to the sequential e-invoice number.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: United Arab Emirates. E-invoicing under Guidelines V2.0",
+    "rationale": "E-invoicing guidance requires it in addition to the sequence. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "See NUM-020.",
+    "evidence": [
+      "LEG-24",
+      "research/design_decision_matrix.md#LG-8",
+      "research/design_decision_matrix.md#LG-15"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm UUID and sequential number are both present.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-012",
+    "title": "KSA invoice number",
+    "statement": "Saudi tax invoices MUST carry a sequential number that distinguishes them from other invoices.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Saudi Arabia. KSA VAT scope, ZATCA invoicing guideline",
+    "rationale": "The number is a required invoice item. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Gap treatment is governed by NUM-018 and NUM-013.",
+    "evidence": [
+      "LEG-25",
+      "research/design_decision_matrix.md#LG-9"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Confirm sequential numbering per taxpayer.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-013",
+    "title": "KSA counter and hash chain",
+    "statement": "In KSA e-invoicing scope, the invoice counter value MUST NOT be reused, rejected documents MUST consume a counter value and stay in the chain, and each invoice MUST hold the previous invoice hash.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: Saudi Arabia. KSA e-invoicing scope, ZATCA technical guidelines",
+    "rationale": "The technical guideline requires this chain. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The technical guideline read is dated November 2022 and later versions may exist. Append-only event series is an inference.",
+    "evidence": [
+      "LEG-26",
+      "LEG-27",
+      "research/design_decision_matrix.md#LG-9",
+      "research/design_decision_matrix.md#LG-15"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "pipeline_test",
+    "check_description": "Confirm counter values are not reused and chain continuity holds, including rejected documents.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "NUM-014",
+    "title": "ViDA corrective invoice reference",
+    "statement": "From 1 July 2030 where transposed, EU corrective invoices MUST cite the sequential number of the corrected invoice.",
+    "level": "MANDATORY",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction: European Union. From 1 July 2030 where transposed into national law, under Directive (EU) 2025/516 Article 5",
+    "rationale": "ViDA adds point (16) to Article 226. National transposition was not researched. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Article 6(5) derogation for Member States with a qualifying real-time reporting obligation applies specified measures by 1 January 2035. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Article 226(2) is not rewritten by any amendment seen. A self-reference design is an inference. Transposition deadline for Article 5 is 30 June 2030.",
+    "evidence": [
+      "LEG-02",
+      "research/design_decision_matrix.md#LG-10",
+      "research/database_security_standards.md#12.8"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "manual_review",
+    "check_description": "Check national transposition and confirm corrective invoices can cite the corrected number.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-015",
+    "title": "Record unused numbers",
+    "statement": "Every unused, cancelled or spoiled invoice number SHOULD be recorded with a reason.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction-scoped: legal entities under the UK, French and KSA rules in NUM-003, NUM-007 and NUM-013; elsewhere a recommended control",
+    "rationale": "An unexplained break is hard to defend; UK guidance tolerates a break if it is explained or the spoiled invoice kept. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "UK and ZATCA guidance are the direct sources. No French official text on spoiled numbers was found, so that wording is the continuity wording only.",
+    "evidence": [
+      "LEG-07",
+      "LEG-14",
+      "LEG-26",
+      "research/design_decision_matrix.md#LG-12"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "catalog_query",
+    "check_description": "List gaps in each series and confirm each has a recorded reason.",
+    "lifecycle_stage": "Data Quality"
+  },
+  {
+    "id": "NUM-016",
+    "title": "Avoid plain sequences for legal numbers",
+    "statement": "Legally numbered documents SHOULD NOT take numbers from a plain database sequence object where a gap-sensitive rule applies.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction-scoped: where a gap-sensitive rule applies, with France as the strictest wording found",
+    "rationale": "Sequences can skip on rollback or crash and cannot provide gapless numbering. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Series in jurisdictions where counsel confirms gaps are tolerated; the owner approves. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "PostgreSQL documents sequences as non-gapless; other engines were not checked. The industry-practice file labels this MANDATORY where gaps are not acceptable; the matrix and note 19 hold it RECOMMENDED.",
+    "evidence": [
+      "TEN-33",
+      "LEG-07",
+      "research/design_decision_matrix.md#LG-13"
+    ],
+    "evidence_strength": "single_vendor",
+    "status": "provisional",
+    "decision_ref": "A6",
+    "check_method": "migration_lint",
+    "check_description": "Flag any legal document number column sourced from a sequence object.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "NUM-017",
+    "title": "Series per legal entity and document type",
+    "statement": "Legal numbering series SHOULD be defined per legal entity and document type.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction-scoped: regimes that allow one or more series; Spain requires a separate corrective series under NUM-005",
+    "rationale": "A global series cannot meet per-entity rules or separate corrective series. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "Design inference from the laws allowing one or more series.",
+    "evidence": [
+      "LEG-01",
+      "LEG-04",
+      "LEG-11",
+      "LEG-13",
+      "research/design_decision_matrix.md#LG-14"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check each numbered document type has a series scoped to its legal entity.",
+    "lifecycle_stage": "Schema Design"
+  },
+  {
+    "id": "NUM-018",
+    "title": "Gap policy per legal entity",
+    "statement": "A multi-jurisdiction system SHOULD apply the strictest gap rule applying to each legal entity and SHOULD record every break in the series.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction-scoped: all jurisdictions in NUM-001 to NUM-013; no single gap rule can be derived",
+    "rationale": "Gap positions differ by jurisdiction and some are unsettled or unverified. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "Counsel must confirm the gap rule for each legal entity. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "France: continuity wording, no tolerance found. UK: tolerated with kept invoice or explanation. KSA: counter never reused. Germany: unverified. Italy, Spain, Pakistan, UAE: not addressed or not found.",
+    "evidence": [
+      "LEG-07",
+      "LEG-13",
+      "LEG-14",
+      "LEG-25",
+      "LEG-26",
+      "research/design_decision_matrix.md#LG-12",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "standard",
+    "status": "provisional",
+    "decision_ref": "A6",
+    "check_method": "manual_review",
+    "check_description": "Confirm the gap rule recorded for each legal entity and series.",
+    "lifecycle_stage": "Governance"
+  },
+  {
+    "id": "NUM-019",
+    "title": "Locked counter at posting",
+    "statement": "Legal numbers SHOULD be assigned inside the issuing transaction from a locked per-series counter, so that drafts consume none.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Gap-sensitive numbering per NUM-016",
+    "rationale": "Assignment outside the posting transaction consumes numbers for failed work; the cost is serialized posting per series.",
+    "exceptions": "Where counsel confirms gaps are tolerated; the system owner approves.",
+    "engine_notes": "Inference; no fetched case documents this at scale. Frappe's naming series is a convention, and the notes do not show whether it is gapless. Decision A6 settles where assignment happens (OR-4): inside the issuing transaction, which is also the posting transaction where a document is issued on posting. Canonical rule for TXN-018.",
+    "evidence": [
+      "research/design_decision_matrix.md#TX-12",
+      "research/industry_best_practices.md#5"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": "A6",
+    "check_method": "pipeline_test",
+    "check_description": "Run concurrent postings with failures and confirm no number is lost or duplicated within a series.",
+    "lifecycle_stage": "Transactions"
+  },
+  {
+    "id": "NUM-020",
+    "title": "Separate authority identifiers",
+    "statement": "Authority number, UUID, counter and previous-invoice hash SHOULD be held as separate attributes from the local invoice number where those regimes apply.",
+    "level": "RECOMMENDED",
+    "scope": [
+      "OLTP"
+    ],
+    "applies_when": "Jurisdiction-scoped: Pakistan FBR integrated persons, UAE e-invoicing and KSA e-invoicing",
+    "rationale": "Combining them prevents correlation with the authority and breaks chain validation. Requires legal review by counsel for the entity concerned before adoption.",
+    "exceptions": "No exception identified in the sources read. Requires legal review by counsel for the entity concerned before adoption.",
+    "engine_notes": "The data items are mandatory under NUM-009, NUM-011 and NUM-013. Separation as attributes is an inference.",
+    "evidence": [
+      "LEG-19",
+      "LEG-24",
+      "LEG-26",
+      "LEG-27",
+      "research/design_decision_matrix.md#LG-15"
+    ],
+    "evidence_strength": "inference",
+    "status": "provisional",
+    "decision_ref": null,
+    "check_method": "schema_lint",
+    "check_description": "Check that each regime's items are distinct attributes.",
+    "lifecycle_stage": "Schema Design"
+  }
+]

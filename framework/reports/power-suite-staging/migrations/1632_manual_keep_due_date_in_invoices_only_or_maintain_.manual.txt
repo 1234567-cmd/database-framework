@@ -1,0 +1,4 @@
+Step M1632: Manual: Keep due_date in invoices only, or maintain the copy through one controlled mech
+MANUAL: this step has no generated SQL.
+Keep due_date in invoices only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-32c035dc

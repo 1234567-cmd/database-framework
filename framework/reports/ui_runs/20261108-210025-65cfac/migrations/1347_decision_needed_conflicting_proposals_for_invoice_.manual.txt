@@ -1,0 +1,4 @@
+Step M1347: Decision needed: conflicting proposals for invoice_footers.updatedAt
+MANUAL: this step has no generated SQL.
+Cannot rename invoice_footers.updatedAt to an existing column 'updated_at'.
+Findings: SCH-052-f9b25cf8

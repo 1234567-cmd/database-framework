@@ -1,0 +1,4 @@
+Step M1330: Decision needed: conflicting proposals for credit_notes.deposit_balance
+MANUAL: this step has no generated SQL.
+Conflicting target types for credit_notes.deposit_balance: ['decimal(12,2)', 'decimal(14,4)'].
+Findings: SCH-022-7493b69f, SCH-023-3fa04057

@@ -1,0 +1,4 @@
+Step M096: Manual: Pipeline nightly_sales_load: name an accountable owner.
+MANUAL: this step has no generated SQL.
+Pipeline nightly_sales_load: name an accountable owner.
+Findings: DE-010-e5e9a46a

@@ -1,0 +1,4 @@
+Step M1901: Manual: Keep address in suppliers only, or maintain the copy through one controlled mech
+MANUAL: this step has no generated SQL.
+Keep address in suppliers only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-20217a8d

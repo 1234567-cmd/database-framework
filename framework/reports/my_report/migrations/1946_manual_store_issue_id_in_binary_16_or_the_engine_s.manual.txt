@@ -1,0 +1,4 @@
+Step M1946: Manual: Store issue_id in binary(16) or the engine's native UUID form, and update reader
+MANUAL: this step has no generated SQL.
+Store issue_id in binary(16) or the engine's native UUID form, and update readers.
+Findings: SCH-036-ff74445a

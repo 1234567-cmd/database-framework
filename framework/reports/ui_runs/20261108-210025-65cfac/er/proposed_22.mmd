@@ -1,0 +1,25 @@
+%% Proposed schema of power-suite-staging (22 of 80: around payment_settlement_customer_transfers)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    payment_settlement_customer_transfers {
+        bigint id PK "proposed: changed"
+        int payment_settlement_id FK
+        int customer_deposit_transfer_id FK
+        decimal_22_4 amount "proposed: changed"
+        decimal_10_4 exchange_rate
+        decimal_22_4 base_amount "proposed: changed"
+        text remarks
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customer_deposit_transfers {
+        external stub "see the diagram that holds this table"
+    }
+    payment_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    customer_deposit_transfers ||--o{ payment_settlement_customer_transfers : "customer_deposit_transfer_id (proposed)"
+    payment_settlements ||--o{ payment_settlement_customer_transfers : "payment_settlement_id (proposed)"

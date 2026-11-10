@@ -1,0 +1,9 @@
+-- Step M896: Contract: drop the old reports.id__dbintel_old
+-- Direction: down
+-- Findings: SCH-037-4315d3b9
+-- Destructive: True. Reversible: False. Data loss risk: high. Lock risk: medium.
+-- PROPOSAL ONLY. Review before use.
+-- Requires a verified backup first.
+-- Precheck: Column reports.id__dbintel_old exists. Expect 1: SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'reports' AND table_schema = DATABASE() AND column_name = 'id__dbintel_old'
+-- Note: Run only after the new column has been verified in production through at least one release (MIG-004).
+-- NOT REVERSIBLE WITHOUT LOSS: Dropping the old column removes its data. Restoring it requires a backup.

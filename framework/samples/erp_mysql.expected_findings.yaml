@@ -1,0 +1,44 @@
+# Expected findings for erp_mysql.sql. Each entry must be reported with this severity. Table and column are exact.
+source: erp_mysql.sql
+name: erp_demo
+profile: profiles/erp.yaml
+query_log: query_log.json
+pipelines: pipelines.yaml
+expected:
+  - {rule: SCH-001, table: customers, severity: critical, kind: confirmed_defect}
+  - {rule: SCH-001, table: order_items, severity: critical, kind: confirmed_defect}
+  - {rule: SCH-020, table: orders, column: total, severity: critical, kind: confirmed_defect}
+  - {rule: SCH-020, table: journal_lines, column: debit, severity: critical, kind: confirmed_defect}
+  - {rule: SCH-020, table: journal_lines, column: credit, severity: critical, kind: confirmed_defect}
+  - {rule: SCH-020, table: payments, column: amount, severity: critical, kind: confirmed_defect}
+  - {rule: SCH-020, table: employees, column: salary, severity: critical, kind: confirmed_defect}
+  - {rule: FINA-001, table: journal_lines, severity: critical, kind: confirmed_defect}
+  - {rule: SECA-008, table: users, column: password, severity: critical, kind: confirmed_defect}
+  - {rule: SECA-007, table: payments, column: card_number, severity: critical}
+  - {rule: SECA-006, table: payments, column: cvv, severity: critical}
+  - {rule: SCH-011, table: customers, column: tags, severity: high, kind: confirmed_defect}
+  - {rule: SCH-011, table: products, column: category_ids, severity: high, kind: confirmed_defect}
+  - {rule: SCH-002, table: order_items, column: order_id, severity: high, kind: context_dependent}
+  - {rule: SCH-002, table: order_items, column: product_id, severity: high, kind: context_dependent}
+  - {rule: DQ-002, table: customers, severity: medium, kind: confirmed_defect}
+  - {rule: DQ-003, table: customers, column: customer_code, severity: medium}
+  - {rule: DQ-009, table: order_items, column: order_id, severity: high}
+  - {rule: DQ-009, table: order_items, column: product_id, severity: high}
+  - {rule: DQ-011, table: users, column: email, severity: medium, kind: confirmed_defect}
+  - {rule: DQ-014, table: employees, column: end_date, severity: medium, kind: confirmed_defect}
+  - {rule: SCH-031, table: orders, column: order_date, severity: medium, kind: confirmed_defect}
+  - {rule: TENA-010, table: journal_lines, severity: medium}
+  - {rule: PERF-010, table: customers, column: email, severity: medium, kind: confirmed_defect}
+  - {rule: PERF-012, table: orders, severity: medium, kind: confirmed_defect}
+  - {rule: DE-001, table: fact_sales, severity: high}
+  - {rule: DE-002, table: ledger_snapshot, severity: high}
+absent:
+  - {rule: SECA-010}
+  - {rule: TENA-001}
+never_in_reports:
+  - "4111111111111111"
+  - "5555555555554444"
+  - "378282246310005"
+  - "Summer2024!"
+  - "letmein123"
+  - "orders@rhine.example.com"

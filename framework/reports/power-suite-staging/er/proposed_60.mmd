@@ -1,0 +1,22 @@
+%% Proposed schema of power-suite-staging (60 of 80: around issued_document_numbers)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    issued_document_numbers {
+        bigint id PK "proposed: changed"
+        varchar_200 company_code
+        varchar_20 document_type
+        varchar_255 document_number
+        int first_document_id FK
+        int issued_by
+        varchar_30 source
+        datetime issued_at
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    documents {
+        external stub "see the diagram that holds this table"
+    }
+    documents ||--o{ issued_document_numbers : "first_document_id (proposed)"

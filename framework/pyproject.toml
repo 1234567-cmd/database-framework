@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dbintel"
+version = "0.1.0"
+description = "Enterprise Database Intelligence and Data Engineering Framework"
+requires-python = ">=3.10"
+dependencies = ["sqlglot>=25", "PyYAML>=6"]
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.1"]
+mysql = ["PyMySQL>=1.1"]
+excel = ["openpyxl>=3.1"]
+all = ["psycopg[binary]>=3.1", "PyMySQL>=1.1", "openpyxl>=3.1"]
+dev = ["pytest>=8", "pgserver>=0.1"]
+
+[project.scripts]
+dbintel = "dbintel.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+dbintel = ["data/*.json", "rules/catalog/*.yaml", "ui/static/*", "ui/static/css/*", "ui/static/js/*", "ui/static/js/views/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: needs a real database server, skipped unless configured"]

@@ -1,0 +1,4 @@
+Step M069: Manual: Rebuild the primary key of public.invoices to include tenant_id; plan dependent 
+MANUAL: this step has no generated SQL.
+Rebuild the primary key of public.invoices to include tenant_id; plan dependent keys.
+Findings: TENA-004-e588c013

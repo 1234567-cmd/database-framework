@@ -1,0 +1,4 @@
+Step M2079: Manual: Move analysis_code1, analysis_code2, analysis_code3, analysis_code4, analysis_co
+MANUAL: this step has no generated SQL.
+Move analysis_code1, analysis_code2, analysis_code3, analysis_code4, analysis_code5, analysis_code6 to a child table with one row per value.
+Findings: SCH-010-38a8c7de

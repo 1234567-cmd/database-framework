@@ -1,0 +1,4 @@
+Step M1348: Decision needed: conflicting proposals for tax_rate_maintenance.created_date
+MANUAL: this step has no generated SQL.
+Cannot rename tax_rate_maintenance.created_date to an existing column 'created_at'.
+Findings: SCH-061-b8378624

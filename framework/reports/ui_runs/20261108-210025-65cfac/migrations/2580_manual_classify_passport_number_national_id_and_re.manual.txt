@@ -1,0 +1,4 @@
+Step M2580: Manual: Classify passport_number (national_id) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify passport_number (national_id) and record its required protections.
+Findings: SECA-004-03c9b5de

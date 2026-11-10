@@ -1,0 +1,18 @@
+%% Current schema of power-suite-staging (13 of 57: around fee_class_airlines)
+erDiagram
+    fee_class_airlines {
+        int id PK
+        int fee_rule_id FK
+        int airline_class_id FK
+    }
+    airline_class_codes {
+        int id PK
+        varchar_255 class_code
+        varchar_255 airline_code
+        varchar_255 class_description
+    }
+    maintenance_fee_groups {
+        external stub "see the diagram that holds this table"
+    }
+    maintenance_fee_groups ||--o{ fee_class_airlines : "fee_rule_id"
+    airline_class_codes ||--o{ fee_class_airlines : "airline_class_id"

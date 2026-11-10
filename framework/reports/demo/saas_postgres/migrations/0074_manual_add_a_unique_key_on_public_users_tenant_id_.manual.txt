@@ -1,0 +1,4 @@
+Step M074: Manual: Add a unique key on public.users (tenant_id, id), then replace this foreign key 
+MANUAL: this step has no generated SQL.
+Add a unique key on public.users (tenant_id, id), then replace this foreign key with one that includes tenant_id.
+Findings: TENA-006-35d3c301

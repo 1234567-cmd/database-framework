@@ -1,0 +1,4 @@
+Step M2846: Manual: Keep remarks in service_visas only, or maintain the copy through one controlled 
+MANUAL: this step has no generated SQL.
+Keep remarks in service_visas only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-20cc61e7

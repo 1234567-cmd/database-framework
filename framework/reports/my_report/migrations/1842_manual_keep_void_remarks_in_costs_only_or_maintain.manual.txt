@@ -1,0 +1,4 @@
+Step M1842: Manual: Keep void_remarks in costs only, or maintain the copy through one controlled mec
+MANUAL: this step has no generated SQL.
+Keep void_remarks in costs only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-dd3649b9

@@ -1,0 +1,36 @@
+%% Current schema of power-suite-staging (37 of 57: around invoice_settings)
+erDiagram
+    invoice_settings {
+        int id PK
+        varchar_255 company_code FK
+        tinyint_1 hide_transaction_fee
+        tinyint_1 hide_tax
+        tinyint_1 ticket_issue_date_in_invoice
+        tinyint_1 hide_visa_nationality
+        tinyint_1 hide_visa_destination
+        tinyint_1 hide_visa_code
+        tinyint_1 hide_visa_length_of_stay
+        tinyint_1 hide_visa_process_days
+        tinyint_1 hide_visa_purpose
+        tinyint_1 hide_visa_validity_period
+        tinyint_1 hide_ins_cheque_no
+        tinyint_1 hide_ins_fop
+        tinyint_1 hide_ins_plan_type
+        tinyint_1 hide_ins_policy_no
+        tinyint_1 hide_ins_purchase_date
+        tinyint_1 hide_ins_first_coverage_date
+        tinyint_1 hide_ins_last_coverage_date
+        tinyint_1 hide_ins_expiry_date
+        tinyint_1 hide_ins_city
+        tinyint_1 hide_ins_city_code
+        tinyint_1 hide_ins_pnr
+        tinyint_1 hide_car_type
+        tinyint_1 hide_car_no_of_cars
+        tinyint_1 hide_car_location
+        tinyint_1 hide_car_date
+        tinyint_1 hide_car_city
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ invoice_settings : "company_code"

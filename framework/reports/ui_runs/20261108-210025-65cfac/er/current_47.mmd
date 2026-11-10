@@ -1,0 +1,18 @@
+%% Current schema of power-suite-staging (47 of 57: around service_trains)
+erDiagram
+    service_trains {
+        int id PK
+        int service_id FK
+        int from_city
+        int to_city
+        varchar_255 train_class
+        varchar_255 company
+        datetime departure_date
+        datetime arrival_date
+        int status
+        varchar_255 itin_remarks
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    services ||--o{ service_trains : "service_id"

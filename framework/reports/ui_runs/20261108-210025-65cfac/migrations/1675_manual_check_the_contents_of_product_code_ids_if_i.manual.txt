@@ -1,0 +1,4 @@
+Step M1675: Manual: Check the contents of product_code_ids; if it holds lists, move them to a child 
+MANUAL: this step has no generated SQL.
+Check the contents of product_code_ids; if it holds lists, move them to a child table.
+Findings: SCH-011-5f2acd1c

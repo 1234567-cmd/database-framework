@@ -1,0 +1,540 @@
+%% Current schema of power-suite-staging (1 of 57: around users)
+erDiagram
+    users {
+        int id PK
+        varchar_200 company_code FK
+        varchar_160 username
+        varchar_200 password
+        int user_group_id FK
+        varchar_45 search_by
+        tinyint sales_person
+        tinyint inactive
+        varchar_45 first_name
+        varchar_45 last_name
+        varchar_45 first_name_OTH
+        varchar_45 last_name_OTH
+        varchar_45 description
+        int branch_id FK
+        varchar_45 red_apps_only
+        varchar_45 tel_no
+        varchar_45 fax_no
+        int ref_id
+        int mis_team_codes FK
+        varchar_45 email
+        varchar_45 email_options
+        varchar_45 limit
+        varchar_45 amount
+        tinyint approval_zero_credit_limit
+        tinyint amend_gst
+        tinyint accounts
+        tinyint acct
+        tinyint admin
+        tinyint admin_agt
+        tinyint res
+        varchar_200 smtp_from_email
+        varchar_200 smtp_from_name
+        varchar_50 host_user_id
+        varchar_20 pcc
+        varchar_100 default_booking_type
+        timestamp created_at
+        timestamp updated_at
+    }
+    audit_log {
+        bigint id PK
+        varchar_64 entity_type
+        int entity_id
+        varchar_64 parent_type
+        int parent_id
+        varchar_255 field_name
+        text ref
+        text old_value
+        text new_value
+        enum_create_update_delete action
+        int user_id FK
+        varchar_200 company_code
+        varchar_255 route
+        char_36 request_id
+        datetime created_at
+    }
+    branches {
+        int id PK
+        varchar_255 company_code FK
+        varchar_255 code
+        varchar_255 name
+        varchar_255 document_prefix
+        varchar_255 location
+        varchar_255 iata_number
+        varchar_255 pcc
+        int city_id FK
+        int province_id
+    }
+    chart_of_accounts {
+        int id PK
+        int user_id FK
+        varchar_200 company_code
+        varchar_255 key_account
+        varchar_255 description
+        varchar_255 account_type
+        int journal_entry_type_id FK
+        int level
+        varchar_60 type
+        varchar_160 account_number
+        tinyint_1 status
+        int sub_account_id FK
+        tinyint_1 ar_ap_control
+        tinyint_1 disable_sub_account
+        tinyint_1 fx_adjustment
+        tinyint_1 petty_cash_account
+        datetime created_at
+        datetime updated_at
+    }
+    companies {
+        int id PK
+        varchar_255 code
+        varchar_255 name
+        varchar_255 address
+        varchar_255 phone
+        varchar_255 email
+        varchar_100 licence_no
+        varchar_100 ntn
+        varchar_64 timezone
+    }
+    currency_history {
+        int id PK
+        int currency_id FK
+        int user_id FK
+        varchar_255 from_currency
+        varchar_255 to_currency
+        decimal_10_5 old_rate
+        decimal_10_5 new_rate
+        enum_create_update action
+        datetime created_at
+    }
+    customer_deposit_transfers {
+        int id PK
+        varchar_50 transfer_number
+        varchar_200 company_code
+        int branch_id FK
+        int customer_deposit_id FK
+        int to_customer_deposit_id FK
+        int from_customer_id FK
+        int to_customer_id FK
+        varchar_50 from_customer_number
+        varchar_255 from_customer_name
+        varchar_50 to_customer_number
+        varchar_255 to_customer_name
+        varchar_20 relationship
+        decimal_12_2 amount
+        decimal_12_2 current_amount
+        decimal_12_2 source_balance_before
+        decimal_12_2 destination_balance_before
+        enum_Raised_Printed_Partially_Settled_Settled_Void status
+        datetime printed_at
+        varchar_255 remarks
+        text void_remarks
+        tinyint_1 je_generated
+        int user_id FK
+        date adjustment_date
+        datetime created_at
+        datetime updated_at
+    }
+    customer_history {
+        int id PK
+        int customer_id FK
+        int user_id FK
+        varchar_255 field_name
+        text old_value
+        text new_value
+        enum_create_update_delete action
+        datetime created_at
+        int fee_id FK
+    }
+    documents {
+        int id PK
+        varchar_255 document_number
+        enum_costing_invoice_payment document_type
+        int document_id
+        int payment_settlement_id FK
+        int service_id FK
+        varchar_200 company_code
+        int user_id FK
+        datetime created_at
+        datetime updated_at
+    }
+    hotel_allotments {
+        int id PK
+        json product_code_ids
+        varchar_255 hotel_name
+        text address
+        int city_id FK
+        int country_id FK
+        int currency_id FK
+        varchar_60 telephone
+        varchar_160 email
+        int hotel_chain_id FK
+        tinyint_1 pt_hotels
+        tinyint_1 pt_apartment
+        tinyint_1 pt_villas
+        tinyint_1 pr_1_star
+        tinyint_1 pr_2_stars
+        tinyint_1 pr_3_stars
+        tinyint_1 pr_4_stars
+        tinyint_1 pr_5_stars
+        tinyint_1 fac_swimming_pool
+        tinyint_1 fac_parking
+        tinyint_1 fac_free_wifi
+        tinyint_1 fac_hot_tub_jacuzzi
+        tinyint_1 fac_spa
+        tinyint_1 fac_restaurant
+        tinyint_1 fac_airport_shuttle
+        tinyint_1 fac_fitness_centre
+        tinyint_1 fac_non_smoking_rooms
+        tinyint_1 fac_24_hour_front_desk
+        tinyint_1 fac_wheelchair_accessible
+        tinyint_1 fac_room_service
+        tinyint_1 fac_ev_charging_station
+        tinyint_1 rf_children_cribs
+        tinyint_1 rf_balcony
+        tinyint_1 rf_kitchen
+        tinyint_1 rf_air_conditioning
+        tinyint_1 rf_refrigerator
+        tinyint_1 rf_tea_maker
+        tinyint_1 rf_electric_kettle
+        tinyint_1 rf_tv
+        tinyint_1 rf_coffee_machine
+        tinyint_1 rs_wonderful
+        tinyint_1 rs_very_good
+        tinyint_1 rs_good
+        tinyint_1 rs_pleasant
+        varchar_60 distance_city_centre
+        varchar_60 distance_mecca
+        varchar_60 distance_medinah
+        int supplier_id FK
+        varchar_60 supplier_no
+        varchar_200 company_code FK
+        int user_id FK
+        datetime created_at
+        datetime updated_at
+    }
+    import_batches {
+        int id PK
+        varchar_50 batch_no
+        enum_INV_XO_CN_DN_GL batch_type
+        varchar_255 file_name
+        int total_rows
+        decimal_15_2 total_amount
+        varchar_10 currency
+        varchar_255 branches
+        int imported_by FK
+        int company_id
+        datetime created_at
+        datetime updated_at
+        int journal_batch_id FK
+    }
+    iur_upload_logs {
+        int id PK
+        varchar_255 company_code
+        int user_id FK
+        int branch_id FK
+        varchar_255 file_name
+        enum_service_manual_unknown source
+        datetime uploaded_at
+        tinyint_1 is_backfilled
+        varchar_50 pnr
+        varchar_5 transaction_type
+        tinyint_1 is_ndc
+        tinyint_1 is_void
+        varchar_20 void_type
+        varchar_20 iata
+        varchar_10 airline_code
+        varchar_50 customer_number
+        int customer_id FK
+        varchar_255 customer_name
+        tinyint customer_auto_invoice
+        int order_id FK
+        varchar_50 order_number
+        enum_auto_created_reused_pending_pnr_void_none order_action
+        enum_success_duplicate_warning_failed result
+        text message
+        int passenger_count
+        int service_count
+        int emd_count
+        int reissue_count
+        int voided_count
+        text ticket_numbers
+        text passenger_names
+        text service_ids
+        decimal_15_2 invoice_amount
+        varchar_10 currency
+        datetime created_at
+        datetime updated_at
+    }
+    journal_batches {
+        int id PK
+        varchar_50 batch_no
+        varchar_50 journal_entry_period
+        int branch_id FK
+        text narratives
+        datetime dated
+        enum_Manual_JE_System_JE_Opening_JE batch_type
+        enum_Open_Drafted_Posted_Void status
+        int created_by FK
+        int updated_by FK
+        datetime created_at
+        datetime updated_at
+    }
+    login_history {
+        int id PK
+        int user_id FK
+        datetime login_time
+        datetime logout_time
+        datetime created_at
+        datetime updated_at
+    }
+    order_history {
+        int id PK
+        int order_id FK
+        int user_id FK
+        varchar_255 field_name
+        text ref
+        text old_value
+        text new_value
+        enum_create_update_delete action
+        datetime created_at
+    }
+    orders {
+        int customer_id FK
+        int id PK
+        varchar_50 order_number
+        varchar_50 order_type
+        varchar_100 booking_type
+        varchar_100 destination
+        datetime trip_date
+        datetime trip_deadline
+        varchar_50 sales_id
+        varchar_50 payment_type
+        enum_Active_Inactive_Balanced_Ended_Void status
+        datetime created_at
+        datetime updated_at
+        int tcid_id FK
+        int user_id FK
+        int tcid_user_id FK
+        int branch_id FK
+        varchar_200 company_code
+        varchar_20 iata
+    }
+    reports {
+        int id PK
+        varchar_255 report_number
+        varchar_60 report_type
+        varchar_5 file_type
+        int user_id FK
+        datetime created_at
+        datetime updated_at
+    }
+    services {
+        int id PK
+        int service_type_id FK
+        int user_id FK
+        text description
+        varchar_8 pnr
+        varchar_100 supplier_reference
+        int quantity
+        enum_Booked_Confirmed_Cancelled status
+        int order_id FK
+        varchar_200 company_code
+        int supplier_id FK
+        datetime created_at
+        datetime updated_at
+        tinyint processed_iur
+        int airline_form
+        datetime ticket_issue_date
+        datetime iur_processed_date
+        varchar_50 service_group_id
+        enum_ADT_CHD_INF_ALL passenger_type_filter
+        varchar_20 iata
+    }
+    suppliers {
+        int id PK
+        int user_id FK
+        varchar_200 company_code
+        varchar_255 supp_name
+        varchar_255 supp_no
+        int supplier_type_id FK
+        tinyint_1 hotel_vendor
+        tinyint_1 sundry_profile
+        tinyint_1 BSP
+        varchar_255 sabre_code
+        varchar_255 default_payee
+        varchar_255 interface_account_no
+        varchar_255 gst_reg_no
+        varchar_255 service_provided
+        varchar_255 internet_address
+        tinyint_1 active
+        varchar_255 remarks
+        varchar_255 address
+        varchar_255 post_code
+        varchar_255 country_code
+        decimal_10_2 credit_limit
+        int trading_currency FK
+        decimal_10_2 comission
+        int credit_days_1
+        varchar_255 credit_term_type
+        enum_credit_days_BSP_Payment_Term_BSP_PAYMENT_15_days_Statement_Date_Weekly_COA date_type
+        enum_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday_Sunday weekly
+        tinyint_1 last_day_month
+        datetime other_due_date
+        varchar_255 e_Nett
+        varchar_255 mint_EFT
+        varchar_255 travel_pay_b2b
+        varchar_255 beneficiary_bk_name
+        varchar_255 bank_code
+        varchar_255 bank_address
+        varchar_255 remarks_bank
+        varchar_255 city_bank
+        varchar_255 country_bank
+        varchar_255 beneficiary_name
+        varchar_255 account_one
+        varchar_255 iban_one
+        varchar_255 account_two
+        varchar_255 iban_two
+        varchar_255 account_three
+        varchar_255 iban_three
+        varchar_255 account_four
+        varchar_255 iban_four
+        varchar_255 swift_code
+        varchar_255 bic
+        varchar_255 benef_reamrks
+        varchar_255 beneficiary_name_two
+        varchar_255 beneficiary_address_two
+        varchar_255 beneficiary_account_two
+        varchar_255 beneficiary_swiftcode_two
+        varchar_255 beneficiary_remarks_two
+        varchar_255 beneficiary_name_three
+        varchar_255 beneficiary_address_three
+        varchar_255 beneficiary_account_three
+        varchar_255 beneficiary_swiftcode_three
+        varchar_255 beneficiary_remarks_three
+        timestamp created_at
+        datetime updated_at
+        int supplier_amends FK
+        decimal_10_2 commission_percentage
+        decimal_10_2 commission_amount
+        enum_active_inactive_blacklist_suspend status
+        tinyint_1 use_percent_commission
+    }
+    tcid_users {
+        int id PK
+        varchar_255 company_code FK
+        int user_id FK
+        tinyint_1 inactive
+        datetime created_at
+        datetime updated_at
+    }
+    city_codes {
+        external stub "see the diagram that holds this table"
+    }
+    country_codes {
+        external stub "see the diagram that holds this table"
+    }
+    currencies {
+        external stub "see the diagram that holds this table"
+    }
+    currency_codes {
+        external stub "see the diagram that holds this table"
+    }
+    customer_deposits {
+        external stub "see the diagram that holds this table"
+    }
+    customers {
+        external stub "see the diagram that holds this table"
+    }
+    fee_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    hotel_chain_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    journal_entry_types {
+        external stub "see the diagram that holds this table"
+    }
+    payment_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    sub_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    supplier_amends {
+        external stub "see the diagram that holds this table"
+    }
+    supplier_types {
+        external stub "see the diagram that holds this table"
+    }
+    team_codes {
+        external stub "see the diagram that holds this table"
+    }
+    user_groups {
+        external stub "see the diagram that holds this table"
+    }
+    branches ||--o{ users : "branch_id"
+    companies ||--o{ users : "company_code"
+    team_codes ||--o{ users : "mis_team_codes"
+    user_groups ||--o{ users : "user_group_id"
+    users ||--o{ audit_log : "user_id"
+    city_codes ||--o{ branches : "city_id"
+    companies ||--o{ branches : "company_code"
+    users ||--o{ chart_of_accounts : "user_id"
+    journal_entry_types ||--o{ chart_of_accounts : "journal_entry_type_id"
+    sub_accounts ||--o{ chart_of_accounts : "sub_account_id"
+    currencies ||--o{ currency_history : "currency_id"
+    users ||--o{ currency_history : "user_id"
+    branches ||--o{ customer_deposit_transfers : "branch_id"
+    customer_deposits ||--o{ customer_deposit_transfers : "customer_deposit_id"
+    customers ||--o{ customer_deposit_transfers : "from_customer_id"
+    customers ||--o{ customer_deposit_transfers : "to_customer_id"
+    customer_deposits ||--o{ customer_deposit_transfers : "to_customer_deposit_id"
+    users ||--o{ customer_deposit_transfers : "user_id"
+    customers ||--o{ customer_history : "customer_id"
+    fee_maintenances ||--o{ customer_history : "fee_id"
+    users ||--o{ customer_history : "user_id"
+    services ||--o{ documents : "service_id"
+    users ||--o{ documents : "user_id"
+    payment_settlements ||--o{ documents : "payment_settlement_id"
+    city_codes ||--o{ hotel_allotments : "city_id"
+    country_codes ||--o{ hotel_allotments : "country_id"
+    currency_codes ||--o{ hotel_allotments : "currency_id"
+    hotel_chain_maintenances ||--o{ hotel_allotments : "hotel_chain_id"
+    suppliers ||--o{ hotel_allotments : "supplier_id"
+    companies ||--o{ hotel_allotments : "company_code"
+    users ||--o{ hotel_allotments : "user_id"
+    journal_batches ||--o{ import_batches : "journal_batch_id"
+    users ||--o{ import_batches : "imported_by"
+    branches ||--o{ iur_upload_logs : "branch_id"
+    customers ||--o{ iur_upload_logs : "customer_id"
+    orders ||--o{ iur_upload_logs : "order_id"
+    users ||--o{ iur_upload_logs : "user_id"
+    branches ||--o{ journal_batches : "branch_id"
+    users ||--o{ journal_batches : "created_by"
+    users ||--o{ journal_batches : "updated_by"
+    users ||--o{ login_history : "user_id"
+    orders ||--o{ order_history : "order_id"
+    users ||--o{ order_history : "user_id"
+    branches ||--o{ orders : "branch_id"
+    users ||--o{ orders : "tcid_user_id"
+    customers ||--o{ orders : "customer_id"
+    team_codes ||--o{ orders : "tcid_id"
+    users ||--o{ orders : "user_id"
+    users ||--o{ reports : "user_id"
+    users ||--o{ services : "user_id"
+    service_types ||--o{ services : "service_type_id"
+    orders ||--o{ services : "order_id"
+    suppliers ||--o{ services : "supplier_id"
+    users ||--o{ suppliers : "user_id"
+    currency_codes ||--o{ suppliers : "trading_currency"
+    supplier_amends ||--o{ suppliers : "supplier_amends"
+    supplier_types ||--o{ suppliers : "supplier_type_id"
+    companies ||--o{ tcid_users : "company_code"
+    users ||--o{ tcid_users : "user_id"

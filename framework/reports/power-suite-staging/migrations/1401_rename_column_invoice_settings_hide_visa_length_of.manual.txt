@@ -1,0 +1,4 @@
+Step M1401: Rename column invoice_settings.hide_visa_length_of_stay to is_hide_visa_length_of_stay
+MANUAL: this step has no generated SQL.
+Table invoice_settings matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoice_settings.hide_visa_length_of_stay to is_hide_visa_length_of_stay.
+Findings: SCH-060-b319b965

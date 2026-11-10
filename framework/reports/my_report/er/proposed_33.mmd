@@ -1,0 +1,27 @@
+%% Proposed schema of power-suite-staging (33 of 80: around visa_code_require_codes)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    visa_code_require_codes {
+        int id PK
+        int visa_code_maintenance_id FK "proposed: added"
+        int visa_require_code_id FK "proposed: added"
+        timestamp updated_at "proposed: added"
+    }
+    visa_require_codes {
+        int id PK
+        varchar_255 description
+        varchar_255 code
+        varchar_255 display_order
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    visa_code_maintenance {
+        external stub "see the diagram that holds this table"
+    }
+    visa_code_maintenance ||--o{ visa_code_require_codes : "visa_code_maintenance_id (proposed)"
+    visa_require_codes ||--o{ visa_code_require_codes : "visa_require_code_id (proposed)"

@@ -1,0 +1,4 @@
+Step M1902: Manual: Keep address in companies only, or maintain the copy through one controlled mech
+MANUAL: this step has no generated SQL.
+Keep address in companies only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-27f8362f

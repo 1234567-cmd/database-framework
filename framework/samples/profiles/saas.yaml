@@ -1,0 +1,6 @@
+# Pooled multi-tenant SaaS on PostgreSQL: every tenant shares the same tables.
+workload: OLTP
+tenancy: pool
+tenant_column: tenant_id
+tenant_exempt_tables: [tenants]
+target_engines: [postgres]

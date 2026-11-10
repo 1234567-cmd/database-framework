@@ -1,0 +1,4 @@
+Step M1365: Contract: drop the old payment_settlement_customer_deposits.base_amount__dbintel_old
+MANUAL: this step has no generated SQL.
+Table payment_settlement_customer_deposits matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change. Intended change: Contract: drop the old payment_settlement_customer_deposits.base_amount__dbintel_old.
+Findings: SCH-023-6f0487d7

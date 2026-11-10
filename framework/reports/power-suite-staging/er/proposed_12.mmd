@@ -1,0 +1,104 @@
+%% Proposed schema of power-suite-staging (12 of 80: around hotel_allotment_rooms)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    hotel_allotment_rooms {
+        int id PK
+        int hotel_allotment_id FK
+        int room_type_id FK
+        int room_category_id FK
+        date check_in_date
+        date check_out_date
+        int no_of_rooms
+        int available_rooms
+        decimal_14_4 cost "proposed: changed"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    room_categories {
+        int id PK
+        int display_order
+        varchar_255 rm_cat
+        varchar_255 hotel_smart_code
+        tinyint_1 is_default_new_hotel "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    room_types {
+        int id PK
+        int display_order
+        varchar_255 room_type
+        int no_of_guests
+        tinyint_1 is_default_new_hotel "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_hajj_hotels {
+        int id PK
+        int service_hajj_id FK
+        varchar_255 hotel_name
+        varchar_255 city
+        varchar_45 distance
+        varchar_255 standard
+        datetime check_in_at "proposed: added"
+        datetime check_out_at "proposed: added"
+        int nights
+        varchar_255 meal_plan
+        varchar_255 view
+        int room_type_id FK "proposed: added"
+        varchar_255 booking_ref
+        varchar_255 conf
+        int qty
+        int allotment_room_id
+        tinyint rooms_released
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_umrah_hotels {
+        int id PK
+        int service_umrah_id FK
+        varchar_255 hotel_name
+        varchar_255 distance
+        varchar_255 category
+        varchar_255 city
+        date check_in_date "proposed: added"
+        date check_out_date "proposed: added"
+        int nights
+        int room_type_id FK "proposed: added"
+        varchar_255 view
+        int qty
+        varchar_255 meal_plan
+        varchar_255 status
+        int allotment_room_id
+        tinyint rooms_released
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    hotel_allotments {
+        external stub "see the diagram that holds this table"
+    }
+    service_hajjs {
+        external stub "see the diagram that holds this table"
+    }
+    service_umrahs {
+        external stub "see the diagram that holds this table"
+    }
+    hotel_allotments ||--o{ hotel_allotment_rooms : "hotel_allotment_id"
+    room_types ||--o{ hotel_allotment_rooms : "room_type_id"
+    room_categories ||--o{ hotel_allotment_rooms : "room_category_id"
+    room_types ||--o{ service_hajj_hotels : "room_type_id (proposed)"
+    service_hajjs ||--o{ service_hajj_hotels : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_hotels : "service_hajj_id"
+    room_types ||--o{ service_umrah_hotels : "room_type_id (proposed)"
+    service_umrahs ||--o{ service_umrah_hotels : "service_umrah_id"

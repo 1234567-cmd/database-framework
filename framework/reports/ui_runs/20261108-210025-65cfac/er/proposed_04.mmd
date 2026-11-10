@@ -1,0 +1,145 @@
+%% Proposed schema of power-suite-staging (4 of 80: around posting_rules)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    posting_rules {
+        bigint id PK "proposed: changed"
+        varchar_255 company_code FK "proposed: changed"
+        int journal_entry_type_id FK
+        int posting_number_type_id FK
+        int posting_number_prefix_id FK
+        int customer_type_id FK
+        enum_debit_credit debit_credit
+        int service_type_id FK
+        int sub_account_id FK
+        int chart_of_account_id FK
+        int branch_id FK
+        varchar_10 prefix_code
+        enum_Default_Additional record_type
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customer_types {
+        int id PK
+        varchar_20 type
+        varchar_45 company_code
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    journal_entry_types {
+        int id PK
+        varchar_255 code
+        varchar_255 description
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    posting_number_prefixes {
+        int id PK
+        int posting_number_type_id FK
+        int branch_id FK
+        varchar_255 code
+        varchar_255 description
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    posting_number_types {
+        int id PK
+        varchar_255 code
+        varchar_255 description
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    sub_accounts {
+        int id PK
+        varchar_255 company_code FK "proposed: changed"
+        varchar_255 sub_account_no
+        varchar_255 description
+        varchar_255 interface_account_no
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    journal_entries {
+        bigint id PK "proposed: changed"
+        int entry_no
+        int journal_batch_id FK
+        varchar_200 company_code
+        datetime transaction_date
+        int chart_of_account_id FK
+        int sub_account_id FK
+        decimal_17_4 debit "proposed: changed"
+        decimal_17_4 credit "proposed: changed"
+        varchar_160 gl_entity_id
+        text description
+        varchar_160 analysis_code1
+        varchar_160 analysis_code2
+        varchar_160 analysis_code3
+        varchar_160 analysis_code4
+        varchar_160 analysis_code5
+        varchar_160 analysis_code6
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        char_3 currency_code "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    special_account_maintenances {
+        int id PK
+        enum_CashBox_Account_Special_Income_Account_Payment_Account_Settlement_Account_CCCF_UATP_Account_Credit_Card_Account_Petty_Cash_Account account_type
+        int chart_of_account_id FK
+        int sub_account_id FK
+        tinyint_1 is_adj_account "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    journal_batches {
+        external stub "see the diagram that holds this table"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ posting_rules : "company_code"
+    journal_entry_types ||--o{ posting_rules : "journal_entry_type_id"
+    posting_number_types ||--o{ posting_rules : "posting_number_type_id"
+    posting_number_prefixes ||--o{ posting_rules : "posting_number_prefix_id"
+    customer_types ||--o{ posting_rules : "customer_type_id"
+    service_types ||--o{ posting_rules : "service_type_id"
+    sub_accounts ||--o{ posting_rules : "sub_account_id"
+    chart_of_accounts ||--o{ posting_rules : "chart_of_account_id"
+    branches ||--o{ posting_rules : "branch_id (proposed)"
+    posting_number_types ||--o{ posting_number_prefixes : "posting_number_type_id"
+    branches ||--o{ posting_number_prefixes : "branch_id (proposed)"
+    companies ||--o{ sub_accounts : "company_code"
+    journal_batches ||--o{ journal_entries : "journal_batch_id"
+    chart_of_accounts ||--o{ journal_entries : "chart_of_account_id"
+    sub_accounts ||--o{ journal_entries : "sub_account_id"
+    chart_of_accounts ||--o{ special_account_maintenances : "chart_of_account_id"
+    sub_accounts ||--o{ special_account_maintenances : "sub_account_id"

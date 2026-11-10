@@ -1,0 +1,24 @@
+%% Proposed schema of power-suite-staging (70 of 80: around smtp_settings)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    smtp_settings {
+        int id PK
+        varchar_255 company_code FK
+        varchar_255 smtp_host
+        int smtp_port
+        varchar_255 smtp_user
+        varchar_255 smtp_password
+        enum_none_ssl_tls smtp_encryption
+        varchar_255 from_email
+        varchar_255 from_name
+        tinyint_1 is_active
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ smtp_settings : "company_code"

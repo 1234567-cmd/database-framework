@@ -1,0 +1,16 @@
+%% Current schema of power-suite-staging (30 of 57: around credit_control_pccs)
+erDiagram
+    credit_control_pccs {
+        int id PK
+        int supplier_id FK
+        varchar_255 pseudo_code_one
+        varchar_255 pseudo_code_two
+        varchar_255 pseudo_code_three
+        varchar_255 pseudo_code_four
+        datetime created_at
+        datetime updated_at
+    }
+    suppliers {
+        external stub "see the diagram that holds this table"
+    }
+    suppliers ||--o{ credit_control_pccs : "supplier_id"

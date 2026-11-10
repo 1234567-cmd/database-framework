@@ -1,0 +1,4 @@
+Step M1339: Decision needed: conflicting proposals for suppliers.BSP
+MANUAL: this step has no generated SQL.
+Conflicting new names for suppliers.BSP: ['bsp', 'is_bsp'].
+Findings: SCH-052-e95bd029, SCH-060-052978e0

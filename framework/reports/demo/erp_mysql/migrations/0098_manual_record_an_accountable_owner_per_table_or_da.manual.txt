@@ -1,0 +1,4 @@
+Step M098: Manual: Record an accountable owner per table or dataset.
+MANUAL: this step has no generated SQL.
+Record an accountable owner per table or dataset.
+Findings: GVN-003-ef0005c6

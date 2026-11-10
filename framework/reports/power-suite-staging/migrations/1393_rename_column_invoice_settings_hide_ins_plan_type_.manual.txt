@@ -1,0 +1,4 @@
+Step M1393: Rename column invoice_settings.hide_ins_plan_type to is_hide_ins_plan_type
+MANUAL: this step has no generated SQL.
+Table invoice_settings matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoice_settings.hide_ins_plan_type to is_hide_ins_plan_type.
+Findings: SCH-060-6e16587d

@@ -1,0 +1,4 @@
+Step M1973: Manual: If the UUIDs are random, use a time-ordered version or a 64-bit key.
+MANUAL: this step has no generated SQL.
+If the UUIDs are random, use a time-ordered version or a 64-bit key.
+Findings: PERF-033-29537d8a

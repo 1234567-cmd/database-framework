@@ -1,0 +1,4 @@
+Step M2326: Manual: Choose the delete and update action for this relationship.
+MANUAL: this step has no generated SQL.
+Choose the delete and update action for this relationship.
+Findings: SCH-007-a1d58a9e

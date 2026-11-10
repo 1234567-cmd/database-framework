@@ -1,0 +1,9 @@
+-- Step M623: Contract: drop the old credit_notes.amount__dbintel_old
+-- Direction: down
+-- Findings: SCH-023-7d6ec080
+-- Destructive: True. Reversible: False. Data loss risk: high. Lock risk: medium.
+-- PROPOSAL ONLY. Review before use.
+-- Requires a verified backup first.
+-- Precheck: Column credit_notes.amount__dbintel_old exists. Expect 1: SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'credit_notes' AND table_schema = DATABASE() AND column_name = 'amount__dbintel_old'
+-- Note: Run only after the new column has been verified in production through at least one release (MIG-004).
+-- NOT REVERSIBLE WITHOUT LOSS: Dropping the old column removes its data. Restoring it requires a backup.

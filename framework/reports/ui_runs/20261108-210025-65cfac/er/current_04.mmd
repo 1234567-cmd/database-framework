@@ -1,0 +1,390 @@
+%% Current schema of power-suite-staging (4 of 57: around payment_settlements)
+erDiagram
+    payment_settlements {
+        int id PK
+        varchar_255 payment_number
+        int coa_id FK
+        int supplier_id FK
+        int user_id
+        varchar_200 company_code
+        int branch_id
+        decimal_10_2 amount
+        varchar_255 remarks
+        text void_remarks
+        datetime created_at
+        datetime updated_at
+        enum_Printed_Raised_Void status
+        int_unsigned credit_note_id FK
+        int customer_id
+        varchar_30 settlement_type
+        tinyint_1 je_generated
+        date adjustment_date
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+    }
+    payment_settlement_costs {
+        int id PK
+        int cost_id FK
+        int payment_settlement_id FK
+        decimal_10_2 amount
+        datetime created_at
+        datetime updated_at
+    }
+    payment_settlement_credit_notes {
+        int id PK
+        int payment_settlement_id FK
+        int_unsigned credit_note_id FK
+        decimal_10_2 amount
+        varchar_10 currency_code
+        decimal_10_4 exchange_rate
+        decimal_10_2 base_amount
+        text remarks
+        datetime created_at
+        datetime updated_at
+    }
+    payment_settlement_debit_notes {
+        int id PK
+        int payment_settlement_id FK
+        int debit_note_id FK
+        decimal_10_2 amount
+        varchar_10 currency_code
+        decimal_10_4 exchange_rate
+        decimal_10_2 base_amount
+        text remarks
+        datetime created_at
+        datetime updated_at
+    }
+    payment_settlement_expenses {
+        int id PK
+        int payment_settlement_id FK
+        int coa_id FK
+        int branch_id
+        varchar_255 remarks
+        decimal_10_2 debit
+        decimal_10_2 credit
+        datetime created_at
+        datetime updated_at
+    }
+    payment_settlement_overpayments {
+        int id PK
+        int payment_settlement_id FK
+        int source_payment_settlement_id FK
+        int source_payment_id FK
+        decimal_10_2 amount
+        datetime created_at
+        datetime updated_at
+    }
+    payment_settlement_payments {
+        int id PK
+        int payment_settlement_id FK
+        int bank_id FK
+        int currency_id
+        varchar_50 check_number
+        int card_type_id FK
+        varchar_50 card_number
+        varchar_50 voucher_number
+        varchar_50 gl_account_box
+        varchar_50 account_number
+        decimal_10_2 amount
+        int pay_type_id FK
+        int chart_of_account_id FK
+        int gl_account_id
+        varchar_255 remarks
+        datetime created_at
+        datetime updated_at
+        date adjustment_date
+        decimal_10_2 overpay_amount
+        varchar_45 transfer_type
+        varchar_45 reference_number
+    }
+    costs {
+        int id PK
+        varchar_255 supplier_reference
+        date supplier_due_date
+        varchar_255 charge_type
+        decimal_10_2 amount
+        decimal_10_2 published_rate
+        varchar_160 spl_fare_code
+        decimal_10_5 commission
+        decimal_12_2 commission_value
+        decimal_10_2 net_rate
+        varchar_3 currency
+        decimal_10_2 exchange_rate
+        int quantity
+        decimal_10_2 free_of_cost
+        int service_id FK
+        varchar_200 company_code
+        int branch_id
+        enum_Paid_Partially_Paid_Raised_Void_Printed status
+        datetime created_at
+        datetime updated_at
+        decimal_10_2 staff_comission
+        decimal_10_2 sst
+        tinyint gst_inclusive
+        decimal_15_2 total_costing
+        tinyint_1 je_generated
+        text remarks
+        int credit_days
+        tinyint is_opening
+        int import_batch_id FK
+        varchar_50 xo_number
+        decimal_10_2 extra_charges_percent
+        text void_remarks
+        int passenger_id FK
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+    }
+    debit_notes {
+        int id PK
+        int doc_no
+        date doc_date
+        varchar_50 doc_type
+        varchar_255 reference
+        varchar_255 client_reference
+        decimal_10_2 amount
+        decimal_15_2 amount_base
+        decimal_10_2 billing_amount
+        decimal_10_2 base_amount
+        decimal_10_2 refund_amount
+        varchar_10 currency_id
+        int base_currency_id FK
+        decimal_10_5 exchange_rate
+        date exchange_rate_date
+        enum_Printed_Partially_Paid_Paid_Void doc_status
+        int supplier_id
+        varchar_255 supplier_name
+        text supplier_address
+        varchar_255 from_company
+        text remarks
+        varchar_255 request_by
+        varchar_255 approved_by
+        varchar_50 type
+        int bank_id
+        text bank_details
+        int created_by
+        int updated_by
+        int branch_id
+        varchar_200 company_code
+        timestamp created_at
+        timestamp updated_at
+        tinyint_1 je_generated
+        int refund_id
+        decimal_10_2 used_amount
+        varchar_45 settled_payment_number
+        tinyint is_opening
+        int import_batch_id FK
+        varchar_255 pax_name
+        text void_remarks
+        int passenger_id FK
+        int cost_id FK
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+    }
+    pay_card_types {
+        int id PK
+        varchar_255 card_type
+    }
+    pay_type_forms {
+        int id PK
+        varchar_255 label
+        int chart_of_account_id FK
+        varchar_255 account_key
+    }
+    cost_taxes {
+        int id PK
+        int cost_id FK
+        varchar_255 tax_code
+        decimal_10_2 tax_amount
+        text remarks
+        datetime created_at
+        datetime updated_at
+    }
+    passengers {
+        int id PK
+        varchar_300 passenger_name
+        enum_ADT_CHD_INF passenger_type
+        tinyint_1 lead_passenger
+        varchar_45 passport_number
+        varchar_45 ticket_number
+        int order_id FK
+        varchar_200 company_code
+        int branch_id
+        timestamp created_at
+        timestamp updated_at
+    }
+    payments {
+        int id PK
+        decimal_10_2 amount
+        datetime payment_date
+        varchar_50 payment_method
+        int cost_id FK
+        int bank_account_id FK
+        text report
+        varchar_255 remarks
+        datetime created_at
+        datetime updated_at
+    }
+    refunds {
+        int id PK
+        varchar_50 order_no
+        varchar_50 invoice_no
+        varchar_255 cost_document_number
+        varchar_500 refund
+        varchar_100 form_of_payment
+        varchar_45 currency_code
+        int base_currency_id FK
+        decimal_10_5 exchange_rate
+        date exchange_rate_date
+        decimal_15_2 customer_refund_amount
+        decimal_15_2 customer_refund_amount_base
+        decimal_15_2 customer_airline_charges
+        decimal_15_2 customer_refund_charges
+        decimal_15_2 supplier_refund_amount
+        decimal_15_2 supplier_refund_amount_base
+        decimal_15_2 supplier_airline_charges
+        decimal_15_2 supplier_refund_charges
+        text refund_remarks
+        json voucher_no
+        varchar_100 bank_in_to
+        tinyint customer_refund_complete
+        tinyint supplier_refund_complete
+        int sales
+        varchar_255 supp_name
+        longtext passenger_name
+        varchar_255 customer_name
+        varchar_255 refund_notice
+        int branch_id FK
+        varchar_200 company_code
+        enum_Void_Printed_Raised status
+        datetime created_at
+        datetime updated_at
+        int service_id FK
+        enum_Flight_Hotel_Insurance_Tour_CarRental_CarTransfer_VISA_Train_Cruise_Miscellaneous_Hajj_Umrah service_type
+        json service_details
+        varchar_50 refund_no
+        int orderId
+        int invoice_id FK
+        int cost_id FK
+        json selected_tickets
+        json selected_segments
+        json selected_passengers
+        tinyint_1 je_generated
+        tinyint_1 debit_note_generated
+        json calculator_overrides
+        int debit_note_id
+    }
+    visa_documents {
+        int id PK
+        int service_id
+        varchar_45 quantity
+        varchar_200 remark
+        varchar_100 document_type
+        date modified_date
+        int passenger_id FK
+        int visa_id FK
+    }
+    bank_accounts {
+        int id PK
+        varchar_255 bank_id
+        varchar_255 bank_account_code
+        varchar_255 account_number
+        int chart_of_account_id
+        varchar_45 company_code
+        int status
+        tinyint is_manual_bank
+        varchar_45 manual_bank_name
+        datetime created_at
+        datetime updated_at
+    }
+    receipts {
+        int id PK
+        varchar_50 receipt_number
+        datetime receipt_date
+        decimal_10_2 total_amount
+        enum_Paid_Unpaid_Partially_Paid status
+        varchar_160 payment_method
+        int invoice_id FK
+        int bank_account_id FK
+        text report
+        datetime created_at
+        datetime updated_at
+    }
+    banks {
+        external stub "see the diagram that holds this table"
+    }
+    branches {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    credit_notes {
+        external stub "see the diagram that holds this table"
+    }
+    currency_codes {
+        external stub "see the diagram that holds this table"
+    }
+    import_batches {
+        external stub "see the diagram that holds this table"
+    }
+    invoices {
+        external stub "see the diagram that holds this table"
+    }
+    orders {
+        external stub "see the diagram that holds this table"
+    }
+    service_visas {
+        external stub "see the diagram that holds this table"
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    suppliers {
+        external stub "see the diagram that holds this table"
+    }
+    credit_notes ||--o{ payment_settlements : "credit_note_id"
+    chart_of_accounts ||--o{ payment_settlements : "coa_id"
+    suppliers ||--o{ payment_settlements : "supplier_id"
+    costs ||--o{ payment_settlement_costs : "cost_id"
+    payment_settlements ||--o{ payment_settlement_costs : "payment_settlement_id"
+    payment_settlements ||--o{ payment_settlement_credit_notes : "payment_settlement_id"
+    credit_notes ||--o{ payment_settlement_credit_notes : "credit_note_id"
+    payment_settlements ||--o{ payment_settlement_debit_notes : "payment_settlement_id"
+    debit_notes ||--o{ payment_settlement_debit_notes : "debit_note_id"
+    chart_of_accounts ||--o{ payment_settlement_expenses : "coa_id"
+    payment_settlements ||--o{ payment_settlement_expenses : "payment_settlement_id"
+    payment_settlements ||--o{ payment_settlement_overpayments : "payment_settlement_id"
+    payment_settlements ||--o{ payment_settlement_overpayments : "source_payment_settlement_id"
+    payment_settlement_payments ||--o{ payment_settlement_overpayments : "source_payment_id"
+    chart_of_accounts ||--o{ payment_settlement_payments : "chart_of_account_id"
+    payment_settlements ||--o{ payment_settlement_payments : "payment_settlement_id"
+    banks ||--o{ payment_settlement_payments : "bank_id"
+    pay_card_types ||--o{ payment_settlement_payments : "card_type_id"
+    pay_type_forms ||--o{ payment_settlement_payments : "pay_type_id"
+    services ||--o{ costs : "service_id"
+    import_batches ||--o{ costs : "import_batch_id"
+    passengers ||--o{ costs : "passenger_id"
+    currency_codes ||--o{ debit_notes : "base_currency_id"
+    costs ||--o{ debit_notes : "cost_id"
+    import_batches ||--o{ debit_notes : "import_batch_id"
+    passengers ||--o{ debit_notes : "passenger_id"
+    chart_of_accounts ||--o{ pay_type_forms : "chart_of_account_id"
+    costs ||--o{ cost_taxes : "cost_id"
+    orders ||--o{ passengers : "order_id"
+    bank_accounts ||--o{ payments : "bank_account_id"
+    costs ||--o{ payments : "cost_id"
+    costs ||--o{ refunds : "cost_id"
+    invoices ||--o{ refunds : "invoice_id"
+    currency_codes ||--o{ refunds : "base_currency_id"
+    branches ||--o{ refunds : "branch_id"
+    services ||--o{ refunds : "service_id"
+    passengers ||--o{ visa_documents : "passenger_id"
+    service_visas ||--o{ visa_documents : "visa_id"
+    bank_accounts ||--o{ receipts : "bank_account_id"
+    invoices ||--o{ receipts : "invoice_id"

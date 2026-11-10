@@ -1,0 +1,6 @@
+customer_id,customer_code,name,email,country,created_at
+1,C-100,Pine Sample Ltd,pine@example.com,DE,2024-01-05
+2,C-101,Oak Demo GmbH,oak@example.com,DE,2024-01-06
+3,C-102,Elm Fake BV,not-an-email,NL,2024-02-01
+3,C-102,Elm Fake BV,not-an-email,NL,2024-02-01
+4,C-103,Ash Test LLC,ash@example.org,US,2024-02-09

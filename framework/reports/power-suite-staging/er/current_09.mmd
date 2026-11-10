@@ -1,0 +1,30 @@
+%% Current schema of power-suite-staging (9 of 57: around city_codes)
+erDiagram
+    city_codes {
+        int id PK
+        varchar_255 code
+        varchar_255 name
+        varchar_45 airport_name
+        varchar_45 country_name
+        varchar_45 country_abbr
+        varchar_45 world_area_code
+    }
+    service_flights {
+        int id PK
+        int service_id FK
+        int city_from FK
+        int city_to FK
+        int airline_id
+        datetime departure_date
+        datetime arrival_date
+        varchar_100 flight_number
+        int flight_class
+        datetime created_at
+        datetime updated_at
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    city_codes ||--o{ service_flights : "city_from"
+    city_codes ||--o{ service_flights : "city_to"
+    services ||--o{ service_flights : "service_id"

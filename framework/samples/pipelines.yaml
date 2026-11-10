@@ -1,0 +1,30 @@
+# Fictional ETL manifest for the ERP sample.
+pipelines:
+  - name: nightly_sales_load
+    schedule: "0 2 * * *"
+    steps:
+      - name: extract_orders
+        kind: extract
+        sources: [orders, order_items]
+        targets: [stg_orders]
+      - name: load_fact_sales
+        kind: load
+        sql: "INSERT INTO fact_sales SELECT * FROM stg_orders"
+        sources: [stg_orders]
+        targets: [fact_sales]
+        write_mode: append
+  - name: daily_ledger_snapshot
+    owner: finance-data
+    retries: 2
+    idempotent: true
+    records_run_metadata: true
+    emits_lineage: true
+    quality_checks: [ledger_balanced]
+    steps:
+      - name: snapshot_journal
+        kind: transform
+        sql: "DELETE FROM ledger_snapshot; INSERT INTO ledger_snapshot SELECT * FROM journal_lines"
+        sources: [journal_lines]
+        targets: [ledger_snapshot]
+        write_mode: overwrite
+        merge_keys: [id]

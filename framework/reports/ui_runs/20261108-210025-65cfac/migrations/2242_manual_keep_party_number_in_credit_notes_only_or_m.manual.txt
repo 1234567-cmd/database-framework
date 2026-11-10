@@ -1,0 +1,4 @@
+Step M2242: Manual: Keep party_number in credit_notes only, or maintain the copy through one control
+MANUAL: this step has no generated SQL.
+Keep party_number in credit_notes only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-3a383389

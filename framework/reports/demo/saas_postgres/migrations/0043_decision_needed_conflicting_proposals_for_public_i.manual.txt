@@ -1,0 +1,4 @@
+Step M043: Decision needed: conflicting proposals for public.invoices.updated_at
+MANUAL: this step has no generated SQL.
+Two proposals add public.invoices.updated_at with different types.
+Findings: DE-005-f0c2b3f6, SCH-044-29e07929

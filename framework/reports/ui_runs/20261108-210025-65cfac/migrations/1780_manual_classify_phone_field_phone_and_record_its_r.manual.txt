@@ -1,0 +1,4 @@
+Step M1780: Manual: Classify phone_field (phone) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify phone_field (phone) and record its required protections.
+Findings: SECA-004-4aa2daee

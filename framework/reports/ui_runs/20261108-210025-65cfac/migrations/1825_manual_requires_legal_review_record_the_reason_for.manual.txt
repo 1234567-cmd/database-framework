@@ -1,0 +1,4 @@
+Step M1825: Manual: Requires legal review: record the reason for each gap for the applicable jurisdi
+MANUAL: this step has no generated SQL.
+Requires legal review: record the reason for each gap for the applicable jurisdiction. Do not renumber issued documents.
+Findings: FINA-003-fdb941c4

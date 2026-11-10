@@ -1,0 +1,4 @@
+Step M097: Manual: Pipeline nightly_sales_load: configure bounded retries once its steps are idempo
+MANUAL: this step has no generated SQL.
+Pipeline nightly_sales_load: configure bounded retries once its steps are idempotent.
+Findings: DE-011-17ae8cc7

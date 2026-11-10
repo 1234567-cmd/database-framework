@@ -1,0 +1,4 @@
+Step M1405: Rename column invoice_settings.hide_visa_validity_period to is_hide_visa_validity_period
+MANUAL: this step has no generated SQL.
+Table invoice_settings matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoice_settings.hide_visa_validity_period to is_hide_visa_validity_period.
+Findings: SCH-060-99993a50

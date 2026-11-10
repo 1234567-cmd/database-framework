@@ -1,0 +1,4 @@
+Step M1333: Decision needed: conflicting proposals for cus_supplementaries.amount
+MANUAL: this step has no generated SQL.
+Conflicting target types for cus_supplementaries.amount: ['decimal(12,2)', 'decimal(14,4)'].
+Findings: SCH-022-dc7e0e70, SCH-023-ba12d41d

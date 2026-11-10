@@ -1,0 +1,4 @@
+Step M140: Manual: Pipeline daily_ledger_snapshot, step snapshot_journal: build into a staging tabl
+MANUAL: this step has no generated SQL.
+Pipeline daily_ledger_snapshot, step snapshot_journal: build into a staging table and swap, or wrap the replace in one transaction.
+Findings: DE-002-4a1441ab

@@ -1,0 +1,4 @@
+Step M1332: Decision needed: conflicting proposals for credit_notes.sst_handling_fee
+MANUAL: this step has no generated SQL.
+Conflicting target types for credit_notes.sst_handling_fee: ['decimal(12,2)', 'decimal(14,4)'].
+Findings: SCH-022-0606e28d, SCH-023-586149ff

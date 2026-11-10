@@ -1,0 +1,200 @@
+# Governance and reliability rules. Database settings cannot prove that a backup exists.
+- id: GVN-001
+  check: governance.missing_table_comments
+  title: "Table {table} has no description"
+  category: governance
+  severity: low
+  kind: optional_improvement
+  standards: [GOV-003]
+  root_cause: "The table was created without a description in the schema."
+  business_impact: "Users misread data whose meaning is not recorded."
+  technical_impact: "{table} has no description in the schema."
+  solution: "Add a description held with the schema, with no sensitive values."
+  complexity: low
+  migration: "Metadata only."
+  risks: "None significant."
+  validation: "Re-run the check."
+  params: &comment_params
+    unsupported_dialects: [sqlite]
+    unsupported_sources: [csv, excel]
+
+- id: GVN-002
+  check: governance.missing_column_comments
+  title: "Columns of {table} have no descriptions ({missing_count})"
+  category: governance
+  severity: low
+  kind: optional_improvement
+  standards: [GOV-003]
+  root_cause: "Columns were created without descriptions."
+  business_impact: "Users misread columns whose meaning is not recorded."
+  technical_impact: "{missing_count} columns of {table} have no description."
+  solution: "Describe the columns in the schema, with no sensitive values."
+  complexity: low
+  migration: "Metadata only."
+  risks: "None significant."
+  validation: "Re-run the check."
+  params:
+    <<: *comment_params
+    min_missing_ratio: 0.5
+
+- id: GVN-003
+  check: governance.no_owner_metadata
+  title: "No ownership metadata found"
+  category: governance
+  severity: low
+  kind: context_dependent
+  standards: [GOV-002]
+  root_cause: "Ownership is not recorded in this database."
+  business_impact: "Data issues and access decisions have no accountable person."
+  technical_impact: "No owner can be derived from the schema; it may be held in an external catalog."
+  solution: "Record a named accountable owner per table or dataset."
+  complexity: low
+  migration: "Metadata only."
+  risks: "A catalog outside this database may already hold it."
+  validation: "Confirm each table resolves to an owner."
+  confidence: 0.5
+  params:
+    comment_patterns: ['owner\s*[:=]', 'steward\s*[:=]']
+    table_patterns: ['data_owner', 'dataset_owner', 'table_owner', 'data_catalog']
+
+- id: GVN-004
+  check: governance.no_classification
+  title: "No data classification metadata found"
+  category: governance
+  severity: medium
+  kind: context_dependent
+  standards: [GOV-004]
+  root_cause: "Columns carry no classification attribute in this database."
+  business_impact: "Masking and retention cannot be driven by the sensitivity of the data."
+  technical_impact: "No classification can be derived from the schema; it may be held in an external catalog."
+  solution: "Add a classification attribute per column that drives masking and retention."
+  complexity: medium
+  migration: "Metadata only."
+  risks: "A catalog outside this database may already hold it."
+  validation: "Confirm sensitive columns resolve to a classification."
+  confidence: 0.5
+  params:
+    comment_patterns: ['classification\s*[:=]', 'sensitivity\s*[:=]']
+    table_patterns: ['data_classification', 'column_classification', 'sensitivity_label']
+    column_patterns: ['^classification$', '_classification$']
+
+- id: GVN-005
+  check: governance.no_audit_history
+  title: "No audit or history structures found"
+  category: governance
+  severity: medium
+  kind: context_dependent
+  standards: [RET-033]
+  root_cause: "No audit or history table was found, and engine-level audit cannot be seen here."
+  business_impact: "Past changes cannot be reconstructed for investigation or audit."
+  technical_impact: "No table matches the configured audit and history patterns."
+  solution: "Decide which record classes need audit history, and define a retention period for each audit log class."
+  complexity: medium
+  migration: "Depends on the chosen mechanism."
+  risks: "Engine audit logs or external stores may already cover this."
+  validation: "Confirm audit records exist for a test change."
+  confidence: 0.5
+  params:
+    table_patterns: ['audit', 'history', '_hist$', 'change_log', 'activity_log']
+
+- id: GVN-006
+  check: governance.no_retention_structures
+  title: "No retention schedule structures found"
+  category: governance
+  severity: medium
+  kind: context_dependent
+  standards: [RET-021]
+  workloads: [OLTP, data_warehouse, lakehouse]
+  root_cause: "No retention schedule or legal hold structure is visible in this database."
+  business_impact: "Requires legal review: retention obligations differ by record class and jurisdiction, and cannot be assessed from the schema."
+  technical_impact: "No table matches the configured retention patterns."
+  solution: "Requires legal review. Define a schedule keyed by record class, jurisdiction, start event and legal hold."
+  complexity: high
+  migration: "No automatic change. Nothing is deleted on the basis of this finding."
+  risks: "The schedule may be held outside the database."
+  validation: "Confirm the schedule with counsel for each legal entity."
+  confidence: 0.4
+  params:
+    table_patterns: ['retention', 'legal_hold', 'disposal_schedule']
+
+- id: GVN-007
+  check: governance.no_migration_history
+  title: "No migration history table found"
+  category: maintainability
+  severity: low
+  kind: context_dependent
+  standards: [MIG-001]
+  root_cause: "No known migration tool's history table exists in this database."
+  business_impact: "It is not possible to tell which schema version is deployed."
+  technical_impact: "Schema changes cannot be traced to versioned scripts from this database."
+  solution: "Adopt a versioned migration tool that records what was applied."
+  complexity: medium
+  migration: "Baseline the current schema, then apply changes through the tool."
+  risks: "An unrecognized tool may be in use; add its table to the params."
+  validation: "Confirm the history table records each deployment."
+  confidence: 0.6
+  params:
+    history_tables: [schema_migrations, flyway_schema_history, alembic_version, django_migrations, __EFMigrationsHistory, databasechangelog, knex_migrations, goose_db_version]
+
+- id: REL-001
+  check: reliability.recovery_settings_off
+  title: "Point-in-time recovery signal is off: {setting}"
+  category: reliability_recovery
+  severity: medium
+  kind: context_dependent
+  standards: [BDR-003]
+  requires: [live]
+  workloads: [OLTP]
+  root_cause: "The setting suggests the transaction log is not being archived."
+  business_impact: "If point-in-time recovery is required, data since the last backup could be lost."
+  technical_impact: "{setting} is not set for continuous log archiving. Low confidence: a database setting cannot prove whether a backup exists."
+  solution: "Confirm the backup design, and enable continuous log archiving if point-in-time recovery is required."
+  complexity: medium
+  migration: "Configuration change, which may need a restart."
+  risks: "Snapshots or managed backups may provide recovery without this setting."
+  validation: "Perform a restore test to a chosen point in time."
+  confidence: 0.4
+  params: &recovery_params
+    recovery_settings:
+      - {setting: archive_mode, bad_values: ['off', ''], dialects: [postgres]}
+      - {setting: wal_level, bad_values: [minimal], dialects: [postgres]}
+      - {setting: log_bin, bad_values: ['off', '0'], dialects: [mysql]}
+
+- id: REL-002
+  check: reliability.recovery_settings_on
+  title: "Recovery settings are present, but cannot prove a backup"
+  category: reliability_recovery
+  severity: informational
+  kind: context_dependent
+  standards: [BDR-007]
+  requires: [live]
+  root_cause: "Log and archive settings are configured, but a setting says nothing about restorable backups."
+  business_impact: "Confidence in recovery is only justified by a tested restore."
+  technical_impact: "Low confidence: a database setting cannot prove whether a backup exists."
+  solution: "Schedule restore tests and verify the results for consistency."
+  complexity: medium
+  migration: "None."
+  risks: "None significant."
+  validation: "Review restore test records."
+  confidence: 0.4
+  params: *recovery_params
+
+- id: REL-003
+  check: reliability.not_backup_substitutes
+  title: "Replicas or history are not a substitute for backup"
+  category: reliability_recovery
+  severity: informational
+  kind: context_dependent
+  standards: [BDR-005]
+  root_cause: "Replication or history structures exist, and can be mistaken for backups."
+  business_impact: "A deletion or corruption propagates to replicas and may not be recoverable."
+  technical_impact: "Replicas and history tables do not protect against loss of the primary store's contents."
+  solution: "Keep separate backups in addition to any replicas or history."
+  complexity: low
+  migration: "None."
+  risks: "None significant."
+  validation: "Confirm a separate backup exists and is restore-tested."
+  confidence: 0.4
+  params:
+    replica_setting_patterns: ['hot_standby', 'max_wal_senders', 'rpl_', 'slave_', 'replica']
+    history_table_patterns: ['_history$', '_hist$', 'audit']

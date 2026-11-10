@@ -1,0 +1,18 @@
+{
+ "id": "20261108-210025-65cfac",
+ "name": "power-suite-staging",
+ "dialect": "mysql",
+ "source_label": "power-suite-staging.sql",
+ "source_kind": "sql_dump",
+ "generated_at": "2026-11-08T16:03:44+00:00",
+ "overall": 55.4,
+ "grade": "D",
+ "confidence": 0.79,
+ "capped": false,
+ "findings_total": 3132,
+ "critical": 3,
+ "high": 93,
+ "confirmed_defects": 44,
+ "tables": 213,
+ "plan_hash": "003efdcde5f3c87095cb82d1ba05f396bc9b9ed0c1a397140b1d257c4b90af14"
+}

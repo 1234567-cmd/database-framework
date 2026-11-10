@@ -1,0 +1,4 @@
+Step M1409: Rename column invoices.manual_sst_override to is_manual_sst_override
+MANUAL: this step has no generated SQL.
+Table invoices matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoices.manual_sst_override to is_manual_sst_override.
+Findings: SCH-060-0f5dbab7

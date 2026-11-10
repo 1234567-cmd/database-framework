@@ -1,0 +1,4 @@
+Step M1509: Manual: Keep footer_content in branch_document_template only, or maintain the copy throu
+MANUAL: this step has no generated SQL.
+Keep footer_content in branch_document_template only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-6528f1df

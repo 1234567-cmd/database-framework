@@ -1,0 +1,84 @@
+%% Proposed schema of power-suite-staging (8 of 80: around customer_required_data)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    customer_required_data {
+        int id PK
+        varchar_200 company_code
+        varchar_255 field_name
+        varchar_20 data_type
+        tinyint_1 has_dropdown
+        int field_length
+        tinyint_1 is_add_to_customer "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customer_required_data_options {
+        int id PK
+        int customer_required_data_id FK
+        varchar_255 value
+        int display_order
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customer_required_data_profiles {
+        int id PK
+        int customer_required_data_id FK
+        varchar_20 level
+        varchar_255 from_customer_no
+        varchar_255 to_customer_no
+        tinyint_1 is_mandatory "proposed: added"
+        tinyint_1 is_add_to_all_profiles "proposed: added"
+        int service_type_id FK "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customer_required_data_settings {
+        int id PK
+        varchar_200 company_code
+        varchar_255 customer_number
+        int customer_required_data_id FK
+        varchar_20 level
+        int service_type_id FK "proposed: added"
+        tinyint_1 is_mandatory "proposed: added"
+        tinyint_1 is_active "proposed: added"
+        tinyint_1 is_print "proposed: added"
+        int display_order
+        varchar_500 default_value
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    required_field_values {
+        int id PK
+        varchar_20 level
+        int data_id
+        int customer_required_data_id FK
+        int service_type_id FK "proposed: added"
+        varchar_500 value
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    customer_required_data ||--o{ customer_required_data_options : "customer_required_data_id"
+    customer_required_data ||--o{ customer_required_data_profiles : "customer_required_data_id"
+    service_types ||--o{ customer_required_data_profiles : "service_type_id (proposed)"
+    customer_required_data ||--o{ customer_required_data_settings : "customer_required_data_id"
+    service_types ||--o{ customer_required_data_settings : "service_type_id (proposed)"
+    customer_required_data ||--o{ required_field_values : "customer_required_data_id"
+    service_types ||--o{ required_field_values : "service_type_id (proposed)"

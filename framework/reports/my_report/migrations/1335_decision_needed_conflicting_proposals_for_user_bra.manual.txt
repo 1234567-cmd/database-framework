@@ -1,0 +1,4 @@
+Step M1335: Decision needed: conflicting proposals for user_branches.branch_IATA_NO
+MANUAL: this step has no generated SQL.
+Cannot rename user_branches.branch_IATA_NO to an existing column 'branch_iata_no'.
+Findings: SCH-052-17989024

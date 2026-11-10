@@ -1,0 +1,4 @@
+Step M2237: Manual: Keep party_address in credit_notes only, or maintain the copy through one contro
+MANUAL: this step has no generated SQL.
+Keep party_address in credit_notes only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-ecad3d93

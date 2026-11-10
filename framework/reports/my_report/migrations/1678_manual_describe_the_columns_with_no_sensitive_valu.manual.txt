@@ -1,0 +1,4 @@
+Step M1678: Manual: Describe the columns, with no sensitive values.
+MANUAL: this step has no generated SQL.
+Describe the columns, with no sensitive values.
+Findings: GVN-002-bcc9a8ce

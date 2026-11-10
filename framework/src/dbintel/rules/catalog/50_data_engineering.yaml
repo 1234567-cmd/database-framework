@@ -1,0 +1,291 @@
+# Data engineering readiness rules. Pipeline rules need a manifest; schema-only rules do not.
+- id: DE-001
+  check: data_engineering.non_idempotent_steps
+  title: "Pipeline step {job}.{step} is not idempotent"
+  category: data_engineering_readiness
+  severity: high
+  kind: confirmed_defect
+  standards: [PIP-001]
+  requires: [pipelines]
+  root_cause: "The step appends with no merge key, dedupe guard or delete of the interval before insert."
+  business_impact: "A rerun after a failure duplicates data, which overstates reported figures."
+  technical_impact: "Running {job}.{step} twice writes the same rows twice."
+  solution: "Make the write idempotent with a merge key or by replacing the declared interval."
+  complexity: medium
+  migration: "Pipeline code change; no schema change."
+  risks: "Existing targets may already contain duplicates and need a repair plan."
+  validation: "Run the step twice on the same input and compare the row counts."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+
+- id: DE-002
+  check: data_engineering.non_atomic_overwrite
+  title: "Overwrite in {job}.{step} is not atomic"
+  category: data_engineering_readiness
+  severity: high
+  kind: confirmed_defect
+  standards: [PIP-001]
+  requires: [pipelines]
+  root_cause: "The target is emptied before the new data is written, outside a transaction or swap."
+  business_impact: "Readers see an empty or partial table during a load or after a failure."
+  technical_impact: "A failure between replace and insert leaves a partial result."
+  solution: "Build into a staging table and swap, or wrap the replace in one transaction."
+  complexity: medium
+  migration: "Pipeline code change."
+  risks: "A swap needs matching grants on the staging object."
+  validation: "Interrupt the load in a test and confirm readers still see complete data."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+    atomic_patterns: ['\bswap\b', '\brename\s+(table|to)\b', 'exchange\s+partition', 'create\s+or\s+replace', 'insert\s+overwrite', 'replace\s+table', '\bbegin\b', 'start\s+transaction']
+
+- id: DE-003
+  check: data_engineering.missing_merge_keys
+  title: "Merge in {job}.{step} declares no key"
+  category: data_engineering_readiness
+  severity: medium
+  kind: confirmed_defect
+  standards: [PIP-002]
+  requires: [pipelines]
+  root_cause: "The step is configured to merge, but no business key is declared."
+  business_impact: "An undeclared grain cannot be reviewed, and duplicates can go undetected."
+  technical_impact: "The merge of {job}.{step} has no reviewable key."
+  solution: "Declare the merge key as a business key or a partition and interval."
+  complexity: low
+  migration: "Manifest change."
+  risks: "The chosen key must really be unique in the source."
+  validation: "Test uniqueness of the key in the source."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+
+- id: DE-004
+  check: data_engineering.no_incremental_column
+  title: "Query extract {job}.{step} has no incremental column"
+  category: data_engineering_readiness
+  severity: medium
+  kind: optional_improvement
+  standards: [PIP-008]
+  requires: [pipelines]
+  workloads: [OLTP]
+  root_cause: "The extract does not declare a column for finding changed rows."
+  business_impact: "Full re-reads load the source system, or changes are missed."
+  technical_impact: "{job}.{step} cannot read only changed rows."
+  solution: "Declare a reliable change column and a way of observing deletes, or use log-based capture."
+  complexity: medium
+  migration: "Manifest change, and possibly a new source column."
+  risks: "A column updated only by some writers will silently miss rows."
+  validation: "Compare source and target counts after an incremental run."
+  params:
+    incremental_filter_patterns: ['where\b.*(updated|modified|changed|last_mod|lsn|watermark)']
+
+- id: DE-005
+  check: data_engineering.no_change_column
+  title: "Table {table} has no reliable change column"
+  category: data_engineering_readiness
+  severity: low
+  kind: optional_improvement
+  standards: [PIP-008]
+  workloads: [OLTP]
+  root_cause: "The table does not record when a row last changed."
+  business_impact: "Incremental data feeds cannot be built without full table scans."
+  technical_impact: "Query-based extraction of {table} needs a full read."
+  solution: "Add {column}, maintained by the engine or by a trigger, if the table will be extracted by query."
+  complexity: low
+  migration: "Additive column, then a trigger or an application change."
+  risks: "Only useful if every write path maintains the column."
+  validation: "Update a row through each write path and confirm the column changes."
+  confidence: 0.6
+  params:
+    change_column_patterns: ['^(updated|modified|last_modified|changed|last_updated)(_at|_on|_date|_time)?$', '^rowversion$']
+    change_column_name: updated_at
+    change_column_type: timestamp
+
+- id: DE-006
+  check: data_engineering.no_pk_under_cdc
+  title: "Table {table} has no key for change capture"
+  category: data_engineering_readiness
+  severity: high
+  kind: confirmed_defect
+  requires: [declared_schema]
+  standards: [PIP-006]
+  workloads: [OLTP]
+  root_cause: "The table has neither a primary key nor a non-null unique key."
+  business_impact: "Updates and deletes cannot be replicated reliably, so downstream data drifts."
+  technical_impact: "Log-based capture cannot identify the rows changed in {table}."
+  solution: "Add a primary key or configure an equivalent replica identity."
+  complexity: medium
+  migration: "Confirm the candidate key is unique, then add it."
+  risks: "Adding a key on duplicated data fails, and needs a repair plan first."
+  validation: "Confirm captured update and delete events carry the key."
+  params:
+    assume_readiness: true
+    cdc_step_patterns: ['cdc', 'debezium', 'binlog', 'wal2json', 'logical_repl']
+    cdc_settings:
+      - {setting: wal_level, values: [logical]}
+      - {setting: binlog_format, values: [row]}
+
+- id: DE-007
+  check: data_engineering.no_run_metadata
+  title: "Pipeline {job} records no run metadata"
+  category: data_engineering_readiness
+  severity: medium
+  kind: optional_improvement
+  standards: [PIP-027]
+  requires: [pipelines]
+  root_cause: "The job does not persist run identity, source position, code version or result."
+  business_impact: "A bad load cannot be traced to its input or replayed."
+  technical_impact: "{job} leaves no run record."
+  solution: "Record run identity, source position, code version and result for each run."
+  complexity: low
+  migration: "Pipeline code change and a run log table."
+  risks: "None significant."
+  validation: "Confirm one run log row per execution."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+
+- id: DE-008
+  check: data_engineering.no_lineage
+  title: "Pipeline {job} emits no lineage"
+  category: data_engineering_readiness
+  severity: low
+  kind: optional_improvement
+  standards: [GOV-007]
+  requires: [pipelines]
+  root_cause: "The job does not publish run-level lineage."
+  business_impact: "Impact analysis and audits depend on people's memory."
+  technical_impact: "{job} is absent from the lineage record."
+  solution: "Emit run-level lineage using an open event model or the platform's lineage."
+  complexity: low
+  migration: "Pipeline configuration."
+  risks: "None significant."
+  validation: "Confirm the job appears in the lineage store."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+
+- id: DE-009
+  check: data_engineering.no_quality_gates
+  title: "Pipeline {job} has no quality gates"
+  category: data_engineering_readiness
+  severity: medium
+  kind: optional_improvement
+  standards: [DQA-007]
+  requires: [pipelines]
+  root_cause: "The job publishes output without declared checks."
+  business_impact: "Bad data reaches consumers before anyone notices."
+  technical_impact: "No check stands between the write and publication in {job}."
+  solution: "Write out of view, audit, and publish only after checks pass."
+  complexity: medium
+  migration: "Pipeline change."
+  risks: "New gates can block loads until thresholds are tuned."
+  validation: "Inject a bad row in a test and confirm publication is blocked."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+
+- id: DE-010
+  check: data_engineering.no_owner
+  title: "Pipeline {job} has no owner"
+  category: data_engineering_readiness
+  severity: low
+  kind: optional_improvement
+  standards: [GOV-002]
+  requires: [pipelines]
+  root_cause: "No accountable owner is recorded for the job."
+  business_impact: "Failures have no one responsible for resolving them."
+  technical_impact: "Alerts for {job} have no destination."
+  solution: "Name an accountable owner in the manifest."
+  complexity: low
+  migration: "Manifest change."
+  risks: "None significant."
+  validation: "Confirm the manifest names an owner."
+
+- id: DE-011
+  check: data_engineering.no_retries
+  title: "Pipeline {job} has no retries configured"
+  category: data_engineering_readiness
+  severity: low
+  kind: optional_improvement
+  standards: [PIP-001]
+  requires: [pipelines]
+  root_cause: "The job has no retry policy."
+  business_impact: "Transient failures need manual intervention and delay data."
+  technical_impact: "{job} fails on the first transient error. Retries are safe only once every step is idempotent."
+  solution: "Configure bounded retries once the job's steps are idempotent."
+  complexity: low
+  migration: "Manifest change."
+  risks: "Retrying a non-idempotent step duplicates data."
+  validation: "Simulate a transient failure and confirm the retry runs."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+
+- id: DE-012
+  check: data_engineering.float_money_typed_layer
+  title: "Monetary value {table}.{column} uses floating point ({where_found})"
+  category: data_engineering_readiness
+  severity: high
+  kind: confirmed_defect
+  requires: [declared_schema]
+  standards: [PIP-018]
+  workloads: [OLAP, data_warehouse, lakehouse]
+  root_cause: "A monetary column was typed as binary floating point."
+  business_impact: "Rounding errors accumulate and totals do not reconcile."
+  technical_impact: "{column} cannot represent decimal amounts exactly."
+  solution: "Use exact decimal or integer minor units at the first typed layer."
+  complexity: medium
+  migration: "Type change and a full reconciliation of totals."
+  risks: "Values already rounded in floating point cannot be recovered from this column alone."
+  validation: "Reconcile the totals against the source after the change."
+
+- id: DE-013
+  check: data_engineering.lineage_gaps
+  title: "Lineage cannot be established for {job}.{step}"
+  category: data_engineering_readiness
+  severity: low
+  kind: optional_improvement
+  standards: [GOV-007]
+  requires: [pipelines]
+  root_cause: "The step's declared inputs do not match its SQL, or nothing is declared at all."
+  business_impact: "Impact analysis gives incomplete answers."
+  technical_impact: "The lineage computed for {job}.{step} is incomplete."
+  solution: "Declare sources and targets, and keep them consistent with the SQL."
+  complexity: low
+  migration: "Manifest change."
+  risks: "None significant."
+  validation: "Recompute lineage and confirm the step is fully represented."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+
+- id: DE-014
+  check: data_engineering.select_star
+  title: "SELECT * in {job}: {step}"
+  category: data_engineering_readiness
+  severity: low
+  kind: optional_improvement
+  standards: [GOV-009]
+  root_cause: "The transformation selects all columns implicitly."
+  business_impact: "An upstream column change silently alters downstream output."
+  technical_impact: "Column-level lineage and schema stability are lost for {step}."
+  solution: "List the columns explicitly."
+  complexity: low
+  migration: "Code change."
+  risks: "None significant."
+  validation: "Confirm the output columns are unchanged."
+  params:
+    standard_workloads: [data_warehouse, lakehouse]
+
+- id: DE-015
+  check: data_engineering.view_dependencies
+  title: "Dependency on view {table} by {consumer}"
+  category: data_engineering_readiness
+  severity: low
+  kind: context_dependent
+  standards: [GOV-009]
+  root_cause: "A transformation or view reads another view."
+  business_impact: "Hidden logic makes impact analysis and tuning harder."
+  technical_impact: "{consumer} inherits the view's undeclared logic and performance."
+  solution: "Depend on a governed table or a versioned contract, or document the dependency."
+  complexity: medium
+  migration: "Code change."
+  risks: "Views can be a deliberate stable interface."
+  validation: "Recompute lineage after the change."
+  confidence: 0.6
+  params:
+    standard_workloads: [data_warehouse, lakehouse]

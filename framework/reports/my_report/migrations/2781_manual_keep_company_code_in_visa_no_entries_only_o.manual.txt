@@ -1,0 +1,4 @@
+Step M2781: Manual: Keep company_code in visa_no_entries only, or maintain the copy through one cont
+MANUAL: this step has no generated SQL.
+Keep company_code in visa_no_entries only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-cceab28d

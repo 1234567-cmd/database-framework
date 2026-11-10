@@ -1,0 +1,4 @@
+Step M1349: Decision needed: conflicting proposals for hotel_statuses.createdAt
+MANUAL: this step has no generated SQL.
+Cannot rename hotel_statuses.createdAt to an existing column 'created_at'.
+Findings: SCH-052-83edca56

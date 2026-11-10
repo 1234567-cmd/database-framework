@@ -1,0 +1,4 @@
+Step M1424: Rename column payments.payment_date to payment_at
+MANUAL: this step has no generated SQL.
+Table payments matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column payments.payment_date to payment_at.
+Findings: SCH-061-4b533105

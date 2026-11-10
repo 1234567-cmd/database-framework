@@ -1,0 +1,92 @@
+%% Current schema of erp_demo
+erDiagram
+    accounts {
+        int id PK
+        int company_id
+        varchar_10 code
+        varchar_80 name
+    }
+    companies {
+        int id PK
+        varchar_100 name
+        char_2 country
+        datetime created_at
+    }
+    customers {
+        int customer_id
+        int company_id
+        varchar_20 customer_code
+        varchar_100 name
+        varchar_120 email
+        varchar_30 phone
+        varchar_255 tags
+        float credit_limit
+        datetime created_at
+    }
+    employees {
+        int id PK
+        int company_id
+        varchar_100 full_name
+        varchar_30 national_id
+        float salary
+        date start_date
+        date end_date
+    }
+    journal_entries {
+        int id PK
+        int company_id
+        varchar_20 entry_number
+        date entry_date
+        varchar_200 description
+        varchar_20 status
+    }
+    journal_lines {
+        int id PK
+        int journal_entry_id
+        int account_id
+        float debit
+        float credit
+    }
+    order_items {
+        int order_id
+        int product_id
+        int quantity
+        float unit_price
+    }
+    orders {
+        int id PK
+        int company_id
+        int customer_id
+        varchar_20 order_date
+        float total
+        varchar_20 status
+        datetime created_at
+    }
+    payments {
+        int id PK
+        int company_id
+        int order_id
+        varchar_19 card_number
+        varchar_4 cvv
+        float amount
+        datetime paid_at
+    }
+    products {
+        int id PK
+        int company_id
+        varchar_30 sku
+        varchar_120 name
+        float price
+        double cost
+        varchar_100 category_ids
+        varchar_20 status
+    }
+    users {
+        int id PK
+        int company_id
+        varchar_60 username
+        varchar_120 email
+        varchar_64 password
+        tinyint is_admin
+        datetime created_at
+    }

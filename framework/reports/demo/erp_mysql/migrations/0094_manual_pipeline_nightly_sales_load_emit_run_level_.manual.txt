@@ -1,0 +1,4 @@
+Step M094: Manual: Pipeline nightly_sales_load: emit run-level lineage.
+MANUAL: this step has no generated SQL.
+Pipeline nightly_sales_load: emit run-level lineage.
+Findings: DE-008-fdc7d0a8

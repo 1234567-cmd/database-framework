@@ -1,0 +1,4 @@
+Step M1619: Manual: Keep branch_id in customers only, or maintain the copy through one controlled me
+MANUAL: this step has no generated SQL.
+Keep branch_id in customers only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-771fe147

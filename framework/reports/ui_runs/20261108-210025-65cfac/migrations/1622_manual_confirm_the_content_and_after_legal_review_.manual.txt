@@ -1,0 +1,4 @@
+Step M1622: Manual: Confirm the content and, after legal review, tokenize it.
+MANUAL: this step has no generated SQL.
+Confirm the content and, after legal review, tokenize it.
+Findings: SECA-007-496802c8

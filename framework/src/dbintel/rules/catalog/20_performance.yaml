@@ -1,0 +1,428 @@
+# Performance and scalability rules. Python checks in analyzers/performance.py find facts; text and thresholds live here.
+
+- id: PERF-001
+  check: perf.fk_without_index
+  title: "Foreign key on {table} ({columns}) has no supporting index"
+  category: performance
+  severity: medium
+  kind: context_dependent
+  requires: [declared_schema]
+  standards: [IDX-006, TST-012]
+  workloads: [OLTP]
+  root_cause: "A foreign key was declared without an index on its columns. PostgreSQL and most engines do not create one."
+  business_impact: "Joins and parent deletes slow down as the table grows, and the application can stall."
+  technical_impact: "Joins scan the child table, and parent updates or deletes must scan it while holding locks."
+  solution: "Add an index on the foreign key columns."
+  complexity: low
+  migration: "Create the index concurrently or online on large tables."
+  risks: "Slightly slower writes. Exempt rarely joined append-only children."
+  validation: "EXPLAIN shows the index used for the join, and parent deletes no longer scan the child."
+  confidence: 0.9
+  params:
+    exempt_tables: &infra_tables [schema_migrations, flyway_schema_history, alembic_version, django_migrations, databasechangelog, databasechangeloglock, ar_internal_metadata]
+    auto_index_dialects: [mysql]
+    min_rows: 1000
+
+- id: PERF-002
+  check: perf.redundant_index
+  title: "Index {index} on {table} is redundant"
+  category: performance
+  severity: medium
+  kind: optional_improvement
+  requires: [declared_schema]
+  standards: [IDX-001]
+  workloads: [OLTP]
+  root_cause: "This index is a duplicate or a left prefix of another index."
+  business_impact: "Writes and storage cost more with no query benefit."
+  technical_impact: "Every insert and update maintains an index the optimizer does not need."
+  solution: "Drop the redundant index."
+  complexity: low
+  migration: "Drop online. Keep a re-create script for rollback."
+  risks: "An index hint or a plan may name it. Check first."
+  validation: "Query plans are unchanged and write latency does not rise."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+
+- id: PERF-003
+  check: perf.too_many_indexes
+  title: "Table {table} has many indexes"
+  category: performance
+  severity: low
+  kind: context_dependent
+  standards: [IDX-001]
+  workloads: [OLTP]
+  root_cause: "Indexes have accumulated without each being tied to a named query or constraint."
+  business_impact: "Writes slow down and storage cost rises."
+  technical_impact: "Each index adds write amplification, and the optimizer has more plans to consider."
+  solution: "Review each index against a named query and remove the ones that are not needed."
+  complexity: medium
+  migration: "Drop unneeded indexes one at a time and monitor."
+  risks: "Removing a needed index slows reads. Use invisible indexes to test where available."
+  validation: "Monitored query latency is stable after each removal."
+  confidence: 0.7
+  params:
+    exempt_tables: *infra_tables
+    max_indexes: 8
+
+- id: PERF-004
+  check: perf.missing_index_for_query
+  title: "Queries on {table} ({columns}) have no supporting index"
+  category: performance
+  severity: medium
+  kind: context_dependent
+  standards: [IDX-001, IDX-005]
+  workloads: [OLTP]
+  requires: [query_stats]
+  root_cause: "Observed queries filter or join on columns with no index leading on them."
+  business_impact: "These queries get slower as data grows."
+  technical_impact: "The engine must scan rather than seek."
+  solution: "Add the proposed index, with equality columns before range columns."
+  complexity: low
+  migration: "Create the index concurrently or online."
+  risks: "Slightly slower writes. Confirm with EXPLAIN that the index would be chosen."
+  validation: "Plans use the index and mean time falls."
+  confidence: 0.65
+  params:
+    exempt_tables: *infra_tables
+    min_calls: 10
+    min_mean_ms: 10
+    min_rows: 10000
+    max_columns: 4
+    skip_families: [bool]
+    confidence_known_size: 0.75
+    confidence_unknown_size: 0.5
+
+- id: PERF-005
+  check: perf.wide_index
+  title: "Index {index} on {table} is wide"
+  category: performance
+  severity: low
+  kind: context_dependent
+  standards: [IDX-001]
+  workloads: [OLTP]
+  root_cause: "The index has many columns or a large key."
+  business_impact: "Storage and write cost grow."
+  technical_impact: "Wide keys fit fewer entries per page, raising I/O."
+  solution: "Confirm which query needs the index, and narrow it if possible."
+  complexity: medium
+  migration: "Create a narrower index, then drop the wide one."
+  risks: "A covering index can be intentional."
+  validation: "Plans remain acceptable after narrowing."
+  confidence: 0.65
+  params:
+    exempt_tables: *infra_tables
+    max_columns: 5
+    max_bytes: 767
+
+- id: PERF-006
+  check: perf.low_selectivity_index
+  title: "Index {index} on {table}.{column} has low selectivity"
+  category: performance
+  severity: low
+  kind: context_dependent
+  standards: [IDX-001]
+  workloads: [OLTP]
+  requires: [data]
+  root_cause: "The indexed column has very few distinct values, evenly distributed."
+  business_impact: "Write costs increase with little read benefit."
+  technical_impact: "The optimizer rarely chooses an index that matches a large share of the table."
+  solution: "Drop the index, or replace it with a partial or composite index that a named query uses."
+  complexity: low
+  migration: "Drop online and keep a re-create script."
+  risks: "A rarely used but important query may depend on it. Check usage statistics first."
+  validation: "Monitored query latency is stable."
+  confidence: 0.7
+  params:
+    exempt_tables: *infra_tables
+    min_rows: 10000
+    max_distinct: 10
+    max_ratio: 0.01
+    max_top_share: 0.9
+    sample_limit: 50000
+
+- id: PERF-010
+  check: perf.non_sargable_predicate
+  title: "Non-SARGable predicate on {table} ({column})"
+  category: performance
+  severity: medium
+  kind: confirmed_defect
+  standards: [IDX-017]
+  requires: [query_stats]
+  root_cause: "A predicate wraps the column in a function or expression, or uses a leading wildcard."
+  business_impact: "The query slows as the table grows."
+  technical_impact: "Ordinary indexes cannot be used for this predicate."
+  solution: "Rewrite the predicate so the column stands alone, or add a matching expression index."
+  complexity: medium
+  migration: "Query change in application code; an expression index is an optional schema change."
+  risks: "A rewrite must keep the same semantics, for example around NULL or time zones."
+  validation: "EXPLAIN shows an index seek."
+  confidence: 0.85
+  params:
+    min_calls: 1
+    min_total_ms: 0
+
+- id: PERF-011
+  check: perf.select_star
+  title: "SELECT * in query {query}"
+  category: performance
+  severity: low
+  kind: optional_improvement
+  standards: [IDX-020]
+  requires: [query_stats]
+  root_cause: "The query selects every column."
+  business_impact: "More data is read and transferred than needed."
+  technical_impact: "Covering indexes cannot be used, and schema changes can alter results."
+  solution: "Name the columns the query needs."
+  complexity: low
+  migration: "Query change in application code."
+  risks: "Callers that depend on all columns must be updated."
+  validation: "Result usage is unchanged."
+  confidence: 0.9
+  params:
+    min_calls: 1
+    min_total_ms: 0
+
+- id: PERF-012
+  check: perf.offset_pagination
+  title: "Deep OFFSET pagination in query {query}"
+  category: performance
+  severity: medium
+  kind: confirmed_defect
+  standards: [IDX-021]
+  workloads: [OLTP]
+  requires: [query_stats]
+  root_cause: "Paging uses OFFSET, which reads and discards earlier rows."
+  business_impact: "Later pages are slow, and items can be skipped or repeated while data changes."
+  technical_impact: "Work grows with the offset."
+  solution: "Use keyset pagination on an indexed, unique ordering."
+  complexity: medium
+  migration: "Query and API change."
+  risks: "Clients must page by key instead of page number."
+  validation: "Latency is flat across pages."
+  confidence: 0.85
+  params:
+    min_calls: 1
+    min_total_ms: 0
+    min_offset: 1000
+    flag_parameterized: true
+    parameterized_confidence: 0.5
+    parameterized_severity: low
+
+- id: PERF-013
+  check: perf.implicit_conversion
+  title: "Implicit type conversion on {table}.{column}"
+  category: performance
+  severity: medium
+  kind: confirmed_defect
+  standards: [IDX-017]
+  requires: [query_stats]
+  root_cause: "The column is compared with a literal of a different type."
+  business_impact: "Queries can be slow, and comparisons can match unintended rows."
+  technical_impact: "Conversion is applied to the column, so an index on it may not be used."
+  solution: "Compare with a literal or parameter of the column's type."
+  complexity: low
+  migration: "Query change in application code."
+  risks: "Result sets may change where conversion was hiding bad data."
+  validation: "EXPLAIN shows an index seek."
+  confidence: 0.85
+  params:
+    min_calls: 1
+    min_total_ms: 0
+    numeric_text_pattern: '^-?\d+(\.\d+)?$'
+
+- id: PERF-014
+  check: perf.unbounded_result
+  title: "Unbounded read of {table}"
+  category: performance
+  severity: medium
+  kind: context_dependent
+  standards: [IDX-021]
+  workloads: [OLTP]
+  requires: [query_stats]
+  root_cause: "A query reads a large table with no filter or limit."
+  business_impact: "Memory and response time rise as the table grows, and this can affect other users."
+  technical_impact: "A full scan and a large result set."
+  solution: "Add a filter or a limit, and page through the results."
+  complexity: medium
+  migration: "Query change in application code."
+  risks: "Some export jobs are meant to read everything; move them off the OLTP path."
+  validation: "Rows returned are bounded."
+  confidence: 0.7
+  params:
+    min_rows: 100000
+    min_calls: 1
+    min_total_ms: 0
+
+- id: PERF-015
+  check: perf.n_plus_one
+  title: "Possible N+1 lookups on {table}"
+  category: performance
+  severity: medium
+  kind: context_dependent
+  standards: [IDX-022]
+  workloads: [OLTP]
+  requires: [query_stats]
+  root_cause: "One single-row lookup runs very many times, a pattern typical of loading related rows one at a time."
+  business_impact: "Pages and jobs slow down in proportion to the number of rows."
+  technical_impact: "Many round trips, each with planning and network cost."
+  solution: "Fetch related rows with a join or a batched query."
+  complexity: medium
+  migration: "Application change."
+  risks: "High call counts can also be legitimate point lookups from a cache miss path."
+  validation: "Call count falls with the same result."
+  confidence: 0.55
+  params:
+    min_calls: 1000
+    max_rows_per_call: 1.5
+
+- id: PERF-016
+  check: perf.expensive_query
+  title: "Expensive query {query}"
+  category: performance
+  severity: medium
+  kind: context_dependent
+  standards: [IDX-018]
+  requires: [query_stats]
+  root_cause: "This query uses a large share of observed database time."
+  business_impact: "It drives capacity needs and can degrade other work."
+  technical_impact: "High total execution time over the observation period."
+  solution: "Inspect the plan and tune the query or its indexes."
+  complexity: medium
+  migration: "Depends on the tuning chosen."
+  risks: "Tuning must be tested with realistic data volumes."
+  validation: "Total time falls in the next observation period."
+  confidence: 0.8
+  params:
+    min_total_ms: 60000
+    min_share: 0.1
+    max_hits: 20
+
+- id: PERF-020
+  check: perf.plan_seq_scan
+  title: "Plan scans large table {relation}"
+  category: performance
+  severity: medium
+  kind: context_dependent
+  standards: [IDX-018]
+  requires: [query_stats]
+  root_cause: "The captured execution plan does a full scan of a large table."
+  business_impact: "The query slows as the table grows."
+  technical_impact: "Reads every row, consuming I/O and buffer pool."
+  solution: "Add a suitable index, or make the predicate more selective."
+  complexity: medium
+  migration: "Create the index concurrently or online."
+  risks: "A full scan can be the correct plan for reporting queries."
+  validation: "New plan avoids the scan, and latency falls."
+  confidence: 0.75
+  params:
+    min_rows: 100000
+
+- id: PERF-021
+  check: perf.plan_filesort
+  title: "Plan sorts many rows in query {query}"
+  category: performance
+  severity: medium
+  kind: context_dependent
+  standards: [IDX-018]
+  requires: [query_stats]
+  root_cause: "The captured plan sorts a large row set or spills the sort to disk."
+  business_impact: "Sort-heavy queries are slow and use more memory or disk."
+  technical_impact: "Disk sorts cost much more than index-ordered reads."
+  solution: "Add an index matching the ORDER BY, or reduce the sorted rows."
+  complexity: medium
+  migration: "Create the index concurrently or online."
+  risks: "An extra index slows writes."
+  validation: "The plan has no sort, or an in-memory one."
+  confidence: 0.75
+  params:
+    min_rows: 100000
+
+- id: PERF-030
+  check: perf.key_near_exhaustion
+  title: "Generated key {table}.{column} is at {ratio} of its maximum"
+  category: scalability
+  severity: high
+  kind: confirmed_defect
+  standards: [TYP-029, IDX-023]
+  workloads: [OLTP]
+  root_cause: "The generated key has consumed a large share of its integer range."
+  business_impact: "When the range runs out, inserts fail and the application can stop."
+  technical_impact: "Exhausting the sequence or AUTO_INCREMENT range is a hard outage."
+  solution: "Widen the key to 64-bit, together with every referencing column."
+  complexity: high
+  migration: "Use an online schema change and widen all referencing columns first."
+  risks: "Long rewrites, and applications that store keys in 32-bit fields."
+  validation: "Catalog shows 64-bit, and inserts work past the old limit in testing."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    max_bits: 32
+    warn_ratio: 0.5
+    critical_ratio: 0.85
+
+- id: PERF-031
+  check: perf.partition_key_not_in_unique
+  title: "Unique key on partitioned table {table} omits the partition key"
+  category: scalability
+  severity: high
+  kind: confirmed_defect
+  standards: [IDX-014]
+  workloads: [OLTP, OLAP, data_warehouse]
+  root_cause: "A primary or unique key does not include all partition columns."
+  business_impact: "The design cannot be created as stated on PostgreSQL or MySQL, or uniqueness is not guaranteed."
+  technical_impact: "Engines cannot enforce uniqueness across partitions without the partition key in the index."
+  solution: "Add the partition columns to the key, or record the engine's documented alternative."
+  complexity: high
+  migration: "Rebuild the key. This can change which values count as duplicates."
+  risks: "Adding a column to a unique key weakens the uniqueness rule."
+  validation: "Catalog shows the partition column in every unique key."
+  confidence: 0.9
+  params:
+    exempt_tables: *infra_tables
+    enforcing_dialects: [postgres, mysql]
+
+- id: PERF-032
+  check: perf.large_table_unpartitioned
+  title: "Large table {table} is not partitioned"
+  category: scalability
+  severity: low
+  kind: context_dependent
+  standards: [IDX-013]
+  workloads: [OLTP, data_warehouse]
+  root_cause: "A very large table with date columns has no partitioning."
+  business_impact: "Retention and maintenance may become costly."
+  technical_impact: "Bulk deletes and maintenance touch the whole table."
+  solution: "Assess whether retention, maintenance or pruning on a dominant filter justifies partitioning. Point-lookup speed alone does not."
+  complexity: high
+  migration: "Partitioning usually needs a table rebuild."
+  risks: "Partitioning adds constraints on keys and can slow queries that lack the partition key."
+  validation: "A recorded decision, and pruning shown by EXPLAIN if adopted."
+  confidence: 0.5
+  params:
+    exempt_tables: *infra_tables
+    min_rows: 100000000
+
+- id: PERF-033
+  check: perf.uuid_clustered_innodb
+  title: "UUID primary key {table}.{column} on InnoDB"
+  category: scalability
+  severity: low
+  kind: context_dependent
+  standards: [IDX-023]
+  workloads: [OLTP]
+  root_cause: "A UUID is the clustered key of an InnoDB table. This is a judgment, because the schema does not show if the values are random."
+  business_impact: "Insert performance and storage can degrade as the table grows."
+  technical_impact: "Random keys cause page splits and copy the wide key into every secondary index."
+  solution: "If the UUIDs are random, use a time-ordered version or a 64-bit key."
+  complexity: high
+  migration: "Plan a key change with all referencing columns."
+  risks: "Client-generated UUIDs may be a deliberate requirement."
+  validation: "Insert benchmarks with realistic volume."
+  confidence: 0.55
+  params:
+    exempt_tables: *infra_tables
+    dialects: [mysql]
+    text_lengths: [32, 36]
+    name_tokens: [id, uuid, guid]
+    binary_name_patterns: ["uuid", "guid", "(^|_)id$"]

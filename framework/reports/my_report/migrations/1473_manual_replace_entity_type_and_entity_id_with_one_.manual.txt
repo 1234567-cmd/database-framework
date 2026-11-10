@@ -1,0 +1,4 @@
+Step M1473: Manual: Replace entity_type and entity_id with one nullable foreign key per parent, or a
+MANUAL: this step has no generated SQL.
+Replace entity_type and entity_id with one nullable foreign key per parent, or an exclusive supertype.
+Findings: SCH-040-5a0d6135

@@ -1,0 +1,13 @@
+%% Current schema of power-suite-staging (23 of 57: around visa_length_stays)
+erDiagram
+    visa_length_stays {
+        int id PK
+        varchar_255 length_of_stay
+        varchar_255 code
+        varchar_255 display_order
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }

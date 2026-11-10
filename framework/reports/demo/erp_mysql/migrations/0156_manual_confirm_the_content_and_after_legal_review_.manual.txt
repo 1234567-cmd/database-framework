@@ -1,0 +1,4 @@
+Step M156: Manual: Confirm the content and, after legal review, stop storing it and plan its contro
+MANUAL: this step has no generated SQL.
+Confirm the content and, after legal review, stop storing it and plan its controlled removal.
+Findings: SECA-006-486f8c66

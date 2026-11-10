@@ -1,0 +1,11 @@
+%% Current schema of power-suite-staging (41 of 57: around order_settings)
+erDiagram
+    order_settings {
+        int id PK
+        varchar_255 company_code FK
+        tinyint_1 enable_manual_sst
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ order_settings : "company_code"

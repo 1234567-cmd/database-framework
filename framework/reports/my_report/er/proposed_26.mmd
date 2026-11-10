@@ -1,0 +1,21 @@
+%% Proposed schema of power-suite-staging (26 of 80: around receipt_settlement_invoices)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    receipt_settlement_invoices {
+        bigint id PK "proposed: changed"
+        int invoice_id FK
+        int receipt_settlement_id FK
+        decimal_12_4 amount "proposed: changed"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    invoices {
+        external stub "see the diagram that holds this table"
+    }
+    receipt_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    invoices ||--o{ receipt_settlement_invoices : "invoice_id"
+    receipt_settlements ||--o{ receipt_settlement_invoices : "receipt_settlement_id"

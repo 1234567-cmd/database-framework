@@ -1,0 +1,4 @@
+Step M1796: Manual: Populate the missing values with the data owner, then add NOT NULL.
+MANUAL: this step has no generated SQL.
+Populate the missing values with the data owner, then add NOT NULL.
+Findings: DQ-006-8ba3f070

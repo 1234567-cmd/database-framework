@@ -1,0 +1,11 @@
+# The CSV sample has no declared keys or types, so rules that need a declared schema must be skipped, not reported.
+source: csv
+expected:
+  - {rule: DQ-002, table: customers, severity: medium, kind: confirmed_defect}
+  - {rule: DQ-003, table: customers, column: customer_code, severity: medium}
+  - {rule: DQ-011, table: customers, column: email, severity: medium, kind: confirmed_defect}
+absent:
+  - {rule: SCH-001}
+  - {rule: SCH-020}
+never_in_reports:
+  - "pine@example.com"

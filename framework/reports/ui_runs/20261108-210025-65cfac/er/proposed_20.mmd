@@ -1,0 +1,21 @@
+%% Proposed schema of power-suite-staging (20 of 80: around payment_settlement_costs)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    payment_settlement_costs {
+        bigint id PK "proposed: changed"
+        int cost_id FK
+        int payment_settlement_id FK
+        decimal_12_4 amount "proposed: changed"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    costs {
+        external stub "see the diagram that holds this table"
+    }
+    payment_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    costs ||--o{ payment_settlement_costs : "cost_id"
+    payment_settlements ||--o{ payment_settlement_costs : "payment_settlement_id"

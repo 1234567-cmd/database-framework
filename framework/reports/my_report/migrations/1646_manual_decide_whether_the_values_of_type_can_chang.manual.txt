@@ -1,0 +1,4 @@
+Step M1646: Manual: Decide whether the values of type can change; if so, use a reference table.
+MANUAL: this step has no generated SQL.
+Decide whether the values of type can change; if so, use a reference table.
+Findings: SCH-034-3709aef2

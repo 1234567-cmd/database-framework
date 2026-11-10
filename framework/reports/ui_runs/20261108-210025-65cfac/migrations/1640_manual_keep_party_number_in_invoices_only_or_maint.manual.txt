@@ -1,0 +1,4 @@
+Step M1640: Manual: Keep party_number in invoices only, or maintain the copy through one controlled 
+MANUAL: this step has no generated SQL.
+Keep party_number in invoices only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-e301cdfa

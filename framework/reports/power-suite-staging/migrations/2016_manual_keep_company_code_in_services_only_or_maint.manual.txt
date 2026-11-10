@@ -1,0 +1,4 @@
+Step M2016: Manual: Keep company_code in services only, or maintain the copy through one controlled 
+MANUAL: this step has no generated SQL.
+Keep company_code in services only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-49e453f5

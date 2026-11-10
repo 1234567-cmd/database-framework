@@ -1,0 +1,12 @@
+-- Step M1231: Rename column service_hajj_hotels.check_in to check_in_at
+-- Direction: up
+-- Findings: SCH-061-78cf8383
+-- Destructive: False. Reversible: True. Data loss risk: none. Lock risk: low.
+-- PROPOSAL ONLY. Review before use.
+-- Precheck: Column service_hajj_hotels.check_in exists. Expect 1: SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'service_hajj_hotels' AND table_schema = DATABASE() AND column_name = 'check_in'
+-- Precheck: Column service_hajj_hotels.check_in_at does not exist. Expect 0: SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'service_hajj_hotels' AND table_schema = DATABASE() AND column_name = 'check_in_at'
+-- Note: Renames break every reader that uses the old name. On live systems add a compatible column and migrate callers first (MIG-004).
+-- Note: RENAME COLUMN needs MySQL 8.0 or later; earlier versions need CHANGE with the full column definition.
+-- Dependency risk: Application code, ORM mappings, reports and ETL jobs outside the database are not analyzed by the migration generator and may use this name.
+SET SESSION lock_wait_timeout = 5;
+ALTER TABLE `service_hajj_hotels` RENAME COLUMN `check_in` TO `check_in_at`, ALGORITHM=INPLACE, LOCK=NONE;

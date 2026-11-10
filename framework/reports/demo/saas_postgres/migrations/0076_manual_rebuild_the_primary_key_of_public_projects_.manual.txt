@@ -1,0 +1,4 @@
+Step M076: Manual: Rebuild the primary key of public.projects to include tenant_id; plan dependent 
+MANUAL: this step has no generated SQL.
+Rebuild the primary key of public.projects to include tenant_id; plan dependent keys.
+Findings: TENA-004-f66bd2da

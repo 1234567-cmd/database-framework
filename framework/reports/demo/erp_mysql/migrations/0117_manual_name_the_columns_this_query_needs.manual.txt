@@ -1,0 +1,4 @@
+Step M117: Manual: Name the columns this query needs.
+MANUAL: this step has no generated SQL.
+Name the columns this query needs.
+Findings: PERF-011-8d144c07

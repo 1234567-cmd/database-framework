@@ -1,0 +1,4 @@
+Step M2184: Manual: Keep remarks in payment_settlements only, or maintain the copy through one contr
+MANUAL: this step has no generated SQL.
+Keep remarks in payment_settlements only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-6b86f85a

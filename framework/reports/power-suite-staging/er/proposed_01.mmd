@@ -1,0 +1,730 @@
+%% Proposed schema of power-suite-staging (1 of 80: around users)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    users {
+        int id PK
+        varchar_255 company_code FK "proposed: changed"
+        varchar_160 username
+        varchar_200 password
+        int user_group_id FK
+        varchar_45 search_by
+        tinyint sales_person
+        tinyint inactive
+        varchar_45 first_name
+        varchar_45 last_name
+        varchar_45 first_name_OTH
+        varchar_45 last_name_OTH
+        varchar_45 description
+        int branch_id FK
+        varchar_45 red_apps_only
+        varchar_45 tel_no
+        varchar_45 fax_no
+        int ref_id
+        int team_code_id FK "proposed: added"
+        varchar_45 email
+        varchar_45 email_options
+        varchar_45 limit_value "proposed: added"
+        varchar_45 amount
+        tinyint approval_zero_credit_limit
+        tinyint amend_gst
+        tinyint accounts
+        tinyint acct
+        tinyint admin
+        tinyint admin_agt
+        tinyint res
+        varchar_200 smtp_from_email
+        varchar_200 smtp_from_name
+        varchar_50 host_user_id
+        varchar_20 pcc
+        varchar_100 default_booking_type
+        timestamp created_at
+        timestamp updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    audit_log {
+        bigint id PK
+        varchar_64 entity_type
+        int entity_id
+        varchar_64 parent_type
+        int parent_id
+        varchar_255 field_name
+        text ref
+        text old_value
+        text new_value
+        enum_create_update_delete action
+        int user_id FK
+        varchar_200 company_code
+        varchar_255 route
+        char_36 request_id
+        datetime created_at
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    branches {
+        int id PK
+        varchar_255 company_code FK
+        varchar_255 code
+        varchar_255 name
+        varchar_255 document_prefix
+        varchar_255 location
+        varchar_255 iata_number
+        varchar_255 pcc
+        int city_code_id FK "proposed: added"
+        int province_id
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    chart_of_accounts {
+        bigint id PK "proposed: changed"
+        int user_id FK
+        varchar_200 company_code
+        varchar_255 key_account
+        varchar_255 description
+        varchar_255 account_type
+        int journal_entry_type_id FK
+        int level
+        varchar_60 type
+        varchar_160 account_number
+        tinyint_1 is_status "proposed: added"
+        int sub_account_id FK
+        tinyint_1 is_ar_ap_control "proposed: added"
+        tinyint_1 is_disable_sub_account "proposed: added"
+        tinyint_1 is_fx_adjustment "proposed: added"
+        tinyint_1 is_petty_cash_account "proposed: added"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    companies {
+        int id PK
+        varchar_255 code
+        varchar_255 name
+        varchar_255 address
+        varchar_255 phone
+        varchar_255 email
+        varchar_100 licence_no
+        varchar_100 ntn
+        varchar_64 timezone
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    currency_history {
+        int id PK
+        int currency_id FK
+        int user_id FK
+        varchar_255 from_currency
+        varchar_255 to_currency
+        decimal_10_5 old_rate
+        decimal_10_5 new_rate
+        enum_create_update action
+        datetime created_at
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customer_deposit_transfers {
+        int id PK
+        varchar_50 transfer_number
+        varchar_200 company_code
+        int branch_id FK
+        int customer_deposit_id FK
+        int to_customer_deposit_id FK
+        int from_customer_id FK
+        int to_customer_id FK
+        varchar_50 from_customer_number
+        varchar_255 from_customer_name
+        varchar_50 to_customer_number
+        varchar_255 to_customer_name
+        varchar_20 relationship
+        decimal_14_4 amount "proposed: changed"
+        decimal_14_4 current_amount "proposed: changed"
+        decimal_14_4 source_balance_before "proposed: changed"
+        decimal_14_4 destination_balance_before "proposed: changed"
+        enum_Raised_Printed_Partially_Settled_Settled_Void status
+        datetime printed_at
+        varchar_255 remarks
+        text void_remarks
+        tinyint_1 is_je_generated "proposed: added"
+        int user_id FK
+        date adjustment_date
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customer_deposits {
+        bigint id PK "proposed: changed"
+        varchar_50 receipt_number
+        int user_id FK
+        int customer_id FK
+        int chart_of_account_id FK
+        int branch_id FK
+        int pay_type_form_id FK "proposed: added"
+        int currency_code_id FK "proposed: added"
+        decimal_12_4 amount "proposed: changed"
+        decimal_12_4 current_amount "proposed: changed"
+        decimal_10_4 exchange_rate
+        decimal_12_4 base_amount "proposed: changed"
+        varchar_50 cash_box
+        varchar_50 client_refrence
+        int bank_id FK
+        varchar_50 check_number
+        int pay_card_type_id FK "proposed: added"
+        varchar_50 card_number
+        varchar_50 voucher_number
+        varchar_50 gl_account_box
+        int gl_account_id
+        varchar_50 account_number
+        varchar_255 remarks
+        text void_remarks
+        enum_Printed_Raised_Partially_Settled_Settled_Void status
+        datetime created_at
+        datetime updated_at
+        tinyint_1 is_je_generated "proposed: added"
+        varchar_50 settled_invoice_number
+        date adjustment_date
+        tinyint is_edited
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+        int receipt_settlement_id FK
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customer_history {
+        bigint id PK "proposed: changed"
+        int customer_id FK
+        int user_id FK
+        varchar_255 field_name
+        text old_value
+        text new_value
+        enum_create_update_delete action
+        datetime created_at
+        int fee_maintenance_id FK "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    customers {
+        bigint id PK "proposed: changed"
+        int customer_type_id FK
+        int branch_id FK
+        varchar_200 company_code
+        int team_code_id FK "proposed: added"
+        int sales_id_id FK "proposed: added"
+        int user_id FK
+        varchar_100 customer_number
+        varchar_200 customer_name
+        varchar_45 middle_name
+        varchar_20 receipt_no
+        varchar_20 share_credit_code
+        decimal_12_4 deposit_amount "proposed: changed"
+        decimal_22_4 credit_limit "proposed: changed"
+        timestamp created_at
+        timestamp updated_at
+        decimal_12_4 addon_credit_limit "proposed: changed"
+        int currency_id
+        date credit_from_date
+        date credit_to_date
+        varchar_45 iata
+        varchar_45 alpha_code
+        varchar_45 project_no
+        varchar_100 account_no
+        varchar_100 second_account_no
+        varchar_100 gds_profile_id
+        enum_Single_Married_Divorced_Widowed marital_status
+        date date_of_birth_date "proposed: added"
+        int country_of_birth
+        varchar_200 internet_address
+        int nationality1
+        int country_code_id FK "proposed: added"
+        tinyint absorb_gst
+        tinyint optout_crm_campaign
+        tinyint default_bill_company
+        text policy_file
+        text company_groups
+        text policy_remarks
+        tinyint_1 is_define_headings "proposed: added"
+        varchar_255 sales_tax_invoice_heading
+        varchar_255 invoice_heading
+        tinyint_1 is_deleted "proposed: added"
+        int credit_days_1
+        int late_payment_charge
+        int credit_term_type
+        enum_credit_days_BSP_Payment_Term_BSP_PAYMENT_15_days_Statement_Date_Weekly date_type
+        enum_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday_Sunday weekly
+        tinyint_1 is_last_day_month "proposed: added"
+        datetime other_due_at "proposed: added"
+        varchar_45 customerscol
+        enum_Active_Inactive_Blacklisted_Suspended status
+        int group_id
+        varchar_45 also_known_as
+        varchar_45 company
+        varchar_45 surname
+        tinyint type
+        varchar_45 business_reg_no
+        varchar_45 insurance_number
+        varchar_45 license_number
+        date acc_open_date "proposed: changed"
+        date acc_close_date "proposed: changed"
+        varchar_45 security_id
+        varchar_45 parent_company
+        varchar_45 gst_reg_no
+        varchar_45 comm_id
+        varchar_45 location_code
+        varchar_45 country_client_type
+        varchar_45 hierarchy_structure
+        varchar_45 country_client_code
+        varchar_45 country_agency_code
+        varchar_45 other_profile_id
+        varchar_45 job_title
+        varchar_45 employee
+        varchar_45 department
+        varchar_45 cost_centre
+        varchar_45 ta
+        int special_seat_id FK
+        varchar_45 exit_permit
+        date expiry_date
+        varchar_45 ic_id_one
+        int issue_country_one
+        varchar_45 ic_id_two
+        int issue_country_two
+        varchar_45 insurance
+        int special_meal_id FK
+        varchar_45 given_name
+        int title_id
+        int gender_id
+        int dependent_id
+        tinyint vip
+        int trade_group_id FK
+        int report_group_id
+        varchar_45 tag
+        tinyint tc_profile
+        tinyint_1 is_mailing_address "proposed: added"
+        varchar_255 mailing_suburb_name
+        varchar_255 mailing_post_code
+        varchar_255 mailing_country_code
+        tinyint_1 is_billing_address "proposed: added"
+        varchar_255 billing_suburb_name
+        varchar_255 billing_post_code
+        varchar_255 billing_country_code
+        tinyint_1 is_delivery_address "proposed: added"
+        varchar_255 delivery_suburb_name
+        varchar_255 delivery_post_code
+        varchar_255 delivery_country_code
+        tinyint_1 is_statement_address "proposed: added"
+        varchar_255 statement_suburb_name
+        varchar_255 statement_post_code
+        varchar_255 statement_country_code
+        int payment_type
+        varchar_45 customer_sequence
+        int customer_category_id FK
+        varchar_300 full_address
+        tinyint_1 is_auto_invoice "proposed: added"
+        tinyint_1 is_auto_email "proposed: added"
+        tinyint_1 is_hide_transaction_fee_sst "proposed: added"
+        tinyint_1 is_hide_tax_detail "proposed: added"
+        tinyint hide_description
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    documents {
+        bigint id PK "proposed: changed"
+        varchar_255 document_number
+        enum_costing_invoice_payment document_type
+        int document_id
+        int payment_settlement_id FK
+        int service_id FK
+        varchar_200 company_code
+        int user_id FK
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    hotel_allotments {
+        int id PK
+        json product_code_ids
+        varchar_255 hotel_name
+        text address
+        int city_code_id FK "proposed: added"
+        int country_code_id FK "proposed: added"
+        int currency_code_id FK "proposed: added"
+        varchar_60 telephone
+        varchar_160 email
+        int hotel_chain_maintenance_id FK "proposed: added"
+        tinyint_1 is_pt_hotels "proposed: added"
+        tinyint_1 is_pt_apartment "proposed: added"
+        tinyint_1 is_pt_villas "proposed: added"
+        tinyint_1 is_pr_1_star "proposed: added"
+        tinyint_1 is_pr_2_stars "proposed: added"
+        tinyint_1 is_pr_3_stars "proposed: added"
+        tinyint_1 is_pr_4_stars "proposed: added"
+        tinyint_1 is_pr_5_stars "proposed: added"
+        tinyint_1 is_fac_swimming_pool "proposed: added"
+        tinyint_1 is_fac_parking "proposed: added"
+        tinyint_1 is_fac_free_wifi "proposed: added"
+        tinyint_1 is_fac_hot_tub_jacuzzi "proposed: added"
+        tinyint_1 is_fac_spa "proposed: added"
+        tinyint_1 is_fac_restaurant "proposed: added"
+        tinyint_1 is_fac_airport_shuttle "proposed: added"
+        tinyint_1 is_fac_fitness_centre "proposed: added"
+        tinyint_1 is_fac_non_smoking_rooms "proposed: added"
+        tinyint_1 is_fac_24_hour_front_desk "proposed: added"
+        tinyint_1 is_fac_wheelchair_accessible "proposed: added"
+        tinyint_1 is_fac_room_service "proposed: added"
+        tinyint_1 is_fac_ev_charging_station "proposed: added"
+        tinyint_1 is_rf_children_cribs "proposed: added"
+        tinyint_1 is_rf_balcony "proposed: added"
+        tinyint_1 is_rf_kitchen "proposed: added"
+        tinyint_1 is_rf_air_conditioning "proposed: added"
+        tinyint_1 is_rf_refrigerator "proposed: added"
+        tinyint_1 is_rf_tea_maker "proposed: added"
+        tinyint_1 is_rf_electric_kettle "proposed: added"
+        tinyint_1 is_rf_tv "proposed: added"
+        tinyint_1 is_rf_coffee_machine "proposed: added"
+        tinyint_1 is_rs_wonderful "proposed: added"
+        tinyint_1 is_rs_very_good "proposed: added"
+        tinyint_1 is_rs_good "proposed: added"
+        tinyint_1 is_rs_pleasant "proposed: added"
+        varchar_60 distance_city_centre
+        varchar_60 distance_mecca
+        varchar_60 distance_medinah
+        int supplier_id FK
+        varchar_60 supplier_no
+        varchar_255 company_code FK "proposed: changed"
+        int user_id FK
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    import_batches {
+        int id PK
+        varchar_50 batch_no
+        enum_INV_XO_CN_DN_GL batch_type
+        varchar_255 file_name
+        int total_rows
+        decimal_17_4 total_amount "proposed: changed"
+        varchar_10 currency
+        varchar_255 branches
+        int user_id FK "proposed: added"
+        int company_id FK
+        datetime created_at
+        datetime updated_at
+        int journal_batch_id FK
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    iur_file_imports {
+        bigint id PK "proposed: changed"
+        varchar_255 company_code
+        varchar_255 file_name
+        varchar_255 file_key
+        varchar_64 content_key
+        enum_processing_completed_failed status
+        varchar_120 claimed_by
+        datetime claimed_at
+        datetime settled_at
+        int user_id FK
+        varchar_50 pnr
+        int order_id FK
+        varchar_50 order_number
+        text service_ids
+        int service_count
+        int voided_count
+        text document_numbers
+        text message
+        int repeat_posts
+        datetime last_repeat_at
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    iur_upload_logs {
+        int id PK
+        varchar_255 company_code
+        int user_id FK
+        int branch_id FK
+        varchar_255 file_name
+        enum_service_manual_unknown source
+        datetime uploaded_at
+        tinyint_1 is_backfilled
+        varchar_50 pnr
+        varchar_5 transaction_type
+        tinyint_1 is_ndc
+        tinyint_1 is_void
+        varchar_20 void_type
+        varchar_20 iata
+        varchar_10 airline_code
+        varchar_50 customer_number
+        int customer_id FK
+        varchar_255 customer_name
+        tinyint customer_auto_invoice
+        int order_id FK
+        varchar_50 order_number
+        enum_auto_created_reused_pending_pnr_void_none order_action
+        enum_success_duplicate_warning_failed result
+        text message
+        int passenger_count
+        int service_count
+        int emd_count
+        int reissue_count
+        int voided_count
+        text ticket_numbers
+        text passenger_names
+        text service_ids
+        decimal_17_4 invoice_amount "proposed: changed"
+        varchar_10 currency
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    journal_batches {
+        int id PK
+        varchar_50 batch_no
+        varchar_50 journal_entry_period
+        int branch_id FK
+        text narratives
+        datetime dated
+        enum_Manual_JE_System_JE_Opening_JE batch_type
+        enum_Open_Drafted_Posted_Void status
+        int created_by FK
+        int updated_by FK
+        datetime created_at
+        datetime updated_at
+    }
+    login_history {
+        bigint id PK "proposed: changed"
+        int user_id FK
+        datetime login_at "proposed: added"
+        datetime logout_at "proposed: added"
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    order_history {
+        bigint id PK "proposed: changed"
+        int order_id FK
+        int user_id FK
+        varchar_255 field_name
+        text ref
+        text old_value
+        text new_value
+        enum_create_update_delete action
+        datetime created_at
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    orders {
+        int customer_id FK
+        bigint id PK "proposed: changed"
+        varchar_50 order_number
+        varchar_50 order_type
+        varchar_100 booking_type
+        varchar_100 destination
+        datetime trip_at "proposed: added"
+        datetime trip_deadline_at "proposed: added"
+        varchar_50 sales_id
+        varchar_50 payment_type
+        enum_Active_Inactive_Balanced_Ended_Void status
+        datetime created_at
+        datetime updated_at
+        int team_code_id FK "proposed: added"
+        int user_id FK
+        int tcid_user_id FK
+        int branch_id FK
+        varchar_200 company_code
+        varchar_20 iata
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    payment_settlements {
+        int id PK
+        varchar_255 payment_number
+        int coa_id FK
+        int supplier_id FK
+        int user_id FK
+        varchar_200 company_code
+        int branch_id FK
+        decimal_12_4 amount "proposed: changed"
+        varchar_255 remarks
+        text void_remarks
+        datetime created_at
+        datetime updated_at
+        enum_Printed_Raised_Void status
+        int_unsigned credit_note_id FK
+        int customer_id FK
+        varchar_30 settlement_type
+        tinyint_1 je_generated
+        date adjustment_date
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    banks {
+        external stub "see the diagram that holds this table"
+    }
+    city_codes {
+        external stub "see the diagram that holds this table"
+    }
+    country_codes {
+        external stub "see the diagram that holds this table"
+    }
+    credit_notes {
+        external stub "see the diagram that holds this table"
+    }
+    currencies {
+        external stub "see the diagram that holds this table"
+    }
+    currency_codes {
+        external stub "see the diagram that holds this table"
+    }
+    customer_categories {
+        external stub "see the diagram that holds this table"
+    }
+    customer_types {
+        external stub "see the diagram that holds this table"
+    }
+    fee_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    hotel_chain_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    journal_entry_types {
+        external stub "see the diagram that holds this table"
+    }
+    pay_card_types {
+        external stub "see the diagram that holds this table"
+    }
+    pay_type_forms {
+        external stub "see the diagram that holds this table"
+    }
+    receipt_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    sales_id {
+        external stub "see the diagram that holds this table"
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    special_meal {
+        external stub "see the diagram that holds this table"
+    }
+    special_seat {
+        external stub "see the diagram that holds this table"
+    }
+    sub_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    suppliers {
+        external stub "see the diagram that holds this table"
+    }
+    team_codes {
+        external stub "see the diagram that holds this table"
+    }
+    trade_groups {
+        external stub "see the diagram that holds this table"
+    }
+    user_groups {
+        external stub "see the diagram that holds this table"
+    }
+    branches ||--o{ users : "branch_id"
+    companies ||--o{ users : "company_code"
+    team_codes ||--o{ users : "team_code_id (proposed)"
+    user_groups ||--o{ users : "user_group_id"
+    users ||--o{ audit_log : "user_id"
+    city_codes ||--o{ branches : "city_code_id (proposed)"
+    companies ||--o{ branches : "company_code"
+    users ||--o{ chart_of_accounts : "user_id"
+    journal_entry_types ||--o{ chart_of_accounts : "journal_entry_type_id"
+    sub_accounts ||--o{ chart_of_accounts : "sub_account_id"
+    currencies ||--o{ currency_history : "currency_id"
+    users ||--o{ currency_history : "user_id"
+    branches ||--o{ customer_deposit_transfers : "branch_id"
+    customer_deposits ||--o{ customer_deposit_transfers : "customer_deposit_id"
+    customers ||--o{ customer_deposit_transfers : "from_customer_id"
+    customers ||--o{ customer_deposit_transfers : "to_customer_id"
+    customer_deposits ||--o{ customer_deposit_transfers : "to_customer_deposit_id"
+    users ||--o{ customer_deposit_transfers : "user_id"
+    customers ||--o{ customer_deposits : "customer_id"
+    pay_type_forms ||--o{ customer_deposits : "pay_type_form_id (proposed)"
+    currency_codes ||--o{ customer_deposits : "currency_code_id (proposed)"
+    banks ||--o{ customer_deposits : "bank_id"
+    pay_card_types ||--o{ customer_deposits : "pay_card_type_id (proposed)"
+    chart_of_accounts ||--o{ customer_deposits : "chart_of_account_id"
+    branches ||--o{ customer_deposits : "branch_id (proposed)"
+    receipt_settlements ||--o{ customer_deposits : "receipt_settlement_id (proposed)"
+    users ||--o{ customer_deposits : "user_id (proposed)"
+    customers ||--o{ customer_history : "customer_id"
+    fee_maintenances ||--o{ customer_history : "fee_maintenance_id (proposed)"
+    users ||--o{ customer_history : "user_id"
+    sales_id ||--o{ customers : "sales_id_id (proposed)"
+    team_codes ||--o{ customers : "team_code_id (proposed)"
+    customer_types ||--o{ customers : "customer_type_id"
+    country_codes ||--o{ customers : "country_code_id (proposed)"
+    branches ||--o{ customers : "branch_id (proposed)"
+    customer_categories ||--o{ customers : "customer_category_id (proposed)"
+    special_meal ||--o{ customers : "special_meal_id (proposed)"
+    special_seat ||--o{ customers : "special_seat_id (proposed)"
+    trade_groups ||--o{ customers : "trade_group_id (proposed)"
+    users ||--o{ customers : "user_id (proposed)"
+    services ||--o{ documents : "service_id"
+    users ||--o{ documents : "user_id"
+    payment_settlements ||--o{ documents : "payment_settlement_id"
+    city_codes ||--o{ hotel_allotments : "city_code_id (proposed)"
+    country_codes ||--o{ hotel_allotments : "country_code_id (proposed)"
+    currency_codes ||--o{ hotel_allotments : "currency_code_id (proposed)"
+    hotel_chain_maintenances ||--o{ hotel_allotments : "hotel_chain_maintenance_id (proposed)"
+    suppliers ||--o{ hotel_allotments : "supplier_id"
+    companies ||--o{ hotel_allotments : "company_code"
+    users ||--o{ hotel_allotments : "user_id"
+    journal_batches ||--o{ import_batches : "journal_batch_id"
+    users ||--o{ import_batches : "user_id (proposed)"
+    companies ||--o{ import_batches : "company_id (proposed)"
+    orders ||--o{ iur_file_imports : "order_id (proposed)"
+    users ||--o{ iur_file_imports : "user_id (proposed)"
+    branches ||--o{ iur_upload_logs : "branch_id"
+    customers ||--o{ iur_upload_logs : "customer_id"
+    orders ||--o{ iur_upload_logs : "order_id"
+    users ||--o{ iur_upload_logs : "user_id"
+    branches ||--o{ journal_batches : "branch_id"
+    users ||--o{ journal_batches : "created_by"
+    users ||--o{ journal_batches : "updated_by"
+    users ||--o{ login_history : "user_id"
+    orders ||--o{ order_history : "order_id"
+    users ||--o{ order_history : "user_id"
+    branches ||--o{ orders : "branch_id"
+    users ||--o{ orders : "tcid_user_id"
+    customers ||--o{ orders : "customer_id"
+    team_codes ||--o{ orders : "team_code_id (proposed)"
+    users ||--o{ orders : "user_id"
+    credit_notes ||--o{ payment_settlements : "credit_note_id"
+    chart_of_accounts ||--o{ payment_settlements : "coa_id"
+    suppliers ||--o{ payment_settlements : "supplier_id"
+    branches ||--o{ payment_settlements : "branch_id (proposed)"
+    customers ||--o{ payment_settlements : "customer_id (proposed)"
+    users ||--o{ payment_settlements : "user_id (proposed)"

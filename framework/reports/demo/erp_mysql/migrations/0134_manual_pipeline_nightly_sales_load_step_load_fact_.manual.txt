@@ -1,0 +1,4 @@
+Step M134: Manual: Pipeline nightly_sales_load, step load_fact_sales: list the columns explicitly.
+MANUAL: this step has no generated SQL.
+Pipeline nightly_sales_load, step load_fact_sales: list the columns explicitly.
+Findings: DE-014-100d63bc

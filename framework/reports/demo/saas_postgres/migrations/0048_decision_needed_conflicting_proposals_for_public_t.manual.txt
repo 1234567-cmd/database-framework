@@ -1,0 +1,4 @@
+Step M048: Decision needed: conflicting proposals for public.tenants.updated_at
+MANUAL: this step has no generated SQL.
+Two proposals add public.tenants.updated_at with different types.
+Findings: DE-005-b63839de, SCH-044-dec4fba3

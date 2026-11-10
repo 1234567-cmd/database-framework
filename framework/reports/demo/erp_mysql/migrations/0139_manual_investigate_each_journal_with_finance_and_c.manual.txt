@@ -1,0 +1,4 @@
+Step M139: Manual: Investigate each journal with finance and correct through reversing or correctin
+MANUAL: this step has no generated SQL.
+Investigate each journal with finance and correct through reversing or correcting entries. Do not edit or delete posted entries.
+Findings: FINA-001-458c5e89

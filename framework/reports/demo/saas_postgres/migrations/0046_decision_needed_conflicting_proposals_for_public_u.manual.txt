@@ -1,0 +1,4 @@
+Step M046: Decision needed: conflicting proposals for public.users.updated_at
+MANUAL: this step has no generated SQL.
+Two proposals add public.users.updated_at with different types.
+Findings: DE-005-1b429b26, SCH-044-025e84be

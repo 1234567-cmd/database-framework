@@ -1,0 +1,4 @@
+Step M1414: Rename column journal_periods.end_date to end_at
+MANUAL: this step has no generated SQL.
+Table journal_periods matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column journal_periods.end_date to end_at.
+Findings: SCH-061-cce9dacd

@@ -1,0 +1,45 @@
+%% Current schema of power-suite-staging (11 of 57: around gl_settle_accounts)
+erDiagram
+    gl_settle_accounts {
+        int id PK
+        int chart_of_account_id FK
+        varchar_200 company_code
+        datetime createdAt
+        datetime updatedAt
+    }
+    fee_type_maintenances {
+        int id PK
+        varchar_45 company_code
+        varchar_50 fee_code
+        varchar_255 description
+        int key_account_id FK
+        datetime created_at
+        datetime updated_at
+    }
+    receipt_settlement_payments {
+        int id PK
+        int receipt_settlement_id FK
+        decimal_10_2 amount
+        int customer_deposit_id FK
+        datetime created_at
+        datetime updated_at
+        int gl_account_id FK
+        varchar_10 currency_code
+        decimal_10_4 exchange_rate
+        decimal_10_2 base_amount
+        text remarks
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    customer_deposits {
+        external stub "see the diagram that holds this table"
+    }
+    receipt_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    chart_of_accounts ||--o{ gl_settle_accounts : "chart_of_account_id"
+    gl_settle_accounts ||--o{ fee_type_maintenances : "key_account_id"
+    customer_deposits ||--o{ receipt_settlement_payments : "customer_deposit_id"
+    receipt_settlements ||--o{ receipt_settlement_payments : "receipt_settlement_id"
+    gl_settle_accounts ||--o{ receipt_settlement_payments : "gl_account_id"

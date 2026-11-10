@@ -1,0 +1,220 @@
+%% Proposed schema of power-suite-staging (79 of 80: around airline_equipments)
+%% 1552 manual or refused plan step(s) are not shown as applied.
+erDiagram
+    airline_equipments {
+        int id PK
+        varchar_255 airline_equipment_code
+        varchar_255 airline_equipment_description
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    car_company_maintenances {
+        int id PK
+        varchar_255 car_company_code
+        varchar_255 car_company_name
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    car_rate_maintenances {
+        int id PK
+        varchar_255 rate_type
+        varchar_255 car_rate_type_description
+        int display_order
+        varchar_255 host_code
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    data_migrations {
+        varchar_190 name PK
+        datetime applied_at
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    flyway_schema_history {
+        int installed_rank PK
+        varchar_50 version
+        varchar_200 description
+        varchar_20 type
+        varchar_1000 script
+        int checksum
+        varchar_100 installed_by
+        timestamp installed_on
+        int execution_time
+        tinyint_1 success
+    }
+    hotel_statuses {
+        int id PK
+        varchar_255 label
+        varchar_255 code
+        datetime createdAt
+        datetime updatedAt
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    intake_caches {
+        varchar_64 cache_key PK "proposed: added"
+        json payload "proposed: added"
+        datetime fetched_at "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    intake_legacy_company_labels {
+        bigint id PK "proposed: changed"
+        varchar_255 legacy_label
+        varchar_255 company_code
+        varchar_255 mapped_by
+        varchar_500 notes
+        datetime created_at
+        datetime updated_at
+        varchar_255 created_by "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    intake_notifications {
+        int id PK
+        varchar_128 delivery_id
+        char_36 issue_id
+        varchar_255 recipient
+        datetime sent_at
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    intake_sessions {
+        int id PK
+        enum_customer_staff principal_type
+        int principal_id
+        char_64 token_hash
+        varchar_45 ip_address
+        varchar_255 user_agent
+        datetime issued_at
+        datetime expires_at
+        datetime revoked_at
+        datetime last_seen_at
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    intake_trackers {
+        char_36 issue_id PK
+        enum_customer_staff principal_type PK
+        int principal_id PK
+        datetime assigned_at
+        tinyint_1 is_auto_assigned "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    integrity_snapshots {
+        bigint id PK
+        datetime taken_at
+        varchar_64 check_key
+        varchar_255 company_code
+        int count
+        json meta
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    invoice_footers {
+        bigint id PK "proposed: changed"
+        text invoice_footer
+        datetime createdAt
+        datetime updatedAt
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    migration_tests {
+        int id PK "proposed: added"
+        varchar_255 note "proposed: added"
+        datetime created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    name_titles {
+        int id PK
+        varchar_255 label
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    pay_types {
+        int id PK
+        varchar_255 label
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    personal_dependents {
+        int id PK
+        varchar_255 code
+        varchar_255 label
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    personal_genders {
+        int id PK
+        varchar_255 label
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    pk_provinces {
+        int id PK "proposed: added"
+        varchar_255 name "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }
+    report_groups {
+        int id PK "proposed: added"
+        varchar_255 code "proposed: added"
+        varchar_255 description "proposed: added"
+        varchar_45 company_code "proposed: added"
+        timestamp created_at "proposed: added"
+        varchar_255 created_by "proposed: added"
+        timestamp updated_at "proposed: added"
+        timestamp updated_at "proposed: added"
+        varchar_255 updated_by "proposed: added"
+    }

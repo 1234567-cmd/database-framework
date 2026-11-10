@@ -1,0 +1,4 @@
+Step M093: Manual: Pipeline nightly_sales_load: record run identity, source position, code version 
+MANUAL: this step has no generated SQL.
+Pipeline nightly_sales_load: record run identity, source position, code version and result per run.
+Findings: DE-007-c5788163

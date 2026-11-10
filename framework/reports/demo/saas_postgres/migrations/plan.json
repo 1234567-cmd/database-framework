@@ -1,0 +1,4978 @@
+{
+  "backup_recommendation": "Take a verified physical base backup with continuous WAL archiving (pg_basebackup or your backup platform), or confirm the latest one is usable. pg_dump is a supplement only, useful for portable or partial restore. A replica or standby is not a backup. Restore the backup to a separate instance and verify it before relying on it, and record the time so the recovery point is known.",
+  "database": "saas_demo",
+  "dialect": "postgres",
+  "notes": [],
+  "plan_hash": "d63ba596a41224fba55646637e265498d4fe9d78752ce9f44999069cec9c2d93",
+  "satisfied_findings": [],
+  "source_dialect": "postgres",
+  "steps": [
+    {
+      "breaking": false,
+      "column": "created_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" DROP COLUMN \"created_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-8cc41e76"
+      ],
+      "id": "M001",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 1,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column comments.created_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.comments exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'comments' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column comments.created_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.comments",
+      "title": "Add column comments.created_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" ADD COLUMN \"created_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" DROP COLUMN \"tenant_id\""
+      ],
+      "finding_ids": [
+        "TENA-001-943cd663"
+      ],
+      "id": "M002",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 2,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column comments.tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.comments exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'comments' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column comments.tenant_id does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.comments",
+      "title": "Add column comments.tenant_id bigint",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" ADD COLUMN \"tenant_id\" bigint"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" DROP COLUMN \"updated_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-76a24ebf"
+      ],
+      "id": "M003",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 3,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column comments.updated_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.comments exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'comments' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column comments.updated_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.comments",
+      "title": "Add column comments.updated_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" ADD COLUMN \"updated_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" DROP COLUMN \"created_at\""
+      ],
+      "finding_ids": [
+        "SCH-044-4be16234"
+      ],
+      "id": "M004",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 4,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column invoices.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.invoices exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'invoices' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.created_at does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.invoices",
+      "title": "Add column invoices.created_at timestamptz",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" ADD COLUMN \"created_at\" timestamptz DEFAULT CURRENT_TIMESTAMP"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" DROP COLUMN \"created_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-9c861720"
+      ],
+      "id": "M005",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 5,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column invoices.created_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.invoices exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'invoices' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.created_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.invoices",
+      "title": "Add column invoices.created_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" ADD COLUMN \"created_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" DROP COLUMN \"updated_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-2ec0837a"
+      ],
+      "id": "M006",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 6,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column invoices.updated_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.invoices exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'invoices' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.updated_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.invoices",
+      "title": "Add column invoices.updated_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" ADD COLUMN \"updated_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" DROP COLUMN \"created_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-1301bf30"
+      ],
+      "id": "M007",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 7,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column projects.created_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.projects exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'projects' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column projects.created_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.projects",
+      "title": "Add column projects.created_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" ADD COLUMN \"created_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" DROP COLUMN \"updated_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-5e6da280"
+      ],
+      "id": "M008",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 8,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column projects.updated_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.projects exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'projects' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column projects.updated_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.projects",
+      "title": "Add column projects.updated_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" ADD COLUMN \"updated_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" DROP COLUMN \"created_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-0640c25d"
+      ],
+      "id": "M009",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 9,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column tasks.created_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.tasks exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'tasks' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tasks.created_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.tasks",
+      "title": "Add column tasks.created_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" ADD COLUMN \"created_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" DROP COLUMN \"tenant_id\""
+      ],
+      "finding_ids": [
+        "TENA-001-2d71408c"
+      ],
+      "id": "M010",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 10,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column tasks.tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.tasks exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'tasks' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tasks.tenant_id does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.tasks",
+      "title": "Add column tasks.tenant_id bigint",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" ADD COLUMN \"tenant_id\" bigint"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" DROP COLUMN \"updated_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-24ac9296"
+      ],
+      "id": "M011",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 11,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column tasks.updated_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.tasks exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'tasks' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tasks.updated_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.tasks",
+      "title": "Add column tasks.updated_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" ADD COLUMN \"updated_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" DROP COLUMN \"created_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-02fdddb5"
+      ],
+      "id": "M012",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 12,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column tenants.created_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.tenants exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'tenants' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tenants.created_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.tenants",
+      "title": "Add column tenants.created_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" ADD COLUMN \"created_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" DROP COLUMN \"updated_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-41fb29ba"
+      ],
+      "id": "M013",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 13,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column tenants.updated_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.tenants exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'tenants' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tenants.updated_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.tenants",
+      "title": "Add column tenants.updated_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" ADD COLUMN \"updated_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" DROP COLUMN \"created_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-4203a0c8"
+      ],
+      "id": "M014",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 14,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column users.created_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.users exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'users' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.created_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.users",
+      "title": "Add column users.created_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" ADD COLUMN \"created_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_by",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" DROP COLUMN \"updated_by\""
+      ],
+      "finding_ids": [
+        "SCH-044-b1440965"
+      ],
+      "id": "M015",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Rollback drops the column and discards any values written to it after the change.",
+        "On PostgreSQL 11 and later a constant default does not rewrite the table; the brief ACCESS EXCLUSIVE lock is bounded by lock_timeout."
+      ],
+      "op": "add_column",
+      "order": 15,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column users.updated_by exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.users exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'users' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.updated_by does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'updated_by'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.users",
+      "title": "Add column users.updated_by varchar(255)",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" ADD COLUMN \"updated_by\" varchar(255)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" DROP COLUMN \"created_at__dbintel_new\""
+      ],
+      "finding_ids": [
+        "SCH-030-a0db6207"
+      ],
+      "id": "M016",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The backfill is one batch; run it repeatedly, throttled, outside any DDL transaction until it updates no rows (MIG-012).",
+        "The application must write both columns, or a sync trigger must exist, from this step until the swap; otherwise later writes are missed and the swap precheck fails (MIG-004, MIG-016)."
+      ],
+      "op": "alter_column_type",
+      "order": 16,
+      "phase_label": "expand",
+      "postchecks": [
+        {
+          "description": "Column comments.created_at__dbintel_new exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.comments exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'comments' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column comments.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.comments",
+      "title": "Expand: add created_at__dbintel_new timestamptz on comments and backfill",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" ADD COLUMN \"created_at__dbintel_new\" timestamptz",
+        "UPDATE \"public\".\"comments\" SET \"created_at__dbintel_new\" = CAST(\"created_at\" AS timestamptz) WHERE (\"id\") IN (SELECT \"id\" FROM \"public\".\"comments\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL LIMIT 1000)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "Backfill of created_at__dbintel_new is complete",
+        "created_at__dbintel_new matches created_at"
+      ],
+      "dependency_risks": [],
+      "depends_on": [
+        "M016"
+      ],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\""
+        },
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_new\"",
+        "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"created_at__dbintel_old\" TO \"created_at\""
+      ],
+      "finding_ids": [
+        "SCH-030-a0db6207"
+      ],
+      "id": "M017",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The application should tolerate both types before this step and deploy between expand and swap (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 17,
+      "phase_label": "swap",
+      "postchecks": [
+        {
+          "description": "Column comments.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column comments.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column comments.created_at__dbintel_new does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Backfill of created_at__dbintel_new is complete",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"comments\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL",
+          "status": "not_run"
+        },
+        {
+          "description": "created_at__dbintel_new matches created_at",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"comments\" WHERE CAST(\"created_at\" AS timestamptz) IS DISTINCT FROM \"created_at__dbintel_new\"",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.comments",
+      "title": "Swap: make created_at__dbintel_new the live comments.created_at",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\"",
+        "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "high",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [
+        "M017"
+      ],
+      "destructive": true,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "drop_column",
+          "severity": "destructive",
+          "source": "sqlglot",
+          "statement": "ALTER TABLE \"public\".\"comments\" DROP COLUMN \"created_at__dbintel_old\""
+        }
+      ],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-030-a0db6207"
+      ],
+      "id": "M018",
+      "irreversible_reason": "Dropping the old column removes its data. Restoring it requires a backup.",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Run only after the new column has been verified in production through at least one release (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 18,
+      "phase_label": "contract",
+      "postchecks": [
+        {
+          "description": "Column comments.created_at__dbintel_old does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column comments.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": true,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.comments",
+      "title": "Contract: drop the old comments.created_at__dbintel_old",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" DROP COLUMN \"created_at__dbintel_old\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "issued_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" DROP COLUMN \"issued_at__dbintel_new\""
+      ],
+      "finding_ids": [
+        "SCH-030-bbf7e5c3"
+      ],
+      "id": "M019",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The backfill is one batch; run it repeatedly, throttled, outside any DDL transaction until it updates no rows (MIG-012).",
+        "The application must write both columns, or a sync trigger must exist, from this step until the swap; otherwise later writes are missed and the swap precheck fails (MIG-004, MIG-016)."
+      ],
+      "op": "alter_column_type",
+      "order": 19,
+      "phase_label": "expand",
+      "postchecks": [
+        {
+          "description": "Column invoices.issued_at__dbintel_new exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'issued_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.invoices exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'invoices' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.issued_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'issued_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.invoices",
+      "title": "Expand: add issued_at__dbintel_new timestamptz on invoices and backfill",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" ADD COLUMN \"issued_at__dbintel_new\" timestamptz",
+        "UPDATE \"public\".\"invoices\" SET \"issued_at__dbintel_new\" = CAST(\"issued_at\" AS timestamptz) WHERE (\"id\") IN (SELECT \"id\" FROM \"public\".\"invoices\" WHERE \"issued_at__dbintel_new\" IS NULL AND \"issued_at\" IS NOT NULL LIMIT 1000)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "issued_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "Backfill of issued_at__dbintel_new is complete",
+        "issued_at__dbintel_new matches issued_at"
+      ],
+      "dependency_risks": [],
+      "depends_on": [
+        "M019"
+      ],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"issued_at\" TO \"issued_at__dbintel_old\""
+        },
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"issued_at__dbintel_new\" TO \"issued_at\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"issued_at\" TO \"issued_at__dbintel_new\"",
+        "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"issued_at__dbintel_old\" TO \"issued_at\""
+      ],
+      "finding_ids": [
+        "SCH-030-bbf7e5c3"
+      ],
+      "id": "M020",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The application should tolerate both types before this step and deploy between expand and swap (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 20,
+      "phase_label": "swap",
+      "postchecks": [
+        {
+          "description": "Column invoices.issued_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'issued_at'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.issued_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'issued_at__dbintel_old'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.issued_at__dbintel_new does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'issued_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Backfill of issued_at__dbintel_new is complete",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"invoices\" WHERE \"issued_at__dbintel_new\" IS NULL AND \"issued_at\" IS NOT NULL",
+          "status": "not_run"
+        },
+        {
+          "description": "issued_at__dbintel_new matches issued_at",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"invoices\" WHERE CAST(\"issued_at\" AS timestamptz) IS DISTINCT FROM \"issued_at__dbintel_new\"",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.invoices",
+      "title": "Swap: make issued_at__dbintel_new the live invoices.issued_at",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"issued_at\" TO \"issued_at__dbintel_old\"",
+        "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"issued_at__dbintel_new\" TO \"issued_at\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "total",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "Could not write a generic check that invoices.total converts from double precision to decimal(19,4). Verify conversion by hand before running."
+      ],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" DROP COLUMN \"total__dbintel_new\""
+      ],
+      "finding_ids": [
+        "SCH-020-f15a2d57"
+      ],
+      "id": "M021",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The backfill is one batch; run it repeatedly, throttled, outside any DDL transaction until it updates no rows (MIG-012).",
+        "The application must write both columns, or a sync trigger must exist, from this step until the swap; otherwise later writes are missed and the swap precheck fails (MIG-004, MIG-016)."
+      ],
+      "op": "alter_column_type",
+      "order": 21,
+      "phase_label": "expand",
+      "postchecks": [
+        {
+          "description": "Column invoices.total__dbintel_new exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'total__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.invoices exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'invoices' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.total exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'total'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.invoices",
+      "title": "Expand: add total__dbintel_new decimal(19,4) on invoices and backfill",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" ADD COLUMN \"total__dbintel_new\" decimal(19,4)",
+        "UPDATE \"public\".\"invoices\" SET \"total__dbintel_new\" = CAST(\"total\" AS decimal(19,4)) WHERE (\"id\") IN (SELECT \"id\" FROM \"public\".\"invoices\" WHERE \"total__dbintel_new\" IS NULL AND \"total\" IS NOT NULL LIMIT 1000)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "total",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "Backfill of total__dbintel_new is complete",
+        "total__dbintel_new matches total"
+      ],
+      "dependency_risks": [],
+      "depends_on": [
+        "M021"
+      ],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"total\" TO \"total__dbintel_old\""
+        },
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"total__dbintel_new\" TO \"total\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"total\" TO \"total__dbintel_new\"",
+        "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"total__dbintel_old\" TO \"total\""
+      ],
+      "finding_ids": [
+        "SCH-020-f15a2d57"
+      ],
+      "id": "M022",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The application should tolerate both types before this step and deploy between expand and swap (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 22,
+      "phase_label": "swap",
+      "postchecks": [
+        {
+          "description": "Column invoices.total exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'total'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.total__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'total__dbintel_old'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.total__dbintel_new does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'total__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Backfill of total__dbintel_new is complete",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"invoices\" WHERE \"total__dbintel_new\" IS NULL AND \"total\" IS NOT NULL",
+          "status": "not_run"
+        },
+        {
+          "description": "total__dbintel_new matches total",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"invoices\" WHERE CAST(\"total\" AS decimal(19,4)) IS DISTINCT FROM \"total__dbintel_new\"",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.invoices",
+      "title": "Swap: make total__dbintel_new the live invoices.total",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"total\" TO \"total__dbintel_old\"",
+        "ALTER TABLE \"public\".\"invoices\" RENAME COLUMN \"total__dbintel_new\" TO \"total\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" DROP COLUMN \"created_at__dbintel_new\""
+      ],
+      "finding_ids": [
+        "SCH-030-85b4ef80"
+      ],
+      "id": "M023",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The backfill is one batch; run it repeatedly, throttled, outside any DDL transaction until it updates no rows (MIG-012).",
+        "The application must write both columns, or a sync trigger must exist, from this step until the swap; otherwise later writes are missed and the swap precheck fails (MIG-004, MIG-016)."
+      ],
+      "op": "alter_column_type",
+      "order": 23,
+      "phase_label": "expand",
+      "postchecks": [
+        {
+          "description": "Column projects.created_at__dbintel_new exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.projects exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'projects' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column projects.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.projects",
+      "title": "Expand: add created_at__dbintel_new timestamptz on projects and backfill",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" ADD COLUMN \"created_at__dbintel_new\" timestamptz",
+        "UPDATE \"public\".\"projects\" SET \"created_at__dbintel_new\" = CAST(\"created_at\" AS timestamptz) WHERE (\"id\") IN (SELECT \"id\" FROM \"public\".\"projects\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL LIMIT 1000)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "Backfill of created_at__dbintel_new is complete",
+        "created_at__dbintel_new matches created_at"
+      ],
+      "dependency_risks": [],
+      "depends_on": [
+        "M023"
+      ],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\""
+        },
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_new\"",
+        "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"created_at__dbintel_old\" TO \"created_at\""
+      ],
+      "finding_ids": [
+        "SCH-030-85b4ef80"
+      ],
+      "id": "M024",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The application should tolerate both types before this step and deploy between expand and swap (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 24,
+      "phase_label": "swap",
+      "postchecks": [
+        {
+          "description": "Column projects.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column projects.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column projects.created_at__dbintel_new does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Backfill of created_at__dbintel_new is complete",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"projects\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL",
+          "status": "not_run"
+        },
+        {
+          "description": "created_at__dbintel_new matches created_at",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"projects\" WHERE CAST(\"created_at\" AS timestamptz) IS DISTINCT FROM \"created_at__dbintel_new\"",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.projects",
+      "title": "Swap: make created_at__dbintel_new the live projects.created_at",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\"",
+        "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "high",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [
+        "M024"
+      ],
+      "destructive": true,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "drop_column",
+          "severity": "destructive",
+          "source": "sqlglot",
+          "statement": "ALTER TABLE \"public\".\"projects\" DROP COLUMN \"created_at__dbintel_old\""
+        }
+      ],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-030-85b4ef80"
+      ],
+      "id": "M025",
+      "irreversible_reason": "Dropping the old column removes its data. Restoring it requires a backup.",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Run only after the new column has been verified in production through at least one release (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 25,
+      "phase_label": "contract",
+      "postchecks": [
+        {
+          "description": "Column projects.created_at__dbintel_old does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column projects.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": true,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Contract: drop the old projects.created_at__dbintel_old",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" DROP COLUMN \"created_at__dbintel_old\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" DROP COLUMN \"created_at__dbintel_new\""
+      ],
+      "finding_ids": [
+        "SCH-030-c8978150"
+      ],
+      "id": "M026",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The backfill is one batch; run it repeatedly, throttled, outside any DDL transaction until it updates no rows (MIG-012).",
+        "The application must write both columns, or a sync trigger must exist, from this step until the swap; otherwise later writes are missed and the swap precheck fails (MIG-004, MIG-016)."
+      ],
+      "op": "alter_column_type",
+      "order": 26,
+      "phase_label": "expand",
+      "postchecks": [
+        {
+          "description": "Column tasks.created_at__dbintel_new exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.tasks exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'tasks' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tasks.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.tasks",
+      "title": "Expand: add created_at__dbintel_new timestamptz on tasks and backfill",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" ADD COLUMN \"created_at__dbintel_new\" timestamptz",
+        "UPDATE \"public\".\"tasks\" SET \"created_at__dbintel_new\" = CAST(\"created_at\" AS timestamptz) WHERE (\"id\") IN (SELECT \"id\" FROM \"public\".\"tasks\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL LIMIT 1000)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "Backfill of created_at__dbintel_new is complete",
+        "created_at__dbintel_new matches created_at"
+      ],
+      "dependency_risks": [],
+      "depends_on": [
+        "M026"
+      ],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\""
+        },
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_new\"",
+        "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"created_at__dbintel_old\" TO \"created_at\""
+      ],
+      "finding_ids": [
+        "SCH-030-c8978150"
+      ],
+      "id": "M027",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The application should tolerate both types before this step and deploy between expand and swap (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 27,
+      "phase_label": "swap",
+      "postchecks": [
+        {
+          "description": "Column tasks.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tasks.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tasks.created_at__dbintel_new does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Backfill of created_at__dbintel_new is complete",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"tasks\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL",
+          "status": "not_run"
+        },
+        {
+          "description": "created_at__dbintel_new matches created_at",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"tasks\" WHERE CAST(\"created_at\" AS timestamptz) IS DISTINCT FROM \"created_at__dbintel_new\"",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.tasks",
+      "title": "Swap: make created_at__dbintel_new the live tasks.created_at",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\"",
+        "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "high",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [
+        "M027"
+      ],
+      "destructive": true,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "drop_column",
+          "severity": "destructive",
+          "source": "sqlglot",
+          "statement": "ALTER TABLE \"public\".\"tasks\" DROP COLUMN \"created_at__dbintel_old\""
+        }
+      ],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-030-c8978150"
+      ],
+      "id": "M028",
+      "irreversible_reason": "Dropping the old column removes its data. Restoring it requires a backup.",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Run only after the new column has been verified in production through at least one release (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 28,
+      "phase_label": "contract",
+      "postchecks": [
+        {
+          "description": "Column tasks.created_at__dbintel_old does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column tasks.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": true,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tasks",
+      "title": "Contract: drop the old tasks.created_at__dbintel_old",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" DROP COLUMN \"created_at__dbintel_old\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" DROP COLUMN \"created_at__dbintel_new\""
+      ],
+      "finding_ids": [
+        "SCH-030-3206b2be"
+      ],
+      "id": "M029",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The backfill is one batch; run it repeatedly, throttled, outside any DDL transaction until it updates no rows (MIG-012).",
+        "The application must write both columns, or a sync trigger must exist, from this step until the swap; otherwise later writes are missed and the swap precheck fails (MIG-004, MIG-016)."
+      ],
+      "op": "alter_column_type",
+      "order": 29,
+      "phase_label": "expand",
+      "postchecks": [
+        {
+          "description": "Column tenants.created_at__dbintel_new exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.tenants exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'tenants' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tenants.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.tenants",
+      "title": "Expand: add created_at__dbintel_new timestamptz on tenants and backfill",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" ADD COLUMN \"created_at__dbintel_new\" timestamptz",
+        "UPDATE \"public\".\"tenants\" SET \"created_at__dbintel_new\" = CAST(\"created_at\" AS timestamptz) WHERE (\"id\") IN (SELECT \"id\" FROM \"public\".\"tenants\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL LIMIT 1000)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "Backfill of created_at__dbintel_new is complete",
+        "created_at__dbintel_new matches created_at"
+      ],
+      "dependency_risks": [],
+      "depends_on": [
+        "M029"
+      ],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"tenants\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\""
+        },
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"tenants\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_new\"",
+        "ALTER TABLE \"public\".\"tenants\" RENAME COLUMN \"created_at__dbintel_old\" TO \"created_at\""
+      ],
+      "finding_ids": [
+        "SCH-030-3206b2be"
+      ],
+      "id": "M030",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The application should tolerate both types before this step and deploy between expand and swap (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 30,
+      "phase_label": "swap",
+      "postchecks": [
+        {
+          "description": "Column tenants.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tenants.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tenants.created_at__dbintel_new does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Backfill of created_at__dbintel_new is complete",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"tenants\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL",
+          "status": "not_run"
+        },
+        {
+          "description": "created_at__dbintel_new matches created_at",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"tenants\" WHERE CAST(\"created_at\" AS timestamptz) IS DISTINCT FROM \"created_at__dbintel_new\"",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.tenants",
+      "title": "Swap: make created_at__dbintel_new the live tenants.created_at",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\"",
+        "ALTER TABLE \"public\".\"tenants\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "high",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [
+        "M030"
+      ],
+      "destructive": true,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "drop_column",
+          "severity": "destructive",
+          "source": "sqlglot",
+          "statement": "ALTER TABLE \"public\".\"tenants\" DROP COLUMN \"created_at__dbintel_old\""
+        }
+      ],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-030-3206b2be"
+      ],
+      "id": "M031",
+      "irreversible_reason": "Dropping the old column removes its data. Restoring it requires a backup.",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Run only after the new column has been verified in production through at least one release (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 31,
+      "phase_label": "contract",
+      "postchecks": [
+        {
+          "description": "Column tenants.created_at__dbintel_old does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column tenants.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tenants' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": true,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tenants",
+      "title": "Contract: drop the old tenants.created_at__dbintel_old",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tenants\" DROP COLUMN \"created_at__dbintel_old\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" DROP COLUMN \"created_at__dbintel_new\""
+      ],
+      "finding_ids": [
+        "SCH-030-63750fad"
+      ],
+      "id": "M032",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The backfill is one batch; run it repeatedly, throttled, outside any DDL transaction until it updates no rows (MIG-012).",
+        "The application must write both columns, or a sync trigger must exist, from this step until the swap; otherwise later writes are missed and the swap precheck fails (MIG-004, MIG-016)."
+      ],
+      "op": "alter_column_type",
+      "order": 32,
+      "phase_label": "expand",
+      "postchecks": [
+        {
+          "description": "Column users.created_at__dbintel_new exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.users exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'users' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.users",
+      "title": "Expand: add created_at__dbintel_new timestamptz on users and backfill",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" ADD COLUMN \"created_at__dbintel_new\" timestamptz",
+        "UPDATE \"public\".\"users\" SET \"created_at__dbintel_new\" = CAST(\"created_at\" AS timestamptz) WHERE (\"id\") IN (SELECT \"id\" FROM \"public\".\"users\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL LIMIT 1000)"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "Backfill of created_at__dbintel_new is complete",
+        "created_at__dbintel_new matches created_at"
+      ],
+      "dependency_risks": [],
+      "depends_on": [
+        "M032"
+      ],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"users\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\""
+        },
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"users\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_new\"",
+        "ALTER TABLE \"public\".\"users\" RENAME COLUMN \"created_at__dbintel_old\" TO \"created_at\""
+      ],
+      "finding_ids": [
+        "SCH-030-63750fad"
+      ],
+      "id": "M033",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The application should tolerate both types before this step and deploy between expand and swap (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 33,
+      "phase_label": "swap",
+      "postchecks": [
+        {
+          "description": "Column users.created_at exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_at'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.created_at__dbintel_new does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_at__dbintel_new'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Backfill of created_at__dbintel_new is complete",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"users\" WHERE \"created_at__dbintel_new\" IS NULL AND \"created_at\" IS NOT NULL",
+          "status": "not_run"
+        },
+        {
+          "description": "created_at__dbintel_new matches created_at",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"users\" WHERE CAST(\"created_at\" AS timestamptz) IS DISTINCT FROM \"created_at__dbintel_new\"",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.users",
+      "title": "Swap: make created_at__dbintel_new the live users.created_at",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" RENAME COLUMN \"created_at\" TO \"created_at__dbintel_old\"",
+        "ALTER TABLE \"public\".\"users\" RENAME COLUMN \"created_at__dbintel_new\" TO \"created_at\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "created_at",
+      "data_loss_risk": "high",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [
+        "M033"
+      ],
+      "destructive": true,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "drop_column",
+          "severity": "destructive",
+          "source": "sqlglot",
+          "statement": "ALTER TABLE \"public\".\"users\" DROP COLUMN \"created_at__dbintel_old\""
+        }
+      ],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-030-63750fad"
+      ],
+      "id": "M034",
+      "irreversible_reason": "Dropping the old column removes its data. Restoring it requires a backup.",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Run only after the new column has been verified in production through at least one release (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 34,
+      "phase_label": "contract",
+      "postchecks": [
+        {
+          "description": "Column users.created_at__dbintel_old does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column users.created_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'created_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": true,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Contract: drop the old users.created_at__dbintel_old",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" DROP COLUMN \"created_at__dbintel_old\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "No NULLs in users.tenant_id (NOT NULL would fail)"
+      ],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "drop_constraint",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"users\" DROP CONSTRAINT \"nn_users_tenant_id\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" ALTER COLUMN \"tenant_id\" DROP NOT NULL"
+      ],
+      "finding_ids": [
+        "TENA-003-a7fc303f"
+      ],
+      "id": "M035",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "PostgreSQL 12 and later use the validated CHECK to skip the full scan under ACCESS EXCLUSIVE."
+      ],
+      "op": "set_not_null",
+      "order": 35,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "users.tenant_id is NOT NULL",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'tenant_id' AND is_nullable = 'NO'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.users exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'users' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "No NULLs in users.tenant_id (NOT NULL would fail)",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"users\" WHERE \"tenant_id\" IS NULL",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.users",
+      "title": "Set users.tenant_id NOT NULL",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" ADD CONSTRAINT \"nn_users_tenant_id\" CHECK (\"tenant_id\" IS NOT NULL) NOT VALID",
+        "ALTER TABLE \"public\".\"users\" VALIDATE CONSTRAINT \"nn_users_tenant_id\"",
+        "ALTER TABLE \"public\".\"users\" ALTER COLUMN \"tenant_id\" SET NOT NULL",
+        "ALTER TABLE \"public\".\"users\" DROP CONSTRAINT \"nn_users_tenant_id\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "email",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "No duplicate values in users (tenant_id, email) (UNIQUE would fail)"
+      ],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "DROP INDEX CONCURRENTLY \"public\".\"uq_users_tenant_id_email\""
+      ],
+      "finding_ids": [
+        "TENA-005-5720c9a7"
+      ],
+      "id": "M036",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "CREATE INDEX CONCURRENTLY must run outside a transaction. If it fails it leaves an INVALID index to drop before retrying."
+      ],
+      "op": "add_index",
+      "order": 36,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Index uq_users_tenant_id_email exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM pg_indexes WHERE tablename = 'users' AND schemaname = 'public' AND indexname = 'uq_users_tenant_id_email'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.users exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'users' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.email exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'email'",
+          "status": "not_run"
+        },
+        {
+          "description": "No duplicate values in users (tenant_id, email) (UNIQUE would fail)",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM (SELECT \"tenant_id\", \"email\" FROM \"public\".\"users\" WHERE \"tenant_id\" IS NOT NULL AND \"email\" IS NOT NULL GROUP BY \"tenant_id\", \"email\" HAVING COUNT(*) > 1) d",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.users",
+      "title": "Add unique index on users (tenant_id, email)",
+      "transactional": false,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "CREATE UNIQUE INDEX CONCURRENTLY \"uq_users_tenant_id_email\" ON \"public\".\"users\" (\"tenant_id\", \"email\")"
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "status",
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "No rows violate status IN ('done', 'open')"
+      ],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" DROP CONSTRAINT \"check_tasks_status\""
+      ],
+      "finding_ids": [
+        "SCH-046-d531e8ef"
+      ],
+      "id": "M037",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "NOT VALID then VALIDATE avoids scanning under a write-blocking lock."
+      ],
+      "op": "add_check",
+      "order": 37,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Constraint check_tasks_status exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.table_constraints WHERE table_name = 'tasks' AND table_schema = 'public' AND constraint_name = 'check_tasks_status' AND constraint_type = 'CHECK'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.tasks exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'tasks' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "No rows violate status IN ('done', 'open')",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"tasks\" WHERE NOT (status IN ('done', 'open'))",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.tasks",
+      "title": "Add check constraint check_tasks_status on tasks",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" ADD CONSTRAINT \"check_tasks_status\" CHECK (status IN ('done', 'open')) NOT VALID",
+        "ALTER TABLE \"public\".\"tasks\" VALIDATE CONSTRAINT \"check_tasks_status\""
+      ]
+    },
+    {
+      "breaking": true,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "No NULLs in projects.tenant_id (tenant isolation would fail)"
+      ],
+      "dependency_risks": [
+        "Foreign key from public.tasks references projects.",
+        "Application code, ORM mappings, reports and ETL jobs outside the database are not analyzed by the migration generator and may use this name."
+      ],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" DISABLE ROW LEVEL SECURITY",
+        "DROP POLICY \"rls_projects_tenant_id\" ON \"public\".\"projects\""
+      ],
+      "finding_ids": [
+        "TENA-007-c6f5ed6c"
+      ],
+      "id": "M038",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The session setting app.tenant_id is a placeholder convention; confirm how the application sets tenant context before use.",
+        "Table owners and BYPASSRLS roles are exempt unless FORCE ROW LEVEL SECURITY is added; confirm application roles."
+      ],
+      "op": "enable_rls",
+      "order": 38,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "RLS is enabled on projects",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relname = 'projects' AND n.nspname = 'public' AND c.relrowsecurity",
+          "status": "not_run"
+        },
+        {
+          "description": "Policy rls_projects_tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM pg_policies WHERE tablename = 'projects' AND policyname = 'rls_projects_tenant_id'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.projects exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'projects' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column projects.tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "No NULLs in projects.tenant_id (tenant isolation would fail)",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"projects\" WHERE \"tenant_id\" IS NULL",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.projects",
+      "title": "Enable row level security on projects by tenant_id",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "CREATE POLICY \"rls_projects_tenant_id\" ON \"public\".\"projects\" USING (\"tenant_id\" = CAST(current_setting('app.tenant_id') AS bigint)) WITH CHECK (\"tenant_id\" = CAST(current_setting('app.tenant_id') AS bigint))",
+        "ALTER TABLE \"public\".\"projects\" ENABLE ROW LEVEL SECURITY"
+      ]
+    },
+    {
+      "breaking": true,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [
+        "No NULLs in users.tenant_id (tenant isolation would fail)"
+      ],
+      "dependency_risks": [
+        "Foreign key from public.projects references users.",
+        "Foreign key from public.tasks references users.",
+        "Foreign key from public.comments references users.",
+        "Application code, ORM mappings, reports and ETL jobs outside the database are not analyzed by the migration generator and may use this name."
+      ],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"users\" DISABLE ROW LEVEL SECURITY",
+        "DROP POLICY \"rls_users_tenant_id\" ON \"public\".\"users\""
+      ],
+      "finding_ids": [
+        "TENA-007-21a82e8b"
+      ],
+      "id": "M039",
+      "irreversible_reason": "",
+      "lock_risk": "medium",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "The session setting app.tenant_id is a placeholder convention; confirm how the application sets tenant context before use.",
+        "Table owners and BYPASSRLS roles are exempt unless FORCE ROW LEVEL SECURITY is added; confirm application roles."
+      ],
+      "op": "enable_rls",
+      "order": 39,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "RLS is enabled on users",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relname = 'users' AND n.nspname = 'public' AND c.relrowsecurity",
+          "status": "not_run"
+        },
+        {
+          "description": "Policy rls_users_tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM pg_policies WHERE tablename = 'users' AND policyname = 'rls_users_tenant_id'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.users exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'users' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column users.tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "No NULLs in users.tenant_id (tenant isolation would fail)",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"users\" WHERE \"tenant_id\" IS NULL",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": true,
+      "reversible": true,
+      "table": "public.users",
+      "title": "Enable row level security on users by tenant_id",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "CREATE POLICY \"rls_users_tenant_id\" ON \"public\".\"users\" USING (\"tenant_id\" = CAST(current_setting('app.tenant_id') AS bigint)) WITH CHECK (\"tenant_id\" = CAST(current_setting('app.tenant_id') AS bigint))",
+        "ALTER TABLE \"public\".\"users\" ENABLE ROW LEVEL SECURITY"
+      ]
+    },
+    {
+      "breaking": true,
+      "column": "author_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [
+        "Application code, ORM mappings, reports and ETL jobs outside the database are not analyzed by the migration generator and may use this name."
+      ],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"author_id\" TO \"user_id\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"user_id\" TO \"author_id\""
+      ],
+      "finding_ids": [
+        "SCH-058-e7dee54b"
+      ],
+      "id": "M040",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Renames break every reader that uses the old name. On live systems add a compatible column and migrate callers first (MIG-004)."
+      ],
+      "op": "rename_column",
+      "order": 40,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column comments.user_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'user_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column comments.author_id does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'author_id'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column comments.author_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'author_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column comments.user_id does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'comments' AND table_schema = 'public' AND column_name = 'user_id'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.comments",
+      "title": "Rename column comments.author_id to user_id",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"comments\" RENAME COLUMN \"author_id\" TO \"user_id\""
+      ]
+    },
+    {
+      "breaking": true,
+      "column": "owner_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [
+        "Application code, ORM mappings, reports and ETL jobs outside the database are not analyzed by the migration generator and may use this name."
+      ],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"owner_id\" TO \"user_id\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"user_id\" TO \"owner_id\""
+      ],
+      "finding_ids": [
+        "SCH-058-08613045"
+      ],
+      "id": "M041",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Renames break every reader that uses the old name. On live systems add a compatible column and migrate callers first (MIG-004)."
+      ],
+      "op": "rename_column",
+      "order": 41,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column projects.user_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'user_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column projects.owner_id does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'owner_id'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column projects.owner_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'owner_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column projects.user_id does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'projects' AND table_schema = 'public' AND column_name = 'user_id'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.projects",
+      "title": "Rename column projects.owner_id to user_id",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"projects\" RENAME COLUMN \"owner_id\" TO \"user_id\""
+      ]
+    },
+    {
+      "breaking": true,
+      "column": "assignee_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [
+        "Application code, ORM mappings, reports and ETL jobs outside the database are not analyzed by the migration generator and may use this name."
+      ],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [
+        {
+          "detail": "",
+          "kind": "rename",
+          "severity": "risky",
+          "source": "fallback",
+          "statement": "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"assignee_id\" TO \"user_id\""
+        }
+      ],
+      "down_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"user_id\" TO \"assignee_id\""
+      ],
+      "finding_ids": [
+        "SCH-058-ca93a6d7"
+      ],
+      "id": "M042",
+      "irreversible_reason": "",
+      "lock_risk": "low",
+      "manual": false,
+      "manual_description": "",
+      "online_notes": [
+        "Renames break every reader that uses the old name. On live systems add a compatible column and migrate callers first (MIG-004)."
+      ],
+      "op": "rename_column",
+      "order": 42,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "Column tasks.user_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'user_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tasks.assignee_id does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'assignee_id'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column tasks.assignee_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'assignee_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column tasks.user_id does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'tasks' AND table_schema = 'public' AND column_name = 'user_id'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": true,
+      "table": "public.tasks",
+      "title": "Rename column tasks.assignee_id to user_id",
+      "transactional": true,
+      "up_sql": [
+        "SET lock_timeout = '5s'",
+        "ALTER TABLE \"public\".\"tasks\" RENAME COLUMN \"assignee_id\" TO \"user_id\""
+      ]
+    },
+    {
+      "breaking": false,
+      "column": "updated_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "DE-005-f0c2b3f6",
+        "SCH-044-29e07929"
+      ],
+      "id": "M043",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Two proposals add public.invoices.updated_at with different types.",
+      "online_notes": [],
+      "op": "add_column",
+      "order": 43,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Decision needed: conflicting proposals for public.invoices.updated_at",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "updated_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "DE-005-e3d826de",
+        "SCH-044-1fa0269d"
+      ],
+      "id": "M044",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Two proposals add public.comments.updated_at with different types.",
+      "online_notes": [],
+      "op": "add_column",
+      "order": 44,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.comments",
+      "title": "Decision needed: conflicting proposals for public.comments.updated_at",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "updated_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "DE-005-69aab2fa",
+        "SCH-044-89d095d3"
+      ],
+      "id": "M045",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Two proposals add public.tasks.updated_at with different types.",
+      "online_notes": [],
+      "op": "add_column",
+      "order": 45,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tasks",
+      "title": "Decision needed: conflicting proposals for public.tasks.updated_at",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "updated_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "DE-005-1b429b26",
+        "SCH-044-025e84be"
+      ],
+      "id": "M046",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Two proposals add public.users.updated_at with different types.",
+      "online_notes": [],
+      "op": "add_column",
+      "order": 46,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Decision needed: conflicting proposals for public.users.updated_at",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "updated_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "DE-005-0615d78f",
+        "SCH-044-6b5eb095"
+      ],
+      "id": "M047",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Two proposals add public.projects.updated_at with different types.",
+      "online_notes": [],
+      "op": "add_column",
+      "order": 47,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Decision needed: conflicting proposals for public.projects.updated_at",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "updated_at",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "DE-005-b63839de",
+        "SCH-044-dec4fba3"
+      ],
+      "id": "M048",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Two proposals add public.tenants.updated_at with different types.",
+      "online_notes": [],
+      "op": "add_column",
+      "order": 48,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tenants",
+      "title": "Decision needed: conflicting proposals for public.tenants.updated_at",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "issued_at",
+      "data_loss_risk": "high",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [
+        "M020"
+      ],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-030-bbf7e5c3"
+      ],
+      "id": "M049",
+      "irreversible_reason": "Dropping the old column removes its data. Restoring it requires a backup.",
+      "lock_risk": "medium",
+      "manual": true,
+      "manual_description": "Table invoices matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change. Intended change: Contract: drop the old invoices.issued_at__dbintel_old.",
+      "online_notes": [
+        "Run only after the new column has been verified in production through at least one release (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 49,
+      "phase_label": "contract",
+      "postchecks": [
+        {
+          "description": "Column invoices.issued_at__dbintel_old does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'issued_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column invoices.issued_at__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'issued_at__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "Table invoices matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change.",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Contract: drop the old invoices.issued_at__dbintel_old",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "total",
+      "data_loss_risk": "high",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [
+        "M022"
+      ],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-020-f15a2d57"
+      ],
+      "id": "M050",
+      "irreversible_reason": "Dropping the old column removes its data. Restoring it requires a backup.",
+      "lock_risk": "medium",
+      "manual": true,
+      "manual_description": "Table invoices matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change. Intended change: Contract: drop the old invoices.total__dbintel_old.",
+      "online_notes": [
+        "Run only after the new column has been verified in production through at least one release (MIG-004)."
+      ],
+      "op": "alter_column_type",
+      "order": 50,
+      "phase_label": "contract",
+      "postchecks": [
+        {
+          "description": "Column invoices.total__dbintel_old does not exist",
+          "expected": 0,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'total__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Column invoices.total__dbintel_old exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'total__dbintel_old'",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "Table invoices matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change.",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Contract: drop the old invoices.total__dbintel_old",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": true,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [
+        "Application code, ORM mappings, reports and ETL jobs outside the database are not analyzed by the migration generator and may use this name."
+      ],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "TENA-007-8377a792"
+      ],
+      "id": "M051",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "medium",
+      "manual": true,
+      "manual_description": "Table invoices matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Enable row level security on invoices by tenant_id.",
+      "online_notes": [
+        "The session setting app.tenant_id is a placeholder convention; confirm how the application sets tenant context before use.",
+        "Table owners and BYPASSRLS roles are exempt unless FORCE ROW LEVEL SECURITY is added; confirm application roles."
+      ],
+      "op": "enable_rls",
+      "order": 51,
+      "phase_label": "",
+      "postchecks": [
+        {
+          "description": "RLS is enabled on invoices",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relname = 'invoices' AND n.nspname = 'public' AND c.relrowsecurity",
+          "status": "not_run"
+        },
+        {
+          "description": "Policy rls_invoices_tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM pg_policies WHERE tablename = 'invoices' AND policyname = 'rls_invoices_tenant_id'",
+          "status": "not_run"
+        }
+      ],
+      "prechecks": [
+        {
+          "description": "Table public.invoices exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'invoices' AND table_schema = 'public'",
+          "status": "not_run"
+        },
+        {
+          "description": "Column invoices.tenant_id exists",
+          "expected": 1,
+          "kind": "schema",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'invoices' AND table_schema = 'public' AND column_name = 'tenant_id'",
+          "status": "not_run"
+        },
+        {
+          "description": "No NULLs in invoices.tenant_id (tenant isolation would fail)",
+          "expected": 0,
+          "kind": "data",
+          "observed": null,
+          "sql": "SELECT COUNT(*) FROM \"public\".\"invoices\" WHERE \"tenant_id\" IS NULL",
+          "status": "not_run"
+        }
+      ],
+      "refused_reason": "Table invoices matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change.",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Enable row level security on invoices by tenant_id",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SECA-002-72e454df"
+      ],
+      "id": "M052",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "revoke_grant needs a grantee and a table scope.",
+      "online_notes": [],
+      "op": "revoke_grant",
+      "order": 52,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: revoke_grant on database",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SECA-002-d0a96b3f"
+      ],
+      "id": "M053",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "revoke_grant needs a grantee and a table scope.",
+      "online_notes": [],
+      "op": "revoke_grant",
+      "order": 53,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: revoke_grant on database",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-003-1309bdeb"
+      ],
+      "id": "M054",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Record an accountable owner per table or dataset.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 54,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: Record an accountable owner per table or dataset.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-004-1eb17008"
+      ],
+      "id": "M055",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Add a classification attribute per column that drives masking and retention.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 55,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: Add a classification attribute per column that drives masking and retention.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-005-f4a9337b"
+      ],
+      "id": "M056",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Decide which record classes need audit history and how long it is retained.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 56,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: Decide which record classes need audit history and how long it is retained.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-006-4f4e563b"
+      ],
+      "id": "M057",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Requires legal review: define retention by record class, jurisdiction, start event and hold.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 57,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: Requires legal review: define retention by record class, jurisdiction, start eve",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-007-0fa88106"
+      ],
+      "id": "M058",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Adopt a versioned migration tool that records what was applied.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 58,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: Adopt a versioned migration tool that records what was applied.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-057-e69b837d"
+      ],
+      "id": "M059",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Decide whether to adopt the standard name or record the existing uniform convention as an exception.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 59,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": null,
+      "title": "Manual: Decide whether to adopt the standard name or record the existing uniform convent",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-001-daf72158"
+      ],
+      "id": "M060",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Add a description to the table, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 60,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.comments",
+      "title": "Manual: Add a description to the table, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-03e1e3bd"
+      ],
+      "id": "M061",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 61,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.comments",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-059-ecf107e4"
+      ],
+      "id": "M062",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and index_ forms in a planned change.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 62,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.comments",
+      "title": "Manual: Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and ind",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "author_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-007-56e7d617"
+      ],
+      "id": "M063",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Choose the delete and update action for this relationship.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 63,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.comments",
+      "title": "Manual: Choose the delete and update action for this relationship.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "task_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-007-ea6b38d8"
+      ],
+      "id": "M064",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Choose the delete and update action for this relationship.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 64,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.comments",
+      "title": "Manual: Choose the delete and update action for this relationship.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-001-5c6fdcf2"
+      ],
+      "id": "M065",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Add a description to the table, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 65,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Manual: Add a description to the table, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-464c94de"
+      ],
+      "id": "M066",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 66,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-059-d125567c"
+      ],
+      "id": "M067",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and index_ forms in a planned change.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 67,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Manual: Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and ind",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-007-e352e6cd"
+      ],
+      "id": "M068",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Choose the delete and update action for this relationship.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 68,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Manual: Choose the delete and update action for this relationship.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "TENA-004-e588c013"
+      ],
+      "id": "M069",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rebuild the primary key of public.invoices to include tenant_id; plan dependent keys.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 69,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.invoices",
+      "title": "Manual: Rebuild the primary key of public.invoices to include tenant_id; plan dependent ",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-001-e0480900"
+      ],
+      "id": "M070",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Add a description to the table, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 70,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Manual: Add a description to the table, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-80d620da"
+      ],
+      "id": "M071",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 71,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-059-e59d3bf1"
+      ],
+      "id": "M072",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and index_ forms in a planned change.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 72,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Manual: Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and ind",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "owner_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-007-39da3f0a"
+      ],
+      "id": "M073",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Choose the delete and update action for this relationship.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 73,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Manual: Choose the delete and update action for this relationship.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "owner_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "TENA-006-35d3c301"
+      ],
+      "id": "M074",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Add a unique key on public.users (tenant_id, id), then replace this foreign key with one that includes tenant_id.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 74,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Manual: Add a unique key on public.users (tenant_id, id), then replace this foreign key ",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-007-4896b605"
+      ],
+      "id": "M075",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Choose the delete and update action for this relationship.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 75,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Manual: Choose the delete and update action for this relationship.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "TENA-004-f66bd2da"
+      ],
+      "id": "M076",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rebuild the primary key of public.projects to include tenant_id; plan dependent keys.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 76,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.projects",
+      "title": "Manual: Rebuild the primary key of public.projects to include tenant_id; plan dependent ",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-001-35115ed2"
+      ],
+      "id": "M077",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Add a description to the table, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 77,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tasks",
+      "title": "Manual: Add a description to the table, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-c352517a"
+      ],
+      "id": "M078",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 78,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tasks",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-059-eb386df2"
+      ],
+      "id": "M079",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and index_ forms in a planned change.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 79,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tasks",
+      "title": "Manual: Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and ind",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "assignee_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-007-215b2732"
+      ],
+      "id": "M080",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Choose the delete and update action for this relationship.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 80,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tasks",
+      "title": "Manual: Choose the delete and update action for this relationship.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "project_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-007-073c104d"
+      ],
+      "id": "M081",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Choose the delete and update action for this relationship.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 81,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tasks",
+      "title": "Manual: Choose the delete and update action for this relationship.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-001-438a3d43"
+      ],
+      "id": "M082",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Add a description to the table, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 82,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tenants",
+      "title": "Manual: Add a description to the table, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-ce24f04d"
+      ],
+      "id": "M083",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 83,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tenants",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-059-dd8a0359"
+      ],
+      "id": "M084",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and index_ forms in a planned change.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 84,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.tenants",
+      "title": "Manual: Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and ind",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-001-0f0232a4"
+      ],
+      "id": "M085",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Add a description to the table, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 85,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Manual: Add a description to the table, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "GVN-002-06b24064"
+      ],
+      "id": "M086",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Describe the columns, with no sensitive values.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 86,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Manual: Describe the columns, with no sensitive values.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": null,
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-059-93c744c6"
+      ],
+      "id": "M087",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and index_ forms in a planned change.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 87,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Manual: Rename constraints and indexes to the standard pk_, fk_, unique_, check_ and ind",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "email",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SECA-004-6692c41c"
+      ],
+      "id": "M088",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Classify email (email) and record its required protections.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 88,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Manual: Classify email (email) and record its required protections.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "email",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SECA-005-c868042f"
+      ],
+      "id": "M089",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Classify email (email) and protect it accordingly.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 89,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Manual: Classify email (email) and protect it accordingly.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "SCH-007-f2da47cf"
+      ],
+      "id": "M090",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Choose the delete and update action for this relationship.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 90,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Manual: Choose the delete and update action for this relationship.",
+      "transactional": true,
+      "up_sql": []
+    },
+    {
+      "breaking": false,
+      "column": "tenant_id",
+      "data_loss_risk": "none",
+      "data_repair_notes": [],
+      "dependency_risks": [],
+      "depends_on": [],
+      "destructive": false,
+      "destructive_hits": [],
+      "down_sql": [],
+      "finding_ids": [
+        "TENA-004-e5b8ecaa"
+      ],
+      "id": "M091",
+      "irreversible_reason": "Manual step: no SQL is generated, so no rollback exists.",
+      "lock_risk": "low",
+      "manual": true,
+      "manual_description": "Rebuild the primary key of public.users to include tenant_id; plan dependent keys.",
+      "online_notes": [],
+      "op": "manual",
+      "order": 91,
+      "phase_label": "",
+      "postchecks": [],
+      "prechecks": [],
+      "refused_reason": "",
+      "requires_backup": false,
+      "requires_data_repair": false,
+      "reversible": false,
+      "table": "public.users",
+      "title": "Manual: Rebuild the primary key of public.users to include tenant_id; plan dependent key",
+      "transactional": true,
+      "up_sql": []
+    }
+  ],
+  "unaddressed_findings": []
+}

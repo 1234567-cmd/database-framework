@@ -1,0 +1,4 @@
+Step M1398: Rename column invoice_settings.hide_transaction_fee to is_hide_transaction_fee
+MANUAL: this step has no generated SQL.
+Table invoice_settings matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoice_settings.hide_transaction_fee to is_hide_transaction_fee.
+Findings: SCH-060-0bfaaa3c

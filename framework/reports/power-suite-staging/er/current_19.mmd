@@ -1,0 +1,18 @@
+%% Current schema of power-suite-staging (19 of 57: around receipt_settlement_invoices)
+erDiagram
+    receipt_settlement_invoices {
+        int id PK
+        int invoice_id FK
+        int receipt_settlement_id FK
+        decimal_10_2 amount
+        datetime created_at
+        datetime updated_at
+    }
+    invoices {
+        external stub "see the diagram that holds this table"
+    }
+    receipt_settlements {
+        external stub "see the diagram that holds this table"
+    }
+    invoices ||--o{ receipt_settlement_invoices : "invoice_id"
+    receipt_settlements ||--o{ receipt_settlement_invoices : "receipt_settlement_id"

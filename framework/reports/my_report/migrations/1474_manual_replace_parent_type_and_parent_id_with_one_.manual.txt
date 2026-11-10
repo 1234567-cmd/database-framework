@@ -1,0 +1,4 @@
+Step M1474: Manual: Replace parent_type and parent_id with one nullable foreign key per parent, or a
+MANUAL: this step has no generated SQL.
+Replace parent_type and parent_id with one nullable foreign key per parent, or an exclusive supertype.
+Findings: SCH-040-35e96cc5

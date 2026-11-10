@@ -1,0 +1,4 @@
+Step M2368: Manual: Move cost_document_number to the table identified by cost_id and join to it.
+MANUAL: this step has no generated SQL.
+Move cost_document_number to the table identified by cost_id and join to it.
+Findings: SCH-013-101a182d

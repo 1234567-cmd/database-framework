@@ -1,0 +1,4 @@
+Step M1383: Rename column invoice_settings.hide_car_location to is_hide_car_location
+MANUAL: this step has no generated SQL.
+Table invoice_settings matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoice_settings.hide_car_location to is_hide_car_location.
+Findings: SCH-060-90866f67

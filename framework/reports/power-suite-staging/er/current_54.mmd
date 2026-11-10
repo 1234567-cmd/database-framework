@@ -1,0 +1,68 @@
+%% Current schema of power-suite-staging (54 of 57: around admin_users)
+erDiagram
+    admin_sessions {
+        int id PK
+        int admin_user_id FK
+        char_64 token_hash
+        varchar_45 ip_address
+        varchar_255 user_agent
+        datetime issued_at
+        datetime last_seen_at
+        datetime expires_at
+        datetime revoked_at
+    }
+    admin_settings {
+        varchar_64 setting_key PK
+        text value
+        int updated_by FK
+        datetime updated_at
+    }
+    admin_users {
+        int id PK
+        varchar_255 email
+        varchar_200 password
+        varchar_200 full_name
+        enum_owner_operator_viewer role
+        tinyint_1 is_active
+        varchar_255 mfa_secret
+        datetime last_login_at
+        int failed_attempts
+        datetime locked_until
+        datetime created_at
+        datetime updated_at
+    }
+    coa_template_rows {
+        bigint id PK
+        int template_id FK
+        enum_account_posting_rule_lookup row_type
+        json payload
+    }
+    coa_templates {
+        int id PK
+        varchar_120 name
+        int version
+        varchar_255 source_company_code
+        text note
+        int created_by FK
+        datetime created_at
+    }
+    provisioning_runs {
+        int id PK
+        varchar_255 company_code
+        enum_provision_add_branch_repair_rollover kind
+        json params
+        enum_running_succeeded_failed status
+        int current_step
+        json step_log
+        json verification
+        text error
+        int started_by FK
+        datetime started_at
+        datetime heartbeat_at
+        datetime finished_at
+    }
+    admin_users ||--o{ admin_sessions : "admin_user_id"
+    admin_users ||--o{ admin_settings : "updated_by"
+    coa_templates ||--o{ coa_template_rows : "template_id"
+    admin_users ||--o{ coa_templates : "created_by"
+    admin_users ||--o{ provisioning_runs : "started_by"

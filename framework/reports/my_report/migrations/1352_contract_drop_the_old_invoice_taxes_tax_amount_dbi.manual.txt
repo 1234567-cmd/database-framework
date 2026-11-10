@@ -1,0 +1,4 @@
+Step M1352: Contract: drop the old invoice_taxes.tax_amount__dbintel_old
+MANUAL: this step has no generated SQL.
+Table invoice_taxes matches the financial table protection; drop_column is not generated automatically and needs a separately reviewed change. Intended change: Contract: drop the old invoice_taxes.tax_amount__dbintel_old.
+Findings: SCH-023-b8396dd1

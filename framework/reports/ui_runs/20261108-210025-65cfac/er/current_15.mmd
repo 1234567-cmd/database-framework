@@ -1,0 +1,30 @@
+%% Current schema of power-suite-staging (15 of 57: around integration_sources)
+erDiagram
+    integration_sources {
+        int id PK
+        varchar_255 company_code FK
+        varchar_50 name
+        tinyint_1 inactive
+        datetime created_at
+        datetime updated_at
+    }
+    user_other_ids {
+        int id PK
+        int user_id FK
+        int source_id FK
+        varchar_100 other_user_id
+        varchar_500 password_enc
+        varchar_255 remark
+        int sort_order
+        datetime created_at
+        datetime updated_at
+    }
+    companies {
+        external stub "see the diagram that holds this table"
+    }
+    users {
+        external stub "see the diagram that holds this table"
+    }
+    companies ||--o{ integration_sources : "company_code"
+    integration_sources ||--o{ user_other_ids : "source_id"
+    users ||--o{ user_other_ids : "user_id"

@@ -1,0 +1,588 @@
+%% Current schema of power-suite-staging (2 of 57: around customers)
+erDiagram
+    customers {
+        int id PK
+        int customer_type_id FK
+        int branch_id
+        varchar_200 company_code
+        int team_id FK
+        int sale_id FK
+        int user_id
+        varchar_100 customer_number
+        varchar_200 customer_name
+        varchar_45 middle_name
+        varchar_20 receipt_no
+        varchar_20 share_credit_code
+        decimal_10_2 deposit_amount
+        decimal_20_2 credit_limit
+        timestamp created_at
+        timestamp updated_at
+        decimal_10_2 addon_credit_limit
+        int currency_id
+        date credit_from_date
+        date credit_to_date
+        varchar_45 iata
+        varchar_45 alpha_code
+        varchar_45 project_no
+        varchar_100 account_no
+        varchar_100 second_account_no
+        varchar_100 gds_profile_id
+        enum_Single_Married_Divorced_Widowed marital_status
+        date date_of_birth
+        int country_of_birth
+        varchar_200 internet_address
+        int nationality1
+        int nationality2 FK
+        tinyint absorb_gst
+        tinyint optout_crm_campaign
+        tinyint default_bill_company
+        text policy_file
+        text company_groups
+        text policy_remarks
+        tinyint_1 define_headings
+        varchar_255 sales_tax_invoice_heading
+        varchar_255 invoice_heading
+        tinyint_1 deleted
+        int credit_days_1
+        int late_payment_charge
+        int credit_term_type
+        enum_credit_days_BSP_Payment_Term_BSP_PAYMENT_15_days_Statement_Date_Weekly date_type
+        enum_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday_Sunday weekly
+        tinyint_1 last_day_month
+        datetime other_due_date
+        varchar_45 customerscol
+        enum_Active_Inactive_Blacklisted_Suspended status
+        int group_id
+        varchar_45 also_known_as
+        varchar_45 company
+        varchar_45 surname
+        tinyint type
+        varchar_45 business_reg_no
+        varchar_45 insurance_number
+        varchar_45 license_number
+        varchar_45 acc_open_date
+        varchar_45 acc_close_date
+        varchar_45 security_id
+        varchar_45 parent_company
+        varchar_45 gst_reg_no
+        varchar_45 comm_id
+        varchar_45 location_code
+        varchar_45 country_client_type
+        varchar_45 hierarchy_structure
+        varchar_45 country_client_code
+        varchar_45 country_agency_code
+        varchar_45 other_profile_id
+        varchar_45 job_title
+        varchar_45 employee
+        varchar_45 department
+        varchar_45 cost_centre
+        varchar_45 ta
+        int special_seat_id
+        varchar_45 exit_permit
+        date expiry_date
+        varchar_45 ic_id_one
+        int issue_country_one
+        varchar_45 ic_id_two
+        int issue_country_two
+        varchar_45 insurance
+        int special_meal_id
+        varchar_45 given_name
+        int title_id
+        int gender_id
+        int dependent_id
+        tinyint vip
+        int trade_group_id
+        int report_group_id
+        varchar_45 tag
+        tinyint tc_profile
+        tinyint_1 mailing_address
+        varchar_255 mailing_suburb_name
+        varchar_255 mailing_post_code
+        varchar_255 mailing_country_code
+        tinyint_1 billing_address
+        varchar_255 billing_suburb_name
+        varchar_255 billing_post_code
+        varchar_255 billing_country_code
+        tinyint_1 delivery_address
+        varchar_255 delivery_suburb_name
+        varchar_255 delivery_post_code
+        varchar_255 delivery_country_code
+        tinyint_1 statement_address
+        varchar_255 statement_suburb_name
+        varchar_255 statement_post_code
+        varchar_255 statement_country_code
+        int payment_type
+        varchar_45 customer_sequence
+        int customer_category_id
+        varchar_300 full_address
+        tinyint_1 auto_invoice
+        tinyint_1 auto_email
+        tinyint_1 hide_transaction_fee_sst
+        tinyint_1 hide_tax_detail
+        tinyint hide_description
+    }
+    country_codes {
+        int id PK
+        varchar_45 code
+        varchar_100 name
+    }
+    credit_notes {
+        int_unsigned id PK
+        int supplier_id FK
+        int customer_id FK
+        int doc_no
+        date doc_date
+        int so_no
+        varchar_50 doc_type
+        decimal_15_2 billing_amount
+        decimal_15_2 billing_amount_base
+        varchar_300 to
+        int currency_id FK
+        int base_currency_id FK
+        decimal_10_5 exchange_rate
+        date exchange_rate_date
+        decimal_15_2 base_amount
+        decimal_15_2 base_amount_base
+        varchar_45 sst_code
+        decimal_15_2 sst_amount
+        int buy_staff_id
+        enum_Printed_Raised_Partially_Settled_Settled_Paid_Void doc_status
+        int credit_term
+        date due_date
+        varchar_60 reference
+        varchar_45 service_provided
+        text remarks
+        varchar_50 deposit_no
+        date deposit_date
+        decimal_10_0 deposit_balance
+        decimal_15_2 refund_amount
+        decimal_15_2 refund_amount_base
+        decimal_10_0 handling_fee
+        varchar_45 transfer_to
+        decimal_10_0 sst_handling_fee
+        int account_no
+        enum_Cash_Cheque_Credit_Card_Direct_Deposit_GL_Account type
+        int bank_id FK
+        int pay_type_id FK
+        int tc_id FK
+        decimal_15_2 amount
+        decimal_15_2 amount_base
+        varchar_45 cash_box
+        int chart_of_account_id FK
+        varchar_45 client_refrence
+        varchar_45 check_number
+        int card_type_id FK
+        varchar_45 card_number
+        varchar_45 voucher_number
+        varchar_45 gl_account_box
+        varchar_45 account_number
+        int amount_raw
+        varchar_45 request_by
+        varchar_45 approved_by
+        varchar_45 paid_amount
+        varchar_45 internal_remarks
+        enum_Miscellaneous_Payment_XO_Payment pr_type
+        timestamp created_at
+        timestamp updated_at
+        tinyint_1 je_generated
+        decimal_10_2 used_amount
+        varchar_50 settled_invoice_number
+        varchar_255 paid_payment_number
+        int branch_id
+        varchar_200 company_code
+        int refund_id
+        tinyint is_opening
+        int import_batch_id FK
+        varchar_255 pax_name
+        text void_remarks
+        int passenger_id FK
+        int invoice_id FK
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+    }
+    cus_supplementaries {
+        int id PK
+        int customer_id FK
+        int fee_code_id
+        varchar_255 fee_description
+        varchar_255 region_code
+        int product_code_id FK
+        decimal_10_0 amount
+        datetime created_at
+        datetime updated_at
+        tinyint unit_fare
+        tinyint unit_fare_tax
+        varchar_45 product_code_ids
+        decimal_10_0 percent_amount
+        tinyint active
+    }
+    customer_credit_terms {
+        int id PK
+        int customer_id FK
+        int days
+        decimal_10_2 charge_percent
+        tinyint last_day
+        date other_due_date
+        varchar_10 weekly
+        decimal_10_2 ytd_turnover
+    }
+    customer_deposits {
+        int id PK
+        varchar_50 receipt_number
+        int user_id
+        int customer_id FK
+        int chart_of_account_id FK
+        int branch_id
+        int pay_type_id FK
+        int currency_id FK
+        decimal_10_2 amount
+        decimal_10_2 current_amount
+        decimal_10_4 exchange_rate
+        decimal_10_2 base_amount
+        varchar_50 cash_box
+        varchar_50 client_refrence
+        int bank_id FK
+        varchar_50 check_number
+        int card_type_id FK
+        varchar_50 card_number
+        varchar_50 voucher_number
+        varchar_50 gl_account_box
+        int gl_account_id
+        varchar_50 account_number
+        varchar_255 remarks
+        text void_remarks
+        enum_Printed_Raised_Partially_Settled_Settled_Void status
+        datetime created_at
+        datetime updated_at
+        tinyint_1 je_generated
+        varchar_50 settled_invoice_number
+        date adjustment_date
+        tinyint is_edited
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+        int receipt_settlement_id
+    }
+    customer_memberships {
+        int id PK
+        int customer_id FK
+        varchar_255 code
+        varchar_255 membership_number
+        varchar_255 membership_name
+        timestamp issue_date
+        timestamp expiry_date
+        text remarks
+        varchar_250 product_type
+    }
+    customer_permissions {
+        int id PK
+        int customer_id FK
+        int user_group_id FK
+        tinyint_1 active
+    }
+    customer_special_handling {
+        int id PK
+        int customer_id FK
+        date effective_date
+        varchar_45 type
+        text description
+        text details
+        timestamp created_at
+        timestamp updated_at
+    }
+    customer_types {
+        int id PK
+        varchar_20 type
+        varchar_45 company_code
+    }
+    customer_uploads {
+        int id PK
+        int upload_type_id
+        int customer_id FK
+        tinyint selected
+        tinyint phone_field
+        timestamp created_at
+        timestamp updated_at
+    }
+    customer_visas {
+        int id PK
+        int customer_id FK
+        varchar_255 country
+        varchar_255 type
+        varchar_255 number_of_entries
+        timestamp expiry_date
+        varchar_255 visa_number
+        varchar_255 issue_country
+        varchar_255 passport_number
+        varchar_250 purpose
+        timestamp issue_date
+        varchar_250 length_of_stay
+    }
+    receipt_settlements {
+        int id PK
+        varchar_255 receipt_number
+        int user_id
+        varchar_200 company_code
+        int customer_id FK
+        int supplier_id FK
+        decimal_10_2 amount
+        varchar_200 remarks
+        varchar_200 internal_remarks
+        varchar_200 receipt_reference
+        varchar_200 billing_address
+        enum_Printed_Raised_Void status
+        varchar_30 settlement_type
+        datetime created_at
+        datetime updated_at
+        tinyint_1 je_generated
+        date adjustment_date
+        text void_remarks
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+    }
+    sales_id {
+        int id PK
+        varchar_45 company_code
+        varchar_160 sales_person_name
+        varchar_20 sales_person_identity
+        decimal_10_2 interest_rate
+        varchar_200 email
+        int team_id
+    }
+    team_codes {
+        int id PK
+        varchar_45 company_code
+        varchar_20 code
+        varchar_160 name
+        varchar_160 manager
+        varchar_200 email
+        varchar_200 display_email_name
+    }
+    service_visas {
+        int id PK
+        int service_id FK
+        varchar_255 title
+        varchar_255 surname
+        int ptc FK
+        enum_male_female gender
+        int nationality FK
+        int destination FK
+        int visa_code FK
+        decimal_10_2 price
+        decimal_10_2 cost
+        varchar_255 passport_type
+        varchar_255 passport_number
+        varchar_255 mobile
+        varchar_255 email
+        varchar_45 address
+        int entries FK
+        int purpose FK
+        int urgency FK
+        int validity FK
+        int length_of_stay FK
+        int process_days
+        varchar_45 remarks
+        varchar_45 given_name
+        varchar_200 status
+        datetime status_date
+    }
+    visa_code_maintenance {
+        int id PK
+        varchar_200 company_code
+        varchar_255 code
+        varchar_255 description
+        int destination FK
+        int purpose FK
+        enum_Yes_No require_visa
+        int nationality FK
+        int document_type FK
+        int length_of_stay FK
+        int entries FK
+        int validity FK
+        int urgency FK
+        varchar_255 photo
+        enum_Yes_No next_stop
+        text forms
+        enum_Yes_No ticket
+        varchar_255 validity_secondary
+        varchar_255 working_day
+        int selling_price_currency FK
+        decimal_15_2 selling_price
+        int cost_price_currency FK
+        decimal_15_2 cost_amount
+        tinyint_1 approval
+        int require_code FK
+        text remark
+    }
+    banks {
+        int id PK
+        varchar_255 name
+        varchar_255 code
+        int status
+        datetime created_at
+        datetime updated_at
+    }
+    currency_codes {
+        int id PK
+        varchar_10 currency_code
+        text description
+        varchar_10 symbol
+    }
+    invoices {
+        int id PK
+        varchar_50 invoice_number
+        datetime invoice_date
+        decimal_10_2 total_amount
+        varchar_20 currency
+        decimal_10_2 markup
+        decimal_10_2 price
+        decimal_10_6 discount
+        decimal_10_6 rebate
+        varchar_45 sst
+        tinyint_1 manual_sst_override
+        int quantity
+        varchar_255 free_of_cost
+        enum_Raised_Partially_Settled_Printed_Settled_Void status
+        int service_id FK
+        varchar_200 company_code
+        int branch_id
+        datetime created_at
+        datetime updated_at
+        varchar_200 customer_no
+        float transaction_fee
+        tinyint manual_transaction_fee
+        decimal_10_2 total_price
+        tinyint_1 je_generated
+        text remarks
+        decimal_10_2 exchange_rate
+        decimal_10_2 customer_supplementary_fee
+        json supplementary_fee_ids
+        tinyint is_supplementary_checked
+        tinyint is_supplementary_manual
+        date due_date
+        tinyint_1 is_opening
+        int import_batch_id FK
+        tinyint manual_markup
+        decimal_10_2 transaction_fee_percent
+        text void_remarks
+        int passenger_id FK
+        varchar_10 manual_sst
+        decimal_10_2 sst_value
+        varchar_255 party_name
+        varchar_255 party_number
+        varchar_500 party_address
+        datetime party_captured_at
+    }
+    chart_of_accounts {
+        external stub "see the diagram that holds this table"
+    }
+    import_batches {
+        external stub "see the diagram that holds this table"
+    }
+    passengers {
+        external stub "see the diagram that holds this table"
+    }
+    pay_card_types {
+        external stub "see the diagram that holds this table"
+    }
+    pay_type_forms {
+        external stub "see the diagram that holds this table"
+    }
+    service_types {
+        external stub "see the diagram that holds this table"
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    suppliers {
+        external stub "see the diagram that holds this table"
+    }
+    user_groups {
+        external stub "see the diagram that holds this table"
+    }
+    visa_length_stays {
+        external stub "see the diagram that holds this table"
+    }
+    visa_no_entries {
+        external stub "see the diagram that holds this table"
+    }
+    visa_ptc_maintenances {
+        external stub "see the diagram that holds this table"
+    }
+    visa_purposes {
+        external stub "see the diagram that holds this table"
+    }
+    visa_require_codes {
+        external stub "see the diagram that holds this table"
+    }
+    visa_types {
+        external stub "see the diagram that holds this table"
+    }
+    visa_urgencies {
+        external stub "see the diagram that holds this table"
+    }
+    visa_validities {
+        external stub "see the diagram that holds this table"
+    }
+    sales_id ||--o{ customers : "sale_id"
+    team_codes ||--o{ customers : "team_id"
+    customer_types ||--o{ customers : "customer_type_id"
+    country_codes ||--o{ customers : "nationality2"
+    pay_card_types ||--o{ credit_notes : "card_type_id"
+    chart_of_accounts ||--o{ credit_notes : "chart_of_account_id"
+    banks ||--o{ credit_notes : "bank_id"
+    currency_codes ||--o{ credit_notes : "base_currency_id"
+    import_batches ||--o{ credit_notes : "import_batch_id"
+    invoices ||--o{ credit_notes : "invoice_id"
+    passengers ||--o{ credit_notes : "passenger_id"
+    currency_codes ||--o{ credit_notes : "currency_id"
+    customers ||--o{ credit_notes : "customer_id"
+    pay_type_forms ||--o{ credit_notes : "pay_type_id"
+    suppliers ||--o{ credit_notes : "supplier_id"
+    sales_id ||--o{ credit_notes : "tc_id"
+    customers ||--o{ cus_supplementaries : "customer_id"
+    service_types ||--o{ cus_supplementaries : "product_code_id"
+    customers ||--o{ customer_credit_terms : "customer_id"
+    customers ||--o{ customer_deposits : "customer_id"
+    pay_type_forms ||--o{ customer_deposits : "pay_type_id"
+    currency_codes ||--o{ customer_deposits : "currency_id"
+    banks ||--o{ customer_deposits : "bank_id"
+    pay_card_types ||--o{ customer_deposits : "card_type_id"
+    chart_of_accounts ||--o{ customer_deposits : "chart_of_account_id"
+    customers ||--o{ customer_memberships : "customer_id"
+    customers ||--o{ customer_permissions : "customer_id"
+    user_groups ||--o{ customer_permissions : "user_group_id"
+    customers ||--o{ customer_special_handling : "customer_id"
+    customers ||--o{ customer_uploads : "customer_id"
+    customers ||--o{ customer_visas : "customer_id"
+    customers ||--o{ receipt_settlements : "customer_id"
+    suppliers ||--o{ receipt_settlements : "supplier_id"
+    country_codes ||--o{ service_visas : "destination"
+    visa_no_entries ||--o{ service_visas : "entries"
+    visa_length_stays ||--o{ service_visas : "length_of_stay"
+    country_codes ||--o{ service_visas : "nationality"
+    visa_ptc_maintenances ||--o{ service_visas : "ptc"
+    visa_purposes ||--o{ service_visas : "purpose"
+    services ||--o{ service_visas : "service_id"
+    visa_urgencies ||--o{ service_visas : "urgency"
+    visa_validities ||--o{ service_visas : "validity"
+    visa_code_maintenance ||--o{ service_visas : "visa_code"
+    country_codes ||--o{ visa_code_maintenance : "destination"
+    currency_codes ||--o{ visa_code_maintenance : "cost_price_currency"
+    visa_require_codes ||--o{ visa_code_maintenance : "require_code"
+    visa_purposes ||--o{ visa_code_maintenance : "purpose"
+    country_codes ||--o{ visa_code_maintenance : "nationality"
+    visa_types ||--o{ visa_code_maintenance : "document_type"
+    visa_length_stays ||--o{ visa_code_maintenance : "length_of_stay"
+    visa_no_entries ||--o{ visa_code_maintenance : "entries"
+    visa_validities ||--o{ visa_code_maintenance : "validity"
+    visa_urgencies ||--o{ visa_code_maintenance : "urgency"
+    currency_codes ||--o{ visa_code_maintenance : "selling_price_currency"
+    import_batches ||--o{ invoices : "import_batch_id"
+    passengers ||--o{ invoices : "passenger_id"
+    services ||--o{ invoices : "service_id"

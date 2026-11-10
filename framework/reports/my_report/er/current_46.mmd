@@ -1,0 +1,34 @@
+%% Current schema of power-suite-staging (46 of 57: around service_tours)
+erDiagram
+    service_tours {
+        int id PK
+        int service_id FK
+        varchar_255 package_name
+        varchar_255 package_code
+        int status
+        int destination
+        datetime start_date_time
+        datetime end_date_time
+        text itin_remarks
+        datetime created_at
+        datetime updated_at
+        text insurance_options
+        text hotel_bookings
+        text air_travel
+        text visa_service
+        text other_services
+        decimal_15_2 air_travel_cost
+        decimal_15_2 air_travel_price
+        decimal_15_2 hotel_bookings_cost
+        decimal_15_2 hotel_bookings_price
+        decimal_15_2 insurance_options_cost
+        decimal_15_2 insurance_options_price
+        decimal_15_2 visa_service_cost
+        decimal_15_2 visa_service_price
+        decimal_15_2 itin_remarks_cost
+        decimal_15_2 itin_remarks_price
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    services ||--o{ service_tours : "service_id"

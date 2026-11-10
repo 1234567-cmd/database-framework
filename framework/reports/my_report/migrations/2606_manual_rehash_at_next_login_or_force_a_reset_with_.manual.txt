@@ -1,0 +1,4 @@
+Step M2606: Manual: Rehash at next login or force a reset with a password-hashing algorithm.
+MANUAL: this step has no generated SQL.
+Rehash at next login or force a reset with a password-hashing algorithm.
+Findings: SECA-008-8dffd26b

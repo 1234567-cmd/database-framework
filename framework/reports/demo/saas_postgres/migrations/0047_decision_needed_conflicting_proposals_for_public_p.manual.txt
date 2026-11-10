@@ -1,0 +1,4 @@
+Step M047: Decision needed: conflicting proposals for public.projects.updated_at
+MANUAL: this step has no generated SQL.
+Two proposals add public.projects.updated_at with different types.
+Findings: DE-005-0615d78f, SCH-044-6b5eb095

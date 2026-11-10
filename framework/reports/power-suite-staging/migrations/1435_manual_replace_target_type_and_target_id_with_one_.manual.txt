@@ -1,0 +1,4 @@
+Step M1435: Manual: Replace target_type and target_id with one nullable foreign key per parent, or a
+MANUAL: this step has no generated SQL.
+Replace target_type and target_id with one nullable foreign key per parent, or an exclusive supertype.
+Findings: SCH-040-29b0fd45

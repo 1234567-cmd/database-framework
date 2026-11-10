@@ -1,0 +1,4 @@
+Step M104: Manual: Inspect the execution plan and tune the query or its indexes.
+MANUAL: this step has no generated SQL.
+Inspect the execution plan and tune the query or its indexes.
+Findings: PERF-016-24cabf14

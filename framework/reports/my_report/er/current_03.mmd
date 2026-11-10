@@ -1,0 +1,307 @@
+%% Current schema of power-suite-staging (3 of 57: around service_hajjs)
+erDiagram
+    service_hajjs {
+        int id PK
+        int service_id FK
+        varchar_255 package_name
+        int status FK
+        datetime departure_date
+        datetime arrival_date
+        varchar_255 airline
+        text emergency_notes
+        text other_services_notes
+        text disclaimer
+        text terms_and_conditions
+        datetime created_at
+        datetime updated_at
+    }
+    car_rental_statuses {
+        int id PK
+        varchar_255 label
+        varchar_45 code
+    }
+    service_hajj_contacts {
+        int id PK
+        int service_hajj_id FK
+        varchar_255 location
+        varchar_255 name
+        varchar_255 phone
+        varchar_255 title
+        varchar_255 phone2
+        datetime created_at
+        datetime updated_at
+    }
+    service_hajj_flights {
+        int id PK
+        int service_hajj_id FK
+        varchar_255 flight
+        int flight_airline_id FK
+        varchar_255 flight_airline_code
+        datetime date
+        varchar_255 dep_port
+        varchar_255 arr_port
+        varchar_255 dep_time
+        varchar_255 arr_time
+        datetime created_at
+        datetime updated_at
+    }
+    service_hajj_hotels {
+        int id PK
+        int service_hajj_id FK
+        varchar_255 hotel_name
+        varchar_255 city
+        varchar_45 distance
+        varchar_255 standard
+        datetime check_in
+        datetime check_out
+        int nights
+        varchar_255 meal_plan
+        varchar_255 view
+        int room_type FK
+        varchar_255 booking_ref
+        varchar_255 conf
+        int qty
+        int allotment_room_id
+        tinyint rooms_released
+        datetime created_at
+        datetime updated_at
+    }
+    service_hajj_tours {
+        int id PK
+        int service_hajj_id FK
+        datetime date
+        varchar_255 booking_ref
+        varchar_255 vehicle
+        varchar_255 location
+        varchar_255 type
+        datetime created_at
+        datetime updated_at
+    }
+    service_hajj_transports {
+        int id PK
+        int service_hajj_id FK
+        datetime date
+        varchar_255 booking_ref
+        varchar_255 vehicle
+        varchar_255 pick_up
+        varchar_255 drop
+        varchar_255 type
+        datetime created_at
+        datetime updated_at
+    }
+    airline_codes {
+        int id PK
+        varchar_45 airline_ticket_prefix
+        int airline_ticket
+        varchar_200 airline_name
+        varchar_70 airline_code
+        tinyint bsp_airline
+        tinyint lcc
+    }
+    room_types {
+        int id PK
+        int display_order
+        varchar_255 room_type
+        int no_of_guests
+        tinyint_1 default_new_hotel
+    }
+    fee_airlines {
+        int id PK
+        int fee_rule_id FK
+        int airline_id FK
+    }
+    service_umrah_flights {
+        int id PK
+        int service_umrah_id
+        varchar_255 flight
+        int flight_airline_id FK
+        varchar_255 flight_airline_code
+        date date
+        varchar_255 dep_port
+        varchar_255 arr_port
+        varchar_255 dep_time
+        varchar_255 arr_time
+        datetime created_at
+        datetime updated_at
+    }
+    ticket_inventory_details {
+        int id PK
+        int iata_id FK
+        int product_code_id FK
+        int airline_id FK
+        varchar_45 start_no
+        varchar_45 end_no
+        int service_passenger_id FK
+        int no_of_tickets
+    }
+    hotel_allotment_rooms {
+        int id PK
+        int hotel_allotment_id FK
+        int room_type_id FK
+        int room_category_id FK
+        date check_in_date
+        date check_out_date
+        int no_of_rooms
+        int available_rooms
+        decimal_12_2 cost
+        datetime created_at
+        datetime updated_at
+    }
+    service_umrah_hotels {
+        int id PK
+        int service_umrah_id FK
+        varchar_255 hotel_name
+        varchar_255 distance
+        varchar_255 category
+        varchar_255 city
+        date check_in
+        date check_out
+        int nights
+        int room_type FK
+        varchar_255 view
+        int qty
+        varchar_255 meal_plan
+        varchar_255 status
+        int allotment_room_id
+        tinyint rooms_released
+        datetime created_at
+        datetime updated_at
+    }
+    maintenance_fee_groups {
+        int id PK
+        int group_id
+        varchar_255 fee_name
+        int iata_no_id
+        varchar_255 region_code
+        varchar_255 haul
+        varchar_255 fare_type
+        varchar_255 charge_type
+        varchar_255 comm
+        varchar_255 booking_channel
+        int currency_id
+        varchar_255 currency_from
+        varchar_255 currency_to
+        varchar_255 calculation_basis
+        varchar_255 tax_option
+        varchar_255 international_air
+        varchar_255 domestic_air
+        varchar_255 other_air
+        varchar_255 transaction_fee_method
+        varchar_255 transaction_fee_percent
+        varchar_255 transaction_fee_amount
+        varchar_255 transaction_fee_max_amount
+        varchar_255 transaction_fee_min_amount
+        varchar_255 discount
+        varchar_255 discount_hold_tax
+        varchar_255 remarks
+        varchar_45 ticket_type
+        varchar_45 airline
+        int segment_from
+        int segment_to
+        varchar_45 air_class
+        tinyint use_rbd
+        enum_All_International_Domestic_Specific_Routing routing
+        tinyint origin_base
+        int country_id
+        date validity_period_from
+        date validity_period_to
+        varchar_45 markup_fee_method
+        varchar_45 markup_fee_percent
+        varchar_45 markup_fee_amount
+        tinyint is_markup_fee_rule
+        int departure_city_id
+        int arrival_city_id
+    }
+    iata_maintenances {
+        int id PK
+        int iata_number
+        varchar_255 iata_name
+        varchar_45 company_code
+        tinyint_1 def
+        datetime createdAt
+        datetime updatedAt
+    }
+    service_passengers {
+        int id PK
+        int service_id FK
+        int passenger_id FK
+        datetime created_at
+        datetime updated_at
+        enum_BSP_Temporary stock_type
+        varchar_45 ticket_number
+        varchar_45 conjection_ticket_number
+        tinyint is_processed
+        tinyint_1 is_voided
+        datetime voided_at
+        int voided_by
+        enum_IUR_Manual void_source
+        varchar_500 void_remarks
+    }
+    service_types {
+        int id PK
+        varchar_255 type
+        varchar_255 product_description
+        varchar_255 product_code
+    }
+    room_categories {
+        int id PK
+        int display_order
+        varchar_255 rm_cat
+        varchar_255 hotel_smart_code
+        tinyint_1 default_new_hotel
+    }
+    service_umrahs {
+        int id PK
+        int service_id FK
+        varchar_255 package_name
+        varchar_255 status
+        date departure_date
+        date arrival_date
+        varchar_255 guest_name
+        varchar_255 airline
+        text emergency_notes
+        text other_services_notes
+        text disclaimer
+        text terms_and_conditions
+        datetime created_at
+        datetime updated_at
+    }
+    hotel_allotments {
+        external stub "see the diagram that holds this table"
+    }
+    passengers {
+        external stub "see the diagram that holds this table"
+    }
+    services {
+        external stub "see the diagram that holds this table"
+    }
+    car_rental_statuses ||--o{ service_hajjs : "status"
+    services ||--o{ service_hajjs : "service_id"
+    service_hajjs ||--o{ service_hajj_contacts : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_contacts : "service_hajj_id"
+    airline_codes ||--o{ service_hajj_flights : "flight_airline_id"
+    service_hajjs ||--o{ service_hajj_flights : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_flights : "service_hajj_id"
+    room_types ||--o{ service_hajj_hotels : "room_type"
+    service_hajjs ||--o{ service_hajj_hotels : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_hotels : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_tours : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_tours : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_transports : "service_hajj_id"
+    service_hajjs ||--o{ service_hajj_transports : "service_hajj_id"
+    maintenance_fee_groups ||--o{ fee_airlines : "fee_rule_id"
+    airline_codes ||--o{ fee_airlines : "airline_id"
+    airline_codes ||--o{ service_umrah_flights : "flight_airline_id"
+    airline_codes ||--o{ ticket_inventory_details : "airline_id"
+    iata_maintenances ||--o{ ticket_inventory_details : "iata_id"
+    service_types ||--o{ ticket_inventory_details : "product_code_id"
+    service_passengers ||--o{ ticket_inventory_details : "service_passenger_id"
+    hotel_allotments ||--o{ hotel_allotment_rooms : "hotel_allotment_id"
+    room_types ||--o{ hotel_allotment_rooms : "room_type_id"
+    room_categories ||--o{ hotel_allotment_rooms : "room_category_id"
+    room_types ||--o{ service_umrah_hotels : "room_type"
+    service_umrahs ||--o{ service_umrah_hotels : "service_umrah_id"
+    services ||--o{ service_passengers : "service_id"
+    passengers ||--o{ service_passengers : "passenger_id"
+    services ||--o{ service_umrahs : "service_id"
+    services ||--o{ service_umrahs : "service_id"

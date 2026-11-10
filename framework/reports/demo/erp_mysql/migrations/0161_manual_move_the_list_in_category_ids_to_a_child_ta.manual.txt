@@ -1,0 +1,4 @@
+Step M161: Manual: Move the list in category_ids to a child table with one row per value.
+MANUAL: this step has no generated SQL.
+Move the list in category_ids to a child table with one row per value.
+Findings: SCH-011-c286a9ca

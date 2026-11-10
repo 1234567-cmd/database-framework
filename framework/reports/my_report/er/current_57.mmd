@@ -1,0 +1,100 @@
+%% Current schema of power-suite-staging (57 of 57: around tax_rate_maintenance)
+erDiagram
+    tax_rate_maintenance {
+        int id PK
+        varchar_255 tax_type
+        varchar_255 description
+        double tax_rate
+        int display_order
+        varchar_255 created_by
+        datetime created_date
+        varchar_255 revised_by
+        datetime revised_date
+        varchar_255 tax_code
+        varchar_45 tax_code_type
+        int province_id
+        int company_code
+    }
+    tcids {
+        int id PK
+        varchar_255 code
+        varchar_255 name
+        varchar_255 manager
+        varchar_255 email
+        varchar_255 display_email_name
+    }
+    templates {
+        int id PK
+        text service_column
+        text document_column
+        int template_id
+        datetime created_at
+        datetime updated_at
+        enum_mandatory_optional mandatory
+        enum_direct_mapping_extraction handling_method
+        varchar_50 separator
+        int start_position
+        int length
+        text description
+        int row_identitfier
+    }
+    trade_groups {
+        int id PK
+        varchar_255 code
+        varchar_255 description
+    }
+    user_branches {
+        int id PK
+        varchar_255 branch_code
+        varchar_255 branch_name
+        varchar_255 branch_document
+        varchar_255 branch_location
+        varchar_255 branch_IATA_NO
+        varchar_255 branch_PCC
+        varchar_255 branch_City_Codes
+        datetime created_at
+        datetime updated_at
+    }
+    vehicle_maintenances {
+        int id PK
+        varchar_255 vehicle_code
+        varchar_255 vehicle_category
+    }
+    visa_import_logs {
+        int id PK
+        varchar_255 company_code
+        int user_id
+        int branch_id
+        int template_id
+        text order_ids
+        varchar_255 file_name
+        datetime uploaded_at
+        int total_rows
+        int orders_created
+        int duplicate_count
+        int error_count
+        int success_count
+        enum_success_partial_failed result
+        text message
+        datetime created_at
+        datetime updated_at
+    }
+    visa_maintenance_history {
+        int id PK
+        varchar_200 company_code
+        varchar_50 list_key
+        int record_id
+        enum_create_update_delete action
+        varchar_255 label
+        varchar_255 old_value
+        int user_id
+        datetime created_at
+    }
+    wht_tax {
+        int id PK
+        varchar_255 tax_type
+        varchar_255 description
+        double tax_rate
+        varchar_255 company_code
+        varchar_255 tax_code
+    }

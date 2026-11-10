@@ -1,0 +1,4 @@
+Step M055: Manual: Add a classification attribute per column that drives masking and retention.
+MANUAL: this step has no generated SQL.
+Add a classification attribute per column that drives masking and retention.
+Findings: GVN-004-1eb17008
