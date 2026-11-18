@@ -1,0 +1,4 @@
+Step M1970: Manual: Document the UTC convention for last_seen_at, or move it to a UTC-normalizing ty
+MANUAL: this step has no generated SQL.
+Document the UTC convention for last_seen_at, or move it to a UTC-normalizing type.
+Findings: SCH-030-8c8b58d3

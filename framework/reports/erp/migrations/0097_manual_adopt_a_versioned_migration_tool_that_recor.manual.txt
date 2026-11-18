@@ -1,0 +1,4 @@
+Step M097: Manual: Adopt a versioned migration tool that records what was applied.
+MANUAL: this step has no generated SQL.
+Adopt a versioned migration tool that records what was applied.
+Findings: GVN-007-b7d1e40e

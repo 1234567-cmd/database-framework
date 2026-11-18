@@ -1,0 +1,4 @@
+Step M2261: Manual: Keep remarks in costs only, or maintain the copy through one controlled mechanis
+MANUAL: this step has no generated SQL.
+Keep remarks in costs only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-f287dcb9

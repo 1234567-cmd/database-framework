@@ -1,0 +1,4 @@
+Step M2420: Manual: Classify phone_one (phone) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify phone_one (phone) and record its required protections.
+Findings: SECA-004-56d10675

@@ -1,0 +1,4 @@
+Step M1342: Decision needed: conflicting proposals for user_branches.branch_PCC
+MANUAL: this step has no generated SQL.
+Cannot rename user_branches.branch_PCC to an existing column 'branch_pcc'.
+Findings: SCH-052-27c8c859

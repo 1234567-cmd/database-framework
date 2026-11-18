@@ -1,0 +1,4 @@
+Step M1412: Rename column invoices.bill_to_company to is_bill_to_company
+MANUAL: this step has no generated SQL.
+Table invoices matches the financial table protection; breaking rename or access change is not generated automatically and needs a separately reviewed change. Intended change: Rename column invoices.bill_to_company to is_bill_to_company.
+Findings: SCH-060-8cc59bc2

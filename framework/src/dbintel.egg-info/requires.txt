@@ -8,6 +8,7 @@ openpyxl>=3.1
 
 [dev]
 pytest>=8
+pgserver>=0.1
 
 [excel]
 openpyxl>=3.1

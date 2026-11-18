@@ -1,0 +1,18 @@
+{
+ "id": "20261118-152714-0de35b",
+ "name": "power_suite",
+ "dialect": "mysql",
+ "source_label": "astra_2026-11-09_1900.sql.gz",
+ "source_kind": "sql_dump",
+ "generated_at": "2026-11-18T10:30:48+00:00",
+ "overall": 55.4,
+ "grade": "D",
+ "confidence": 0.79,
+ "capped": false,
+ "findings_total": 3169,
+ "critical": 3,
+ "high": 92,
+ "confirmed_defects": 45,
+ "tables": 214,
+ "plan_hash": "96b609d888d3a110ee47e0582322a4e557e75f3ae97d66c41df5b636b70d268a"
+}

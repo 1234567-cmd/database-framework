@@ -1,0 +1,4 @@
+Step M2253: Manual: Keep voided_date in credit_notes only, or maintain the copy through one controll
+MANUAL: this step has no generated SQL.
+Keep voided_date in credit_notes only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-4f048816

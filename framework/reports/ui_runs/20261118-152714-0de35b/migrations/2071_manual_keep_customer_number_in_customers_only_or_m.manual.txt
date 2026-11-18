@@ -1,0 +1,4 @@
+Step M2071: Manual: Keep customer_number in customers only, or maintain the copy through one control
+MANUAL: this step has no generated SQL.
+Keep customer_number in customers only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-f5c24d06

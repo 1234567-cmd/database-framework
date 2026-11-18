@@ -1,0 +1,4 @@
+Step M1699: Manual: Classify mobile_number (phone) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify mobile_number (phone) and record its required protections.
+Findings: SECA-004-7492b13b

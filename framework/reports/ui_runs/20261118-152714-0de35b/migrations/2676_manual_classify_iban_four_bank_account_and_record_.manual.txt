@@ -1,0 +1,4 @@
+Step M2676: Manual: Classify iban_four (bank_account) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify iban_four (bank_account) and record its required protections.
+Findings: SECA-004-9b9f4f2f

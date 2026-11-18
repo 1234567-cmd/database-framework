@@ -1,0 +1,4 @@
+Step M1963: Manual: Classify recipient (email) and protect it accordingly.
+MANUAL: this step has no generated SQL.
+Classify recipient (email) and protect it accordingly.
+Findings: SECA-005-b96182d0

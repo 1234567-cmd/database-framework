@@ -1,0 +1,4 @@
+Step M2735: Manual: Check the contents of branch_City_Codes; if it holds lists, move them to a child
+MANUAL: this step has no generated SQL.
+Check the contents of branch_City_Codes; if it holds lists, move them to a child table.
+Findings: SCH-011-810264c7

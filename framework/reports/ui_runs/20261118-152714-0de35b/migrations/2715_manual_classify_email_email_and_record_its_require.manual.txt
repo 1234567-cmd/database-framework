@@ -1,0 +1,4 @@
+Step M2715: Manual: Classify email (email) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify email (email) and record its required protections.
+Findings: SECA-004-2130bc8d

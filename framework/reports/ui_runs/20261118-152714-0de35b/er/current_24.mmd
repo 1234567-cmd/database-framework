@@ -1,0 +1,14 @@
+%% Current schema of power_suite (24 of 57: around visa_no_entries)
+erDiagram
+    visa_no_entries {
+        int id PK
+        varchar_255 no_of_entries
+        varchar_255 code
+        int display_order
+        tinyint_1 default_set
+        varchar_200 company_code
+        int legacy_id
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }

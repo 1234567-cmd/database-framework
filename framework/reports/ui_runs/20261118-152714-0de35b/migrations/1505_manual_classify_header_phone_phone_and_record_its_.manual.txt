@@ -1,0 +1,4 @@
+Step M1505: Manual: Classify header_phone (phone) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify header_phone (phone) and record its required protections.
+Findings: SECA-004-69d1338b

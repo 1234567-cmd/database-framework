@@ -1,0 +1,9 @@
+-- Step M639: Contract: drop the old cruise_services.group_id__dbintel_old
+-- Direction: down
+-- Findings: SCH-039-d53b1a1d
+-- Destructive: True. Reversible: False. Data loss risk: high. Lock risk: medium.
+-- PROPOSAL ONLY. Review before use.
+-- Requires a verified backup first.
+-- Precheck: Column cruise_services.group_id__dbintel_old exists. Expect 1: SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'cruise_services' AND table_schema = DATABASE() AND column_name = 'group_id__dbintel_old'
+-- Note: Run only after the new column has been verified in production through at least one release (MIG-004).
+-- NOT REVERSIBLE WITHOUT LOSS: Dropping the old column removes its data. Restoring it requires a backup.

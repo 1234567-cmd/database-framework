@@ -1,0 +1,4 @@
+Step M2682: Manual: Classify iban_two (bank_account) and record its required protections.
+MANUAL: this step has no generated SQL.
+Classify iban_two (bank_account) and record its required protections.
+Findings: SECA-004-b21860d0

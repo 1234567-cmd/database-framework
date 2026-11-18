@@ -1,0 +1,4 @@
+Step M1885: Manual: Keep company_code in gl_settle_accounts only, or maintain the copy through one c
+MANUAL: this step has no generated SQL.
+Keep company_code in gl_settle_accounts only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-6933d10c

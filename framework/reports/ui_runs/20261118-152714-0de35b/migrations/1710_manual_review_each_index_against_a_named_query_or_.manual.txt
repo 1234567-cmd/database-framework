@@ -1,0 +1,4 @@
+Step M1710: Manual: Review each index against a named query or constraint.
+MANUAL: this step has no generated SQL.
+Review each index against a named query or constraint.
+Findings: PERF-003-56840d0a

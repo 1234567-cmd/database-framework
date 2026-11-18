@@ -1,0 +1,4 @@
+Step M1696: Manual: Correct the values with the data owner, then add validation at write.
+MANUAL: this step has no generated SQL.
+Correct the values with the data owner, then add validation at write.
+Findings: DQ-011-2a1eab9b

@@ -1,0 +1,4 @@
+Step M1653: Manual: Keep voided_date in invoices only, or maintain the copy through one controlled m
+MANUAL: this step has no generated SQL.
+Keep voided_date in invoices only, or maintain the copy through one controlled mechanism and record why.
+Findings: SCH-012-cf39b084
